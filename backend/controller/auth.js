@@ -12,21 +12,20 @@ import nodemailer from "nodemailer";
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
 
+  if (!email || !password || !name) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
   try {
-    const userAlreadyExists = await User.findOne({ email });
-
-    if (!email || !password || !name) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
+    const userAlreadyExists = await User.findOne({ email }).select('_id');
     if (userAlreadyExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const hashedPassword = await bcryptjs.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 8);
     const verificationToken = generateToken();
 
-    const user = await User.create({
+    const user = new User({
       email,
       password: hashedPassword,
       name,
@@ -36,30 +35,24 @@ export const signup = async (req, res) => {
 
     const mailApiUrl = "http://localhost:5000/api/v1/signup-mail";
 
-    try {
-      const emailResponse = await axios.post(mailApiUrl, {
-        email,
-        verificationToken,
-      });
+    const saveUser = user.save();
+    const sendEmail = axios.post(mailApiUrl, {
+      email,
+      verificationToken,
+    });
 
-      if (emailResponse.status === 200) {
-        await user.save();
-        generateTokenAndSetCookie(res, user._id);
+    const [savedUser, emailResponse] = await Promise.all([saveUser, sendEmail]);
 
-        return res.status(201).json({
-          message: "User created successfully. Verification email sent.",
-          user: { ...user._doc, password: undefined },
-        });
-      } else {
-        return res.status(500).json({
-          message: "Error occurred while sending verification email.",
-        });
-      }
-    } catch (error) {
-      return res.status(500).json({
-        message: "Error occurred during signup process. Email not sent.",
-      });
+    if (emailResponse.status !== 200) {
+      return res.status(500).json({ message: "Error sending verification email" });
     }
+
+    generateTokenAndSetCookie(res, savedUser._id);
+
+    return res.status(201).json({
+      message: "User created successfully. Verification email sent.",
+      user: { ...savedUser._doc, password: undefined },
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

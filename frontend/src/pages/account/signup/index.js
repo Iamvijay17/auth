@@ -1,21 +1,40 @@
 import React from "react";
-import SignupForm from "./signForm";
+import loginFormBg from "../../../assets/loginFormBg.png";
+import { AccountServiceAPI } from "../account.service";
+import SignupForm from "./signUpForm";
+import styles from "./styles.module.css";
 
 const Signup = () => {
+  const handleFinish = (values) => {
+    AccountServiceAPI.createAccount(values)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <div className="flex justify-center items-center h-[100%] bg-white">
         <div className="shadow-2xl w-[60%] h-[60%] rounded-2xl grid grid-cols-2 overflow-hidden">
-          <div>
-            <img
-              className="w-[100%] h-[100%] object-cover"
-              src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-              alt=""
-            />
+          <div
+            className="text-center bg-cover bg-no-repeat h-full flex flex-col items-center px-4"
+            style={{ backgroundImage: `url(${loginFormBg})` }}
+          >
+            <h1 className="font-dancingScript text-5xl text-white font-bold pt-6">
+              Wanderlust Voyages
+            </h1>
+            <h2 className="text-white pt-6 w-[75%] text-center leading-relaxed font-light">
+              Travel is the only purchase that enriches you in ways beyond
+              material wealth
+            </h2>
           </div>
-          <div>
+
+          <div className={`${styles.left} ${styles.right}`}>
             <div className="flex justify-center h-[100%] p-5">
-              <SignupForm />
+              <SignupForm handleFinish={handleFinish} />
             </div>
           </div>
         </div>
