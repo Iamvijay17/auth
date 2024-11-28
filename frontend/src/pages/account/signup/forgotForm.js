@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import React from "react";
 import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
 
-const SigninForm = ({ handleFinish, setShowFrom }) => {
+const ForgotForm = ({ handleFinish, setShowFrom }) => {
   return (
     <div className="flex flex-col w-[60%]">
       <h1 className="text-center p-2 text-6xl font-bold text-primary-color font-inter">Welcome</h1>
@@ -18,30 +18,9 @@ const SigninForm = ({ handleFinish, setShowFrom }) => {
           className="w-full"
         />
       </div>
-      <div>
-
-        <TextField
-          id="password"
-          label="Password"
-          size="small"
-          variant="outlined"
-          className="w-full"
-          type="password"
-          // InputProps={{
-          //   startAdornment: (
-          //     <InputAdornment position="start">
-          //       {/* <IconComponent /> */}get
-          //     </InputAdornment>
-          //   ),
-          // }}
-        />
-
-        <a href="#f" className="float-right text-slate-300 p-2 text-sm" onClick={() => setShowFrom("forgot")}>
-          Forgot Password?
-        </a>
-      </div>
+      
       <div className="flex justify-center py-2">
-        <button className="bg-primary-color text-secondary-color px-4 py-2 rounded-md hover:opacity-90 active:opacity-70">Login</button>
+        <button className="bg-primary-color text-secondary-color px-4 py-2 rounded-md hover:opacity-90 active:opacity-70">Next</button>
       </div>
       <Divider className="text-slate-300">OR</Divider>
 
@@ -67,4 +46,4 @@ const SigninForm = ({ handleFinish, setShowFrom }) => {
   );
 };
 
-export default SigninForm;
+export default ForgotForm;

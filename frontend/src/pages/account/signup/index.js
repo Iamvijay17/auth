@@ -4,20 +4,35 @@ import { AccountServiceAPI } from "../account.service";
 import SignupForm from "./signUpForm";
 import styles from "./styles.module.css";
 import Loader from "../../../components/loader";
+import OtpForm from "./otpForm";
+import SigninForm from "./signInForm ";
+import ForgotForm from "./forgotForm";
+import ChangePasswordForm from "./changePasswordForm";
 
 const Signup = () => {
 const [isLoading, setIsLoading] = useState(false);
+const [showFrom, setShowFrom] = useState('changepassword');
 
   const handleFinish = (values) => {
     setIsLoading(true);
     AccountServiceAPI.createAccount(values)
       .then((res) => {
         setIsLoading(false);
-        console.log(res);
+        setShowFrom('otp');
       })
       .catch((err) => {
         setIsLoading(false);
-        console.log(err);
+      });
+  };
+
+  const handleOtpFinish = (values) => {
+    setIsLoading(true);
+    AccountServiceAPI.verifyOtp(values)
+      .then((res) => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
       });
   };
 
@@ -41,7 +56,21 @@ const [isLoading, setIsLoading] = useState(false);
 
           <div className={`${styles.left} ${styles.right}`}>
             <div className="flex justify-center h-[100%] p-5">
-              <SignupForm handleFinish={handleFinish} />
+             {
+               showFrom === 'signin' && <SigninForm handleFinish={handleFinish} setShowFrom={setShowFrom} />
+             }
+             {
+               showFrom === 'signup' && <SignupForm handleFinish={handleFinish} setShowFrom={setShowFrom} />
+             }
+             {
+               showFrom === 'otp' && <OtpForm handleFinish={handleOtpFinish} setShowFrom={setShowFrom} />
+             }
+             {
+               showFrom === 'forgot' && <ForgotForm handleFinish={handleFinish} setShowFrom={setShowFrom} />
+             }
+             {
+               showFrom === 'changepassword' && <ChangePasswordForm handleFinish={handleFinish} setShowFrom={setShowFrom} />
+             }
             </div>
           </div>
         </div>

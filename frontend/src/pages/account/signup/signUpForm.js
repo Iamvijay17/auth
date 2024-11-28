@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
 
-const SignupForm = ({ handleFinish }) => {
+const SignupForm = ({ handleFinish, setShowFrom }) => {
 
   const [formData, setFormData] = useState({
     name: "",
@@ -67,7 +67,7 @@ const SignupForm = ({ handleFinish }) => {
         </div>
       </form>
       <div className="flex justify-center py-6">
-        <button className="bg-primary-color text-secondary-color px-4 py-2 rounded-md hover:opacity-90 active:opacity-70" onClick={handleSubmit}>Login</button>
+        <button className="bg-primary-color text-secondary-color px-4 py-2 rounded-md hover:opacity-90 active:opacity-70" onClick={handleSubmit}>Signup</button>
       </div>
       <Divider className="text-slate-300">OR</Divider>
 
@@ -85,7 +85,7 @@ const SignupForm = ({ handleFinish }) => {
 
       <div className="flex justify-center text-sm">
         <h6>Already have an account?</h6>
-        <a href="#forgot-password" className="text-slate-300 ml-2">
+        <a href="#forgot-password" className="text-slate-300 ml-2" onClick={() => setShowFrom("signin")}>
           Login?
         </a>
       </div>
