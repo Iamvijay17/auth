@@ -8,7 +8,7 @@ import OtpForm from "./otpForm";
 import SigninForm from "./signInForm ";
 import ForgotForm from "./forgotForm";
 import ChangePasswordForm from "./changePasswordForm";
-import { Form } from "antd";
+import { Alert, Form } from "antd";
 
 const Signup = () => {
   const [form] = Form.useForm();
@@ -43,9 +43,11 @@ const Signup = () => {
     AccountServiceAPI.verifyOtp(values)
       .then((res) => {
         setIsLoading(false);
+        <Alert message="Success" type="success" showIcon />;
       })
       .catch((err) => {
         setIsLoading(false);
+        <Alert message="Error" type="error" showIcon />;
       });
   };
 
