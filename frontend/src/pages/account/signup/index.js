@@ -8,10 +8,12 @@ import OtpForm from "./otpForm";
 import SigninForm from "./signInForm ";
 import ForgotForm from "./forgotForm";
 import ChangePasswordForm from "./changePasswordForm";
+import { Form } from "antd";
 
 const Signup = () => {
-const [isLoading, setIsLoading] = useState(false);
-const [showFrom, setShowFrom] = useState('changepassword');
+  const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showFrom, setShowFrom] = useState('signin');
 
   const handleFinish = (values) => {
     setIsLoading(true);
@@ -39,7 +41,7 @@ const [showFrom, setShowFrom] = useState('changepassword');
   return (
     <>
       <div className="flex justify-center items-center h-[100%] bg-white">
-      {isLoading && <Loader />}
+        {isLoading && <Loader />}
         <div className="shadow-2xl w-[60%] h-[60%] rounded-2xl grid grid-cols-2 overflow-hidden">
           <div
             className="text-center bg-cover bg-no-repeat h-full flex flex-col items-center px-4"
@@ -56,21 +58,21 @@ const [showFrom, setShowFrom] = useState('changepassword');
 
           <div className={`${styles.left} ${styles.right}`}>
             <div className="flex justify-center h-[100%] p-5">
-             {
-               showFrom === 'signin' && <SigninForm handleFinish={handleFinish} setShowFrom={setShowFrom} />
-             }
-             {
-               showFrom === 'signup' && <SignupForm handleFinish={handleFinish} setShowFrom={setShowFrom} />
-             }
-             {
-               showFrom === 'otp' && <OtpForm handleFinish={handleOtpFinish} setShowFrom={setShowFrom} />
-             }
-             {
-               showFrom === 'forgot' && <ForgotForm handleFinish={handleFinish} setShowFrom={setShowFrom} />
-             }
-             {
-               showFrom === 'changepassword' && <ChangePasswordForm handleFinish={handleFinish} setShowFrom={setShowFrom} />
-             }
+              {
+                showFrom === 'signin' && <SigninForm handleFinish={handleFinish} setShowFrom={setShowFrom} form={form}/>
+              }
+              {
+                showFrom === 'signup' && <SignupForm handleFinish={handleFinish} setShowFrom={setShowFrom} form={form}/>
+              }
+              {
+                showFrom === 'otp' && <OtpForm handleFinish={handleOtpFinish} setShowFrom={setShowFrom} form={form}/>
+              }
+              {
+                showFrom === 'forgot' && <ForgotForm handleFinish={handleFinish} setShowFrom={setShowFrom} form={form}/>
+              }
+              {
+                showFrom === 'changepassword' && <ChangePasswordForm handleFinish={handleFinish} setShowFrom={setShowFrom} form={form}/>
+              }
             </div>
           </div>
         </div>

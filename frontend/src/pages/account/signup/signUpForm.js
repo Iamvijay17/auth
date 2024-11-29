@@ -7,20 +7,20 @@ const SignupForm = ({ handleFinish, setShowFrom }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
+    password: ""
   });
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [id]: value,
+      [id]: value
     }));
   };
-
+  console.log(handleChange);
   const handleSubmit = (e) => {
     e.preventDefault();
-   handleFinish(formData);
+    handleFinish(formData);
   };
 
   return (
