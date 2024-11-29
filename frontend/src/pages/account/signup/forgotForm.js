@@ -2,18 +2,18 @@ import React from "react";
 import { Divider, Form, Input } from "antd";
 import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
 
-const ForgotForm = ({ handleFinish, setShowFrom }) => {
+const ForgotForm = ({ handleFinish, setShowFrom, form }) => {
+
+  const handleSubmit = (values) => {
+    handleFinish(values);
+  };
+
   return (
     <div className="flex flex-col w-[60%]">
       <Form
         name="basic"
-        initialValues={{
-          remember: true
-        }}
-        onFinish={handleFinish}
-        // onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
+        onFinish={handleSubmit}
+        autoComplete="off" >
         <h1 className="text-center p-2 text-6xl font-bold text-primary-color font-inter">Welcome</h1>
         <h6 className="text-center text-gray-400 text-sm">Login with Email</h6>
         <div className="py-7">

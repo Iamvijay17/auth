@@ -8,4 +8,13 @@ export const AccountServiceAPI = {
   verifyOtp(data) {
     return axios.post(`${BASE_URL}/verify/${data}`);
   },
+  login(data) {
+    return axios.post(`${BASE_URL}/login`, data);
+  },
+  forgotPassword(data) {
+    return axios.post(`${BASE_URL}/forgot-password`, data);
+  },
+  changePassword(data) {
+    return axios.post(`${BASE_URL}/change-password`, data);
+  }
 };

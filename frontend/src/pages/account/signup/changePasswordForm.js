@@ -3,11 +3,17 @@ import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
 import { Divider, Form, Input } from "antd";
 
 const ChangePasswordForm = ({ handleFinish, setShowFrom, form }) => {
+
+  const handleSubmit = (values) => {
+    handleFinish(values);
+  };
+
+
   return (
     <div className="flex flex-col w-[60%]">
       <Form
         name="basic"
-        onFinish={handleFinish}
+        onFinish={handleSubmit}
         // onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
