@@ -1,7 +1,6 @@
-import { Divider } from "@mui/material";
-import TextField from "@mui/material/TextField";
 import React from "react";
 import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
+import { Divider } from "antd";
 
 const ChangePasswordForm = ({ handleFinish, setShowFrom }) => {
   return (
@@ -9,24 +8,10 @@ const ChangePasswordForm = ({ handleFinish, setShowFrom }) => {
       <h1 className="text-center p-2 text-6xl font-bold text-primary-color font-inter">Welcome</h1>
       <h6 className="text-center text-gray-400 text-sm">Enter your new Password</h6>
       <div className="py-7">
-        <TextField
-          id="password"
-          label="Password"
-          size="small"
-          variant="outlined"
-          className="w-full"
-          type="password"
-        />
+        
       </div>
       <div className="pb-3">
-        <TextField
-          id="confirmPassword"
-          label="Confirm Password"
-          size="small"
-          variant="outlined"
-          className="w-full"
-          type="password"
-        />
+      
       </div>
       <div className="flex justify-center py-2">
         <button className="bg-primary-color text-secondary-color px-4 py-2 rounded-md hover:opacity-90 active:opacity-70">Next</button>

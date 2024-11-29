@@ -1,7 +1,6 @@
-import { Divider } from "@mui/material";
-import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
+import { Divider } from "antd";
 
 const SignupForm = ({ handleFinish, setShowFrom }) => {
 
@@ -30,40 +29,13 @@ const SignupForm = ({ handleFinish, setShowFrom }) => {
       <h6 className="text-center text-gray-400 text-sm">Signup with Email</h6>
       <form onSubmit={handleSubmit}>
         <div className="py-2">
-          <TextField
-            id="name"
-            type="name"
-            size="small"
-            label="Name"
-            variant="outlined"
-            className="w-[100%]"
-            onChange={handleChange}
-            value={formData.name}
-          />
+       
         </div>
         <div className="py-5">
-          <TextField
-            id="email"
-            type="email"
-            size="small"
-            label="Email"
-            variant="outlined"
-            className="w-[100%]"
-            onChange={handleChange}
-            value={formData.email}
-          />
+        
         </div>
         <div>
-          <TextField
-            id="password"
-            label="Password"
-            size="small"
-            variant="outlined"
-            className="w-[100%]"
-            type="password"
-            onChange={handleChange}
-            value={formData.password}
-          />
+       
         </div>
       </form>
       <div className="flex justify-center py-6">

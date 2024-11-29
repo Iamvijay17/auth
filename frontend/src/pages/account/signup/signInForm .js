@@ -1,7 +1,6 @@
-import { Divider } from "@mui/material";
-import TextField from "@mui/material/TextField";
 import React from "react";
 import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
+import { Divider } from "antd";
 
 const SigninForm = ({ handleFinish, setShowFrom }) => {
   return (
@@ -9,32 +8,11 @@ const SigninForm = ({ handleFinish, setShowFrom }) => {
       <h1 className="text-center p-2 text-6xl font-bold text-primary-color font-inter">Welcome</h1>
       <h6 className="text-center text-gray-400 text-sm">Login with Email</h6>
       <div className="py-7">
-        <TextField
-          id="email"
-          type="email"
-          size="small"
-          label="Email"
-          variant="outlined"
-          className="w-full"
-        />
+
       </div>
       <div>
 
-        <TextField
-          id="password"
-          label="Password"
-          size="small"
-          variant="outlined"
-          className="w-full"
-          type="password"
-          // InputProps={{
-          //   startAdornment: (
-          //     <InputAdornment position="start">
-          //       {/* <IconComponent /> */}get
-          //     </InputAdornment>
-          //   ),
-          // }}
-        />
+       
 
         <a href="#f" className="float-right text-slate-300 p-2 text-sm" onClick={() => setShowFrom("forgot")}>
           Forgot Password?

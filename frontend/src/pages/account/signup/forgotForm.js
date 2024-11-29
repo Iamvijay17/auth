@@ -1,6 +1,5 @@
-import { Divider } from "@mui/material";
-import TextField from "@mui/material/TextField";
 import React from "react";
+import { Divider } from "antd";
 import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
 
 const ForgotForm = ({ handleFinish, setShowFrom }) => {
@@ -9,14 +8,7 @@ const ForgotForm = ({ handleFinish, setShowFrom }) => {
       <h1 className="text-center p-2 text-6xl font-bold text-primary-color font-inter">Welcome</h1>
       <h6 className="text-center text-gray-400 text-sm">Login with Email</h6>
       <div className="py-7">
-        <TextField
-          id="email"
-          type="email"
-          size="small"
-          label="Email"
-          variant="outlined"
-          className="w-full"
-        />
+       
       </div>
       
       <div className="flex justify-center py-2">
