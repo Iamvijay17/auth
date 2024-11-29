@@ -13,7 +13,7 @@ import { Form } from "antd";
 const Signup = () => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
-  const [showFrom, setShowFrom] = useState('signin');
+  const [showFrom, setShowFrom] = useState('otp');
 
   const handleCreateFinish = (values) => {
     setIsLoading(true);

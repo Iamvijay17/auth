@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  important: true,
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
@@ -10,14 +11,14 @@ module.exports = {
         "text-color": "#333333",
         "error-color": "#EA4335",
         "success-color": "#34A853",
-        "warning-color": "#FBBC04",
+        "warning-color": "#FBBC04"
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
         inter: ["Inter", "sans-serif"],
-        dancingScript: ["Dancing Script", "cursive"],
-      },
-    },
+        dancingScript: ["Dancing Script", "cursive"]
+      }
+    }
   },
-  plugins: [],
+  plugins: []
 };
