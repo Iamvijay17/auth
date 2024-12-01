@@ -9,7 +9,7 @@ const SignupForm = ({ handleFinish, setShowFrom, form }) => {
   };
 
   return (
-    <div className="flex flex-col w-[60%]">
+    <div className="flex flex-col h-[60vh]">
       <h1 className="text-center p-2 text-6xl font-bold text-primary-color font-inter">Welcome</h1>
       <h6 className="text-center text-gray-400 text-sm">Signup with Email</h6>
       <div className="pt-7">

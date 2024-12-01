@@ -9,7 +9,7 @@ const ForgotForm = ({ handleFinish, setShowFrom, form }) => {
   };
 
   return (
-    <div className="flex flex-col w-[60%]">
+    <div className="flex flex-col h-[60vh]">
       <Form
         name="basic"
         onFinish={handleSubmit}
@@ -26,7 +26,7 @@ const ForgotForm = ({ handleFinish, setShowFrom, form }) => {
               }
             ]}
           >
-            <Input placeholder="Enter your email" size="large" />
+            <Input placeholder="Enter your email" size="large" className="hover:border-primary-color"/>
           </Form.Item>
         </div>
 

@@ -10,7 +10,7 @@ const ChangePasswordForm = ({ handleFinish, setShowFrom, form }) => {
 
 
   return (
-    <div className="flex flex-col w-[60%]">
+    <div className="flex flex-col">
       <Form
         name="basic"
         onFinish={handleSubmit}

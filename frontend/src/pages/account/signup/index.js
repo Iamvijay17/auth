@@ -5,7 +5,7 @@ import SignupForm from "./signUpForm";
 import styles from "./styles.module.css";
 import Loader from "../../../components/loader";
 import OtpForm from "./otpForm";
-import SigninForm from "./signInForm ";
+import SigninForm from "./signInForm";
 import ForgotForm from "./forgotForm";
 import ChangePasswordForm from "./changePasswordForm";
 import { Alert, Form } from "antd";
@@ -13,7 +13,7 @@ import { Alert, Form } from "antd";
 const Signup = () => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
-  const [showFrom, setShowFrom] = useState('otp');
+  const [showFrom, setShowFrom] = useState('forgot');
 
   const handleCreateFinish = (values) => {
     setIsLoading(true);
@@ -75,9 +75,9 @@ const Signup = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center h-[100%] bg-white">
+      <div className="bg-white ">
         {isLoading && <Loader />}
-        <div className="shadow-2xl w-[60%] h-[60%] rounded-2xl grid grid-cols-2 overflow-hidden">
+        <div className="shadow-2xl rounded-2xl grid grid-cols-2 overflow-hidden">
           <div
             className="text-center bg-cover bg-no-repeat h-full flex flex-col items-center px-4"
             style={{ backgroundImage: `url(${loginFormBg})` }}

@@ -9,12 +9,9 @@ const OtpForm = ({handleFinish, form}) => {
     console.log(otp);
   };
   return (
-    <div className="flex flex-col w-[60%]">
+    <div className="flex flex-col h-[60vh]">
       <Form
         name="basic"
-        initialValues={{
-          remember: true
-        }}
         form={form}
         onFinish={handleSubmit}
         autoComplete="off"
