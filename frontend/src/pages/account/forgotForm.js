@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider, Form, Input } from "antd";
-import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
+import { AppleIcon, FacebookIcon, GoogleIcon } from "../../components/icons";
 
 const ForgotForm = ({ handleFinish, setShowFrom, form }) => {
 

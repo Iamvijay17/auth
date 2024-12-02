@@ -2,7 +2,7 @@ import { Button, Modal, Typography } from 'antd';
 import React from 'react';
 import { IoSearch } from 'react-icons/io5';
 import { NavLink } from 'react-router-dom';
-import Signup from '../../pages/account/signup';
+import Signup from '../../pages/account';
 import styles from "./styles.module.css";
 
 const { Title } = Typography;

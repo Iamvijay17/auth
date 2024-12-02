@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import loginFormBg from "../../../assets/loginFormBg.png";
-import { AccountServiceAPI } from "../account.service";
+import loginFormBg from "../../assets/loginFormBg.png";
+import { AccountServiceAPI } from "./account.service";
 import SignupForm from "./signUpForm";
 import styles from "./styles.module.css";
-import Loader from "../../../components/loader";
+import Loader from "../../components/loader";
 import OtpForm from "./otpForm";
 import SigninForm from "./signInForm";
 import ForgotForm from "./forgotForm";

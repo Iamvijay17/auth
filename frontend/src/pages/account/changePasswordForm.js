@@ -1,5 +1,5 @@
 import React from "react";
-import { AppleIcon, FacebookIcon, GoogleIcon } from "../../../components/icons";
+import { AppleIcon, FacebookIcon, GoogleIcon } from "../../components/icons";
 import { Divider, Form, Input } from "antd";
 
 const ChangePasswordForm = ({ handleFinish, setShowFrom, form }) => {
