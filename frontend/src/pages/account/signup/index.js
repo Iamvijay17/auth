@@ -75,7 +75,7 @@ const Signup = () => {
 
   return (
     <>
-      <div className="bg-white ">
+      <div className="">
         {isLoading && <Loader />}
         <div className="shadow-2xl rounded-2xl grid grid-cols-2 overflow-hidden">
           <div

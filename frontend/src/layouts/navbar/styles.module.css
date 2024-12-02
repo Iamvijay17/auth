@@ -1,17 +1,19 @@
-.wrapper{
-    /* background-color: rgb(224, 230, 228); */
-    height: 5rem;
-    display: flex;
-    align-items: center;
+.wrapper {
+  /* background-color: rgb(224, 230, 228); */
+  height: 5rem;
+  display: flex;
+  align-items: center;
 
-    justify-content: space-around;
-.menu{
+  justify-content: space-around;
+  .menu {
     display: flex;
     gap: 2rem;
+  }
 }
 
-.ant-modal .ant-modal-content{
-    padding: unset !important;
+:global .ant-modal .ant-modal-content {
+  padding: 0 0 0 0 !important;
+  border-radius: 20px !important;
+  overflow: hidden  !important;
 }
 
-}

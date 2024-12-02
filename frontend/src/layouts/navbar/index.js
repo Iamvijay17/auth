@@ -17,9 +17,9 @@ const Navbar = () => {
       <div className={styles.menu}>
         <div>  <NavLink to="/"><Title level={5} className='hover:text-primary-color'>Home</Title></NavLink></div>
         <div>
-          <Title level={5} className='hover:text-primary-color'>Destination</Title></div>
-        <div><Title level={5} className='hover:text-primary-color'>Stories</Title></div>
-        <div><Title level={5} className='hover:text-primary-color'>Reviews</Title></div>
+          <NavLink to="destination">  <Title level={5} className='hover:text-primary-color'>Destination</Title></NavLink></div>
+        <div><NavLink to="stories"><Title level={5} className='hover:text-primary-color'>Stories</Title></NavLink></div>
+        <div><NavLink to="reviews"><Title level={5} className='hover:text-primary-color'>Reviews</Title></NavLink></div>
       </div>
       <div className="flex align-center gap-10">
         <IoSearch className='text-xl mt-3 hover:text-primary-color cursor-pointer'/>
@@ -34,10 +34,9 @@ const Navbar = () => {
           maskClosable={false}
           width={null}
           closeIcon={null}
-          style={{ padding: 0 }}
           centered
         >
-          <div className="">
+          <div className="!border-rounded-lg">
             <Signup />
           </div>
         </Modal>

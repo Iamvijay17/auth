@@ -1,3 +1,4 @@
+
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
@@ -18,20 +19,3 @@ code {
   font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-.tailwind-override .ant-btn {
-  all: unset;
-  display: inline-flex; /* Ensure the button works with Tailwind's utility classes */
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem; /* Add padding for better appearance */
-  font-size: 1rem; /* Set a base font size */
-  cursor: pointer; /* Ensure pointer cursor on hover */
-  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
-}
-
-.tailwind-override .ant-btn:hover {
-  background-color: #f0f0f0; /* Example hover effect */
-  color: #000;
-}
-
