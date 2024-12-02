@@ -4,6 +4,9 @@ import './App.css';
 import Navbar from './layouts/navbar';
 import heroBgVideo from './assets/hero/hero_bg_video.mp4';
 import Home from './pages/website/home';
+import Destination from './pages/website/destination';
+import Stories from './pages/website/stories';
+import Reviews from './pages/website/reviews';
 
 function App() {
   const location = useLocation();
@@ -30,9 +33,9 @@ function App() {
         <div className="relative z-10">
           <Routes>
             <Route path="/" element={<Home   />} />
-            {/* <Route path="/destination" element={<Destination />} />
+            <Route path="/destination" element={<Destination />} />
             <Route path="/stories" element={<Stories />} />
-            <Route path="/reviews" element={<Reviews />} /> */}
+            <Route path="/reviews" element={<Reviews />} />
           </Routes>
         </div>
       </div>
