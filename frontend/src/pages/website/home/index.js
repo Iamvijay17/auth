@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const Home = () => {
+
+  useEffect(() => {
+  
+  }, []);
+
   return (
-    <div>
-      hi im home
+    <div className='h-screen'>
+      <div className='text-3xl flex justify-center items-center h-screen'>
+         hi im home
+      </div>
     </div>
   );
 };

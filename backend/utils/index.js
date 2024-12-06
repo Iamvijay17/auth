@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
-export const generateToken = () => {
-  return Math.floor(1000 + Math.random() * 9000);
+export const generateVerificationCode = () => {
+   return Math.floor(100000 + Math.random() * 900000);
 };
 
 export const generateTokenAndSetCookie = (res, userId) => {
@@ -15,10 +15,15 @@ export const generateTokenAndSetCookie = (res, userId) => {
   });
 };
 
+export const generateAccessToken = (userId) => {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+};
+
 export const generatePasswordResetToken = (userId) => {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
-
   return token;
 };

@@ -1,9 +1,10 @@
 import { User } from "../models/user.js";
 import bcryptjs from "bcryptjs";
 import {
+  generateAccessToken,
   generatePasswordResetToken,
-  generateToken,
   generateTokenAndSetCookie,
+  generateVerificationCode,
 } from "../utils/index.js";
 import axios from "axios";
 import fs from "fs";
@@ -23,13 +24,13 @@ export const signup = async (req, res) => {
     }
 
     const hashedPassword = await bcryptjs.hash(password, 8);
-    const verificationToken = generateToken();
+    const verificationCode = generateVerificationCode();
 
     const user = new User({
       email,
       password: hashedPassword,
       name,
-      verificationToken,
+      verificationCode,
       verificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
@@ -38,7 +39,7 @@ export const signup = async (req, res) => {
     const saveUser = user.save();
     const sendEmail = axios.post(mailApiUrl, {
       email,
-      verificationToken,
+      verificationCode,
     });
 
     const [savedUser, emailResponse] = await Promise.all([saveUser, sendEmail]);
@@ -51,7 +52,7 @@ export const signup = async (req, res) => {
 
     return res.status(201).json({
       message: "User created successfully. Verification email sent.",
-      user: { ...savedUser._doc, password: undefined },
+      user: { ...savedUser._doc, password: undefined }
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -78,10 +79,12 @@ export const signin = async (req, res) => {
     }
 
     generateTokenAndSetCookie(res, user._id);
+    const accessToken = generateAccessToken(user._id);
 
     return res.status(200).json({
       message: "User signed in successfully",
       user: { ...user._doc, password: undefined },
+      accessToken
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -89,11 +92,15 @@ export const signin = async (req, res) => {
 };
 
 export const verify = async (req, res) => {
-  const { token } = req.params;
+  const { verificationCode, userId } = req.body;
+
+   if (!verificationCode || !userId) {
+    return res.status(400).json({ message: "Verification code and user ID are required" });
+  }
 
   try {
-    const user = await User.findOne({ verificationToken: token });
-
+     const user = await User.findOne({ _id: userId, verificationCode });
+    
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -106,7 +113,7 @@ export const verify = async (req, res) => {
       return res.status(400).json({ message: "User already verified" });
     }
 
-    if (user.verificationToken !== token) {
+    if (user.verificationCode !== token) {
       return res.status(400).json({ message: "Invalid verification token" });
     }
 
@@ -134,13 +141,15 @@ export const verify = async (req, res) => {
         console.log(error);
       } else {
         user.isVerified = true;
-        user.verificationToken = undefined;
+        user.verificationCode = undefined;
         user.verificationExpires = undefined;
         user.save();
       }
     });
 
-    return res.status(200).json({ message: "User verified successfully" });
+    const accessToken = generateAccessToken(user._id);
+
+    return res.status(200).json({ message: "User verified successfully", accessToken });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

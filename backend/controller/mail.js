@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import fs from "fs";
 
 export const signup_mail = async (req, res) => {
-  const { email, verificationToken } = req.body;
+  const { email, verificationCode } = req.body;
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -12,7 +12,7 @@ export const signup_mail = async (req, res) => {
     },
   });
 
-  const verification_link = `http://localhost:5000/api/v1/verify/${verificationToken}`;
+  const verification_link = `http://localhost:5000/api/v1/verify/${verificationCode}`;
 
   let htmlContent = fs.readFileSync(
     "./backend/templates/verification.html",
@@ -21,7 +21,7 @@ export const signup_mail = async (req, res) => {
 
   htmlContent = htmlContent
     .replace("{{verificationToken}}", verification_link)
-    .replace("{{otpCode}}", verificationToken);
+    .replace("{{otpCode}}", verificationCode);
 
   const mailOptions = {
     from: process.env.EMAIL,

@@ -8,18 +8,20 @@ import OtpForm from "./otpForm";
 import SigninForm from "./signInForm";
 import ForgotForm from "./forgotForm";
 import ChangePasswordForm from "./changePasswordForm";
-import { Alert, Form } from "antd";
+import { message, Form } from "antd";
 
-const Signup = () => {
+const Signup = ({setIsModalOpen}) => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
-  const [showFrom, setShowFrom] = useState('forgot');
+  const [showFrom, setShowFrom] = useState('signin');
 
   const handleCreateFinish = (values) => {
     setIsLoading(true);
     AccountServiceAPI.createAccount(values)
       .then((res) => {
         setIsLoading(false);
+        message.success("Account created successfully");
+        message.success("Please verify your email");
         setShowFrom('otp');
       })
       .catch((err) => {
@@ -32,6 +34,8 @@ const Signup = () => {
     AccountServiceAPI.login(values)
       .then((res) => {
         setIsLoading(false);
+        setIsModalOpen(false);
+        message.success("Login successful");
       })
       .catch((err) => {
         setIsLoading(false);
@@ -43,11 +47,11 @@ const Signup = () => {
     AccountServiceAPI.verifyOtp(values)
       .then((res) => {
         setIsLoading(false);
-        <Alert message="Success" type="success" showIcon />;
+        setIsModalOpen(false);
+        message.success("Login successful");
       })
       .catch((err) => {
         setIsLoading(false);
-        <Alert message="Error" type="error" showIcon />;
       });
   };
 

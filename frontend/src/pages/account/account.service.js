@@ -6,10 +6,10 @@ export const AccountServiceAPI = {
     return axios.post(`${BASE_URL}/signup`, data);
   },
   verifyOtp(data) {
-    return axios.post(`${BASE_URL}/verify/${data}`);
+    return axios.post(`${BASE_URL}/verify`, data);
   },
   login(data) {
-    return axios.post(`${BASE_URL}/login`, data);
+    return axios.post(`${BASE_URL}/signin`, data);
   },
   forgotPassword(data) {
     return axios.post(`${BASE_URL}/forgot-password`, data);

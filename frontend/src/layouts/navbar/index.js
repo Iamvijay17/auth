@@ -37,7 +37,7 @@ const Navbar = () => {
           centered
         >
           <div className="!border-rounded-lg">
-            <Signup />
+            <Signup setIsModalOpen={setIsModalOpen}/>
           </div>
         </Modal>
 

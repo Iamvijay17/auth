@@ -13,7 +13,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className="relative w-full h-screen">
+      <div className="relative w-full h-screen ">
         {location.pathname === '/' &&
         <video
           className="absolute top-0 left-0 w-full h-full object-cover"
