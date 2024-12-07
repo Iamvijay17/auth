@@ -11,11 +11,14 @@ import ChangePasswordForm from "./changePasswordForm";
 import { message, Form } from "antd";
 import { generateId } from "../../utils";
 import { getCookie, setCookie } from "../../utils/cookies";
+import { fetchUserById } from "../../store/userByIdSlice";
+import { useDispatch } from "react-redux";
 
 const Signup = ({setIsModalOpen}) => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [showFrom, setShowFrom] = useState('signin');
+  const dispatch = useDispatch();
 
   const handleCreateFinish = (values) => {
     values['userId'] = generateId('USR');
@@ -40,8 +43,10 @@ const Signup = ({setIsModalOpen}) => {
       .then((res) => {
         setIsLoading(false);
         setIsModalOpen(false);
+        setCookie('accessToken', res.accessToken);
+        setCookie('userId', res.user.userId);
+        dispatch(fetchUserById());
         message.success("Login successful");
-        console.log(res);
       })
       .catch((err) => {
         setIsLoading(false);

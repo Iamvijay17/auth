@@ -1,22 +1,65 @@
-import { Avatar, Button, Modal, Typography } from 'antd';
-import React, { useEffect } from 'react';
+import { Avatar, Button, Dropdown, Modal, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { IoSearch } from 'react-icons/io5';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import Signup from '../../pages/account';
 import styles from "./styles.module.css";
-import { getCookie } from '../../utils/cookies';
+import { deleteCookie, getCookie } from '../../utils/cookies';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserById } from '../../store/userByIdSlice';
+import { VscAccount } from "react-icons/vsc";
+import { IoLogOutOutline } from "react-icons/io5";
+import { MdOutlineDashboard } from "react-icons/md";
 
 const { Title } = Typography;
 
 const Navbar = () => {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const accessToken = getCookie('accessToken');
-  const userId = getCookie('userId');
+  const userById = useSelector((state) => state.userById);
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
- 
-  }, [accessToken, userId]);
+    dispatch(fetchUserById());
 
+  }, [dispatch]);
+
+  const handleLogOut = () => {
+    deleteCookie('accessToken');
+    deleteCookie('userId');
+    navigate('/');
+  };
+
+  const items = [
+    {
+      key: '1',
+      label: <Link to="/profile">Profile</Link>,
+      icon: <VscAccount size={16}/>
+    },{
+      key: '2',
+      label: <Link to="/dashboard">Dashboard</Link>,
+      icon: <MdOutlineDashboard  size={16}/>
+    },
+    {
+      type: 'divider'
+    },
+    {
+      key: '3',
+      label: 'Logout',
+      danger: true,
+      icon: <IoLogOutOutline size={18}/>
+
+    }
+  ];
+
+  const DropdownMenuHandleClick = (e) => {
+    if (e.key === "3") {
+      handleLogOut();
+    }
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -31,9 +74,23 @@ const Navbar = () => {
       <div className="flex align-center gap-10">
         <IoSearch className='text-xl mt-3 hover:text-primary-color cursor-pointer'/>
         {
-          accessToken ? <Avatar size={40} style={{ backgroundColor: '#fde3cf', color: '#f56a00'}}>U</Avatar> :
-            <Button size='large' shape="round" className='hover:text-primary-color hover:border-primary-color font-semibold' onClick={() => setIsModalOpen(true)}>Login</Button>
+          accessToken ? (
+            userById?.data?.name ? (
+              <Dropdown menu={{ items, onClick: DropdownMenuHandleClick }} trigger={['click']}>
+                <Avatar size={34} shape="circle">
+                  {userById.data.name.charAt(0).toUpperCase() ?? ''}
+                </Avatar>
+              </Dropdown>
+            ) : null
+          ) : (
+            <Button
+              size="large"
+              shape="round"
+              className="hover:text-primary-color hover:border-primary-color font-semibold"
+              onClick={() => setIsModalOpen(true)}>Login</Button>
+          )
         }
+
       </div>
 
       <>
