@@ -11,11 +11,11 @@ import fs from "fs";
 import nodemailer from "nodemailer";
 
 export const signup = async (req, res) => {
-  const { email, password, name } = req.body;
-
-  if (!email || !password || !name) {
+  const { email, password, name, userId } = req.body;
+  if (!email || !password || !name || !userId) {
     return res.status(400).json({ message: "All fields are required" });
   }
+  console.log(req.body);
 
   try {
     const userAlreadyExists = await User.findOne({ email }).select('_id');
@@ -30,6 +30,7 @@ export const signup = async (req, res) => {
       email,
       password: hashedPassword,
       name,
+      userId,
       verificationCode,
       verificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
@@ -72,6 +73,13 @@ export const signin = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+     if (!user.isVerified) {
+      if (Date.now() > user.verificationExpires) {
+        return res.status(400).json({ message: "Verification token expired. Please request a new verification email." });
+      }
+      return res.status(400).json({ message: "User not verified. Please check your email to verify your account." });
+    }
+
     const isPasswordValid = await bcryptjs.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -98,8 +106,10 @@ export const verify = async (req, res) => {
     return res.status(400).json({ message: "Verification code and user ID are required" });
   }
 
+  console.log( req.body);
   try {
-     const user = await User.findOne({ _id: userId, verificationCode });
+   const user = await User.findOne({ userId: userId, verificationCode: verificationCode });
+
     
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -113,7 +123,7 @@ export const verify = async (req, res) => {
       return res.status(400).json({ message: "User already verified" });
     }
 
-    if (user.verificationCode !== token) {
+    if (user.verificationCode !== verificationCode) {
       return res.status(400).json({ message: "Invalid verification token" });
     }
 
@@ -147,7 +157,7 @@ export const verify = async (req, res) => {
       }
     });
 
-    const accessToken = generateAccessToken(user._id);
+    const accessToken = generateAccessToken(userId.userId);
 
     return res.status(200).json({ message: "User verified successfully", accessToken });
   } catch (error) {

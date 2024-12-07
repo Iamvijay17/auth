@@ -12,7 +12,7 @@ const ChangePasswordForm = ({ handleFinish, setShowFrom, form }) => {
   return (
     <div className="flex flex-col">
       <Form
-        name="basic"
+        name="changePassword"
         onFinish={handleSubmit}
         // onFinishFailed={onFinishFailed}
         autoComplete="off"

@@ -19,7 +19,7 @@ router.post("/signup-mail", signup_mail); // Send email after signup (Verificati
 router.post("/forgot-password-mail", forgotPassword_mail); // Send email for forgot password (reset link email)
 
 // Verification route (email verification)
-router.post("/verify/:token", verify);
+router.post("/verify", verify);
 
 // Password reset routes
 router.post("/forgot-password", forgotPassword); // Handle password reset request

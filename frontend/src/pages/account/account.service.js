@@ -1,20 +1,19 @@
-import axios from "axios";
-import { BASE_URL } from "../../config/api";
+import { api } from "../../config/api";
 
 export const AccountServiceAPI = {
   createAccount(data) {
-    return axios.post(`${BASE_URL}/signup`, data);
+    return api.post(`/signup`, data);
   },
   verifyOtp(data) {
-    return axios.post(`${BASE_URL}/verify`, data);
+    return api.post(`/verify`, data);
   },
   login(data) {
-    return axios.post(`${BASE_URL}/signin`, data);
+    return api.post(`/signin`, data);
   },
   forgotPassword(data) {
-    return axios.post(`${BASE_URL}/forgot-password`, data);
+    return api.post(`/forgot-password`, data);
   },
   changePassword(data) {
-    return axios.post(`${BASE_URL}/change-password`, data);
+    return api.post(`/change-password`, data);
   }
 };

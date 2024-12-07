@@ -11,7 +11,7 @@ const ForgotForm = ({ handleFinish, setShowFrom, form }) => {
   return (
     <div className="flex flex-col h-[60vh]">
       <Form
-        name="basic"
+        name="forgot"
         onFinish={handleSubmit}
         autoComplete="off" >
         <h1 className="text-center p-2 text-6xl font-bold text-primary-color font-inter">Welcome</h1>

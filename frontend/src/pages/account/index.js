@@ -9,6 +9,8 @@ import SigninForm from "./signInForm";
 import ForgotForm from "./forgotForm";
 import ChangePasswordForm from "./changePasswordForm";
 import { message, Form } from "antd";
+import { generateId } from "../../utils";
+import { getCookie, setCookie } from "../../utils/cookies";
 
 const Signup = ({setIsModalOpen}) => {
   const [form] = Form.useForm();
@@ -16,15 +18,18 @@ const Signup = ({setIsModalOpen}) => {
   const [showFrom, setShowFrom] = useState('signin');
 
   const handleCreateFinish = (values) => {
+    values['userId'] = generateId('USR');
     setIsLoading(true);
-    AccountServiceAPI.createAccount(values)
-      .then((res) => {
+    AccountServiceAPI.createAccount(values).then(
+      (res) => {
+        console.log(res);
         setIsLoading(false);
         message.success("Account created successfully");
-        message.success("Please verify your email");
+        message.warning("Please verify your email");
+        setCookie('userId', res.user.userId);
         setShowFrom('otp');
-      })
-      .catch((err) => {
+      },
+      (err) => {
         setIsLoading(false);
       });
   };
@@ -36,18 +41,27 @@ const Signup = ({setIsModalOpen}) => {
         setIsLoading(false);
         setIsModalOpen(false);
         message.success("Login successful");
+        console.log(res);
       })
       .catch((err) => {
         setIsLoading(false);
+        message.error(err.response.data.message);
+
+        if (err.response.data.message === "User not verified. Please check your email to verify your account.") {
+          setShowFrom('otp');
+        }
+
       });
   };
 
   const handleOtpFinish = (values) => {
     setIsLoading(true);
+    values['userId'] = getCookie('userId');
     AccountServiceAPI.verifyOtp(values)
       .then((res) => {
         setIsLoading(false);
         setIsModalOpen(false);
+        setCookie('accessToken', res.accessToken);
         message.success("Login successful");
       })
       .catch((err) => {

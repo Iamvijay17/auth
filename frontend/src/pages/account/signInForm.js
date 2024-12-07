@@ -16,7 +16,7 @@ const SigninForm = ({ handleFinish, setShowFrom, form }) => {
       <h6 className="text-center text-gray-400 text-sm">Login with Email</h6>
       <div className="pt-7">
         <Form
-          name="basic"
+          name="signin"
           onFinish={handleSubmit}
         // onFinishFailed={onFinishFailed}
           autoComplete="off"
