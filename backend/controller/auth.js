@@ -86,8 +86,8 @@ export const signin = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    generateTokenAndSetCookie(res, user._id);
-    const accessToken = generateAccessToken(user._id);
+    generateTokenAndSetCookie(res, user.userId);
+    const accessToken = generateAccessToken(user.userId);
 
     return res.status(200).json({
       message: "User signed in successfully",
@@ -106,7 +106,6 @@ export const verify = async (req, res) => {
     return res.status(400).json({ message: "Verification code and user ID are required" });
   }
 
-  console.log( req.body);
   try {
    const user = await User.findOne({ userId: userId, verificationCode: verificationCode });
 
@@ -157,7 +156,7 @@ export const verify = async (req, res) => {
       }
     });
 
-    const accessToken = generateAccessToken(userId.userId);
+    const accessToken = generateAccessToken(userId);
 
     return res.status(200).json({ message: "User verified successfully", accessToken });
   } catch (error) {

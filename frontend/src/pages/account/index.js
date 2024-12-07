@@ -50,7 +50,6 @@ const Signup = ({setIsModalOpen}) => {
         if (err.response.data.message === "User not verified. Please check your email to verify your account.") {
           setShowFrom('otp');
         }
-
       });
   };
 

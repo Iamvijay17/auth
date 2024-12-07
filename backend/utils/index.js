@@ -5,7 +5,7 @@ export const generateVerificationCode = () => {
 };
 
 export const generateTokenAndSetCookie = (res, userId) => {
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
   res.cookie("token", token, {
@@ -16,13 +16,13 @@ export const generateTokenAndSetCookie = (res, userId) => {
 };
 
 export const generateAccessToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+  return jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 };
 
 export const generatePasswordResetToken = (userId) => {
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
   return token;
