@@ -16,15 +16,26 @@ const port = process.env.PORT || 3000;
 const version = process.env.API_VERSION || 'v1'; // Default version to 'v1' if not defined
 
 // Set allowed origins for CORS based on environment
-const allowedOrigins = process.env.NODE_ENV === 'production'  ? ['https://wanderlustvoyages.vercel.app'] : ['http://localhost:3000'];
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? ['https://wanderlustvoyages.vercel.app']
+  : ['http://localhost:3000'];
 
 // Use CORS middleware with dynamic origin handling
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow all origins during development or if no origin is provided (e.g. testing)
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
 // Apply compression for response optimization
 app.use(compression());
