@@ -3,7 +3,7 @@ import { getCookie } from '../utils/cookies';
 
 const accessToken = getCookie('accessToken');
 
-export const HOST = 'http://localhost:5000';
+export const HOST = process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'https://api.example.com';
 export const VERSION = 'v1';
 export const BASE_URL  = `${HOST}/api/${VERSION}`;
 
