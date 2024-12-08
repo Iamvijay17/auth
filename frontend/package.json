@@ -10,6 +10,7 @@
     "antd": "^5.22.2",
     "antd-form-builder": "^2.1.4",
     "axios": "^1.7.9",
+    "env-cmd": "^10.1.0",
     "js-cookie": "^3.0.5",
     "nanoid": "^5.0.9",
     "react": "^18.3.1",
@@ -20,13 +21,12 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "scripts": {
-    "dev": "NODE_ENV=development react-scripts start",
-    "start": "NODE_ENV=production react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+"scripts": {
+  "dev": "env-cmd -f .env.development react-scripts start",
+  "start": "env-cmd -f .env.production react-scripts start",
+  "build": "react-scripts build",
+  "test": "react-scripts test"
+},
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -20,13 +20,19 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-const allowedOrigins = process.env.NODE_ENV === 'production' ? ['https://wanderlustvoyages.vercel.app/'] : ['http://localhost:3000'];
+const allowedOrigins = process.env.NODE_ENV === 'production' ? ['https://wanderlustvoyages.vercel.app'] : ['http://localhost:3000'];
+
+// app.use(cors({
+//     origin: allowedOrigins,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: ['Content-Type', 'Authorization']
+// }));
 
 app.use(cors({
-    origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+    origin:[process.env.ORIGIN],
+    methods:["GET", "PUT", "DELETE", "POST", "PATCH"],
+    credentials: true
+}))
 
 app.use(compression());
 app.use(express.json());
