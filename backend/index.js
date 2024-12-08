@@ -21,21 +21,15 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
   : ['http://localhost:3000'];
 
 // Use CORS middleware with dynamic origin handling
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow all origins during development or if no origin is provided (e.g. testing)
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 // Apply compression for response optimization
 app.use(compression());
