@@ -9,7 +9,7 @@ import AuthRouter from "./routes/auth.js";
 import userRouter from "./routes/userRoutes.js";
 import swaggerSpec from "./swagger.js";
 
-
+const cors = require('cors');
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
