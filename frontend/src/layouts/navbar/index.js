@@ -63,7 +63,7 @@ const Navbar = () => {
 
   return (
     <div className={styles.wrapper}>
-      <div>Hi Navbar</div>
+      <div>Logo</div>
       <div className={styles.menu}>
         <div>  <NavLink to="/"><Title level={5} className='hover:text-primary-color'>Home</Title></NavLink></div>
         <div>

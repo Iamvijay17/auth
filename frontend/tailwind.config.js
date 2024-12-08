@@ -11,7 +11,8 @@ module.exports = {
         "text-color": "#333333",
         "error-color": "#EA4335",
         "success-color": "#34A853",
-        "warning-color": "#FBBC04"
+        "warning-color": "#FBBC04",
+        "secondary-white": "#F2F2F2"
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
