@@ -20,7 +20,14 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-app.use(cors());
+const allowedOrigins = process.env.NODE_ENV === 'production' ? ['https://wanderlustvoyages.vercel.app/'] : ['http://localhost:3000'];
+
+app.use(cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(compression());
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
