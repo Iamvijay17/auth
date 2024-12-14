@@ -19,14 +19,19 @@ const version = process.env.API_VERSION || 'v1'; // Default version to 'v1' if n
 const allowedOrigins = process.env.NODE_ENV === 'production'
   ? ['https://wanderlustvoyages.vercel.app']
   : ['http://localhost:3000'];
-
+// Middleware to handle CORS
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // Allow from any origin
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-  });
+  res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allow specific HTTP methods
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specific headers in requests
 
+  // For preflight requests, send an immediate response
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  next(); // Pass control to the next middleware
+});
 // Apply compression for response optimization
 app.use(compression());
 
