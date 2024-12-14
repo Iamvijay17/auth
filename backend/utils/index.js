@@ -17,7 +17,7 @@ export const generateTokenAndSetCookie = (res, userId) => {
 
 export const generateAccessToken = (userId) => {
   return jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
-    expiresIn: "30d",
+    expiresIn: "365d",
   });
 };
 
