@@ -7,31 +7,29 @@ import swaggerUi from "swagger-ui-express";
 import AuthRouter from "./routes/auth.js";
 import userRouter from "./routes/userRoutes.js";
 import swaggerSpec from "./swagger.js";
+import cors from "cors";
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const version = process.env.API_VERSION || 'v1'; // Default version to 'v1' if not defined
+const version = process.env.API_VERSION || "v1"; // Default version to 'v1' if not defined
 
 // Set allowed origins for CORS based on environment
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? ['https://wanderlustvoyages.vercel.app']
-  : ['http://localhost:3000'];
-// Middleware to handle CORS
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allow specific HTTP methods
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow specific headers in requests
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? ["https://wanderlustvoyages.vercel.app"]
+    : ["http://localhost:3000"];
 
-  // For preflight requests, send an immediate response
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
+    allowedHeaders: "Content-Type, Authorization",
+  })
+);
 
-  next(); // Pass control to the next middleware
-});
 // Apply compression for response optimization
 app.use(compression());
 
@@ -44,7 +42,7 @@ app.get("/", (req, res) => {
 });
 
 // Set up Swagger documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Define API routes with versioning
 app.use(`/api/${version}`, AuthRouter);
