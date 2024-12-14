@@ -7,7 +7,6 @@ import swaggerUi from "swagger-ui-express";
 import AuthRouter from "./routes/auth.js";
 import userRouter from "./routes/userRoutes.js";
 import swaggerSpec from "./swagger.js";
-import cors from "cors";
 
 // Load environment variables
 dotenv.config();
