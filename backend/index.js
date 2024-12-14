@@ -7,6 +7,7 @@ import swaggerUi from "swagger-ui-express";
 import AuthRouter from "./routes/auth.js";
 import userRouter from "./routes/userRoutes.js";
 import swaggerSpec from "./swagger.js";
+import mongoose from "mongoose";
 
 // Load environment variables
 dotenv.config();
@@ -35,6 +36,17 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+app.get("/test-db", async (req, res) => {
+  try {
+    // Attempt to read some data or check the connection
+    const stats = await mongoose.connection.db.stats();
+    res.status(200).json({ success: true, stats });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 
 // Set up Swagger documentation
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
