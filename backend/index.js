@@ -37,15 +37,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/test-db", async (req, res) => {
-  try {
-    // Attempt to read some data or check the connection
-    const stats = await mongoose.connection.db.stats();
-    res.status(200).json({ success: true, stats });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+
 
 
 // Set up Swagger documentation
@@ -59,4 +51,13 @@ app.use(`/api/${version}`, userRouter);
 app.listen(port, () => {
   connectDB(); // Ensure the database is connected
   console.log(`Server is running on port ${port}`);
+});
+app.get("/test-db", async (req, res) => {
+  try {
+    // Attempt to read some data or check the connection
+    const stats = await mongoose.connection.db.stats();
+    res.status(200).json({ success: true, stats });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
