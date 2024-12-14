@@ -127,7 +127,7 @@ export const verify = async (req, res) => {
     }
 
     let htmlContent = fs.readFileSync(
-      "./backend/templates/verificationDone.html",
+      "./templates/verificationDone.html",
       "utf8"
     );
 

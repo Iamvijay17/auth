@@ -11,16 +11,16 @@ if (process.env.REACT_APP_ENV === "development") {
 }
 
 // Set the API host based on the environment (development or production)
-// const HOST =
-//   process.env.REACT_APP_ENV === "production"
-//     ? "https://wanderlustvoyagesservice.vercel.app"
-//     : "http://localhost:3000"; // or another local API endpoint for development
+const HOST =
+  process.env.REACT_APP_ENV === "production"
+    ? "https://wanderlustvoyagesservice.vercel.app"
+    : "http://localhost:5000"; // or another local API endpoint for development
 
 // API Version
 export const VERSION = "v1";
 
 // Combine the host and version into the base URL for the API
-export const BASE_URL = `${"https://wanderlustvoyagesservice.vercel.app"}/api/${VERSION}`;
+export const BASE_URL = `${HOST}/api/${VERSION}`;
 
 // Create an Axios instance
 export const api = axios.create({

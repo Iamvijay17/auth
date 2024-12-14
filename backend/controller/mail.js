@@ -54,7 +54,7 @@ export const forgotPassword_mail = async (req, res) => {
   const resetPassword_link = `http://localhost:5000/api/v1/reset-password/${resetPasswordToken}`;
 
   let htmlContent = fs.readFileSync(
-    "./backend/templates/resetPassword.html",
+    "./templates/resetPassword.html",
     "utf8"
   );
 
