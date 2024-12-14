@@ -17,14 +17,15 @@ const port = process.env.PORT || 3000;
 const version = process.env.API_VERSION || "v1"; // Default version to 'v1' if not defined
 
 
-app.use(
-  cors({
-    origin: "*",
-    methods: "GET, POST, PUT, DELETE, OPTIONS",
-    allowedHeaders: "Content-Type, Authorization",
-    credentials: true,
-  })
-);
+// Update the CORS configuration based on environment
+const corsOptions = {
+  origin: process.env.NODE_ENV === "production" ? "https://your-frontend-domain.com" : "*", // Use your actual frontend domain in production
+  methods: "GET, POST, PUT, DELETE, OPTIONS",
+  allowedHeaders: "Content-Type, Authorization",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // Apply compression for response optimization
 app.use(compression());
