@@ -18,14 +18,15 @@ const version = process.env.API_VERSION || "v1"; // Default version to 'v1' if n
 // Set allowed origins for CORS based on environment
 const allowedOrigins =
   process.env.NODE_ENV === "production"
-    ? ["https://wanderlustvoyages.vercel.app"]
-    : ["http://localhost:3000"];
+    ? "https://wanderlustvoyages.vercel.app"
+    : "http://localhost:3000";
 
 app.use(
   cors({
     origin: allowedOrigins,
     methods: "GET, POST, PUT, DELETE, OPTIONS",
     allowedHeaders: "Content-Type, Authorization",
+    credentials: true,
   })
 );
 
