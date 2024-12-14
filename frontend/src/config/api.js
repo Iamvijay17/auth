@@ -3,10 +3,8 @@ import { getCookie } from '../utils/cookies';
 
 const accessToken = getCookie('accessToken');
 console.log(process.env );
-const isDevelopment = process.env.REACT_APP_ENV  === 'development';
-export const HOST = isDevelopment
-  ? "http://localhost:5000"
-  : "https://wanderlustvoyagesservice.vercel.app/";  // https://wanderlustvoyagesservice.vercel.app
+// const isDevelopment = process.env.REACT_APP_ENV  === 'development';
+export const HOST = "https://wanderlustvoyagesservice.vercel.app";
 
 export const VERSION = 'v1';
 export const BASE_URL  = `${HOST}/api/${VERSION}`;
