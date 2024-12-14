@@ -54,10 +54,10 @@ app.listen(port, () => {
 });
 app.get("/test-db", async (req, res) => {
   try {
-    // Attempt to read some data or check the connection
-    const stats = await mongoose.connection.db.stats();
-    res.status(200).json({ success: true, stats });
+    await connectDB(); // Ensure the DB connection
+    res.status(200).send("MongoDB connected successfully.");
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).send("MongoDB connection failed.");
+    console.error("MongoDB connection error:", error);
   }
 });
