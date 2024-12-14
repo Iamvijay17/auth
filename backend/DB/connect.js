@@ -5,7 +5,9 @@ mongoose.set("strictQuery", true);
 
 // Database connection function
 export const connectDB = async () => {
-  const MONGODB_URI = process.env.MONGODB_URI;
+  const MONGODB_URI = "mongodb+srv://clevermerkle2:EckzTOeZjqb1POOi@curddb.r9ufyvy.mongodb.net/wanderlust_voyages?retryWrites=true&w=majority&appName=wanderlust_voyages";
+
+//   const MONGODB_URI = process.env.MONGODB_URI;
 
   if (!MONGODB_URI) {
     console.error(
