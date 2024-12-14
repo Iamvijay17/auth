@@ -15,15 +15,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 const version = process.env.API_VERSION || "v1"; // Default version to 'v1' if not defined
 
-// Set allowed origins for CORS based on environment
-const allowedOrigins =
-  process.env.NODE_ENV === "production"
-    ? "https://wanderlustvoyages.vercel.app"
-    : "http://localhost:3000";
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: "*",
     methods: "GET, POST, PUT, DELETE, OPTIONS",
     allowedHeaders: "Content-Type, Authorization",
     credentials: true,
