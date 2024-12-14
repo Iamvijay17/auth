@@ -15,7 +15,7 @@ export const signup_mail = async (req, res) => {
   const verification_link = `http://localhost:5000/api/v1/verify/${verificationCode}`;
 
   let htmlContent = fs.readFileSync(
-    "./backend/templates/verification.html",
+    "./templates/verification.html",
     "utf8"
   );
 
