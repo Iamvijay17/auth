@@ -18,14 +18,21 @@ const version = process.env.API_VERSION || "v1"; // Default version to 'v1' if n
 
 
 // Update the CORS configuration based on environment
-const corsOptions = {
-  origin: process.env.NODE_ENV === "production" ? "https://your-frontend-domain.com" : "*", // Use your actual frontend domain in production
-  methods: "GET, POST, PUT, DELETE, OPTIONS",
-  allowedHeaders: "Content-Type, Authorization",
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: process.env.NODE_ENV === "production" ? "https://your-frontend-domain.com" : "*", // Use your actual frontend domain in production
+//   methods: "GET, POST, PUT, DELETE, OPTIONS",
+//   allowedHeaders: "Content-Type, Authorization",
+//   credentials: true,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // Allow from any origin
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 // Apply compression for response optimization
 app.use(compression());
