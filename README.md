@@ -5,5 +5,5 @@
 ## Live
 
 ### UI : https://wanderlustvoyages.vercel.app/
-### Swagger : 
+### Swagger : https://wanderlust-voyages-service.onrender.com/api-docs/
 
