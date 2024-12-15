@@ -12,7 +12,7 @@ export const signup_mail = async (req, res) => {
     },
   });
 
-  const verification_link = `http://localhost:5000/api/v1/verify/${verificationCode}`;
+  const verification_link = `https://wanderlust-voyages-service.onrender.com/api/v1/verify/${verificationCode}`;
 
   let htmlContent = fs.readFileSync(
     "./templates/verification.html",
@@ -51,7 +51,7 @@ export const forgotPassword_mail = async (req, res) => {
     },
   });
 
-  const resetPassword_link = `http://localhost:5000/api/v1/reset-password/${resetPasswordToken}`;
+  const resetPassword_link = `https://wanderlust-voyages-service.onrender.com/api/v1/reset-password/${resetPasswordToken}`;
 
   let htmlContent = fs.readFileSync(
     "./templates/resetPassword.html",

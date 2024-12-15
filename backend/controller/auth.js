@@ -35,7 +35,7 @@ export const signup = async (req, res) => {
       verificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
     });
 
-    const mailApiUrl = "http://localhost:5000/api/v1/signup-mail";
+    const mailApiUrl = "https://wanderlust-voyages-service.onrender.com/api/v1/signup-mail";
 
     const saveUser = user.save();
     const sendEmail = axios.post(mailApiUrl, {

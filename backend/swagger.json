@@ -37,6 +37,10 @@
                     "type": "string",
                     "example": "john_doe"
                   },
+                  "userId": {
+                    "type": "string",
+                    "example": "usr-35cfe51232"
+                  },
                   "email": {
                     "type": "string",
                     "example": "john@example.com"
