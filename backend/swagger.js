@@ -1,34 +1,15 @@
-import swaggerJsdoc from 'swagger-jsdoc';
+import fs from "fs";
 
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API',
-      version: '1.0.0',
-      description: 'API for managing users, including creating, updating, deleting, and fetching user details.',
-    },
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
-    },
-    security: [
-      {
-        bearerAuth: [], // Apply JWT authentication globally to all routes
-      },
-    ],
-  },
-  apis: [
-    './routes/auth.js',
-     './routes/userRoutes.js'
-    ],
+const loadJson = () => {
+  try {
+    const file = fs.readFileSync("./swagger.json", "utf8"); // Adjust path as needed
+    return JSON.parse(file);
+  } catch (error) {
+    console.error("Error loading Swagger JSON file:", error.message);
+    throw error;
+  }
 };
 
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
+const swaggerSpec = loadJson();
 
 export default swaggerSpec;

@@ -1,21 +1,18 @@
 import compression from "compression";
-import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { connectDB } from "./DB/connect.js";
 import swaggerUi from "swagger-ui-express";
+import { connectDB } from "./DB/connect.js";
 import AuthRouter from "./routes/auth.js";
 import userRouter from "./routes/userRoutes.js";
 import swaggerSpec from "./swagger.js";
-import mongoose from "mongoose";
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const version = process.env.API_VERSION || "v1"; // Default version to 'v1' if not defined
-
+const version = process.env.API_VERSION || "v1";
 
 // Update the CORS configuration based on environment
 // const corsOptions = {
@@ -45,9 +42,6 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-
-
-
 // Set up Swagger documentation
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -59,13 +53,4 @@ app.use(`/api/${version}`, userRouter);
 app.listen(port, () => {
   connectDB(); // Ensure the database is connected
   console.log(`Server is running on port ${port}`);
-});
-app.get("/test-db", async (req, res) => {
-  try {
-    await connectDB(); // Ensure the DB connection
-    res.status(200).send("MongoDB connected successfully.");
-  } catch (error) {
-    res.status(500).send("MongoDB connection failed.");
-    console.error("MongoDB connection error:", error);
-  }
 });
