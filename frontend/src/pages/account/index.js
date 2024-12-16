@@ -43,16 +43,17 @@ const Signup = ({setIsModalOpen}) => {
       .then((res) => {
         setIsLoading(false);
         setIsModalOpen(false);
-        setCookie('accessToken', res.accessToken);
-        setCookie('userId', res.user.userId);
+        setCookie('accessToken', res?.accessToken);
+        setCookie('userId', res.user?.userId);
         dispatch(fetchUserById());
         message.success("Login successful");
       })
       .catch((err) => {
         setIsLoading(false);
-        message.error(err.response.data.message);
+        console.log(err);
+        message.error(err.response?.data?.message);
 
-        if (err.response.data.message === "User not verified. Please check your email to verify your account.") {
+        if (err.response?.data?.message === "User not verified. Please check your email to verify your account.") {
           setShowFrom('otp');
         }
       });

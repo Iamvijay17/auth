@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const adminSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     userId: { type: String, required: true, unique: true },
@@ -12,10 +12,10 @@ const userSchema = new mongoose.Schema(
     resetPasswordExpires: { type: Date },
     verificationCode: { type: String },
     verificationExpires: { type: Date },
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
+    role: { type: String, default: "admin" }, // Fixed role for admin
+    permissions: {
+      type: [String],
+      default: ["manageUsers", "manageDestinations", "viewReports"], // List of admin permissions
     },
   },
   {
@@ -23,5 +23,5 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
-export default User;
+const Admin = mongoose.model("Admin", adminSchema);
+export default Admin;

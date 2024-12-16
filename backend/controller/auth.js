@@ -15,27 +15,36 @@ export const signup = async (req, res) => {
   if (!email || !password || !name || !userId) {
     return res.status(400).json({ message: "All fields are required" });
   }
-  console.log(req.body);
 
   try {
-    const userAlreadyExists = await User.findOne({ email }).select('_id');
+    // Check if user already exists
+    const userAlreadyExists = await User.findOne({ email }).select("_id");
     if (userAlreadyExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    // Hash the password
     const hashedPassword = await bcryptjs.hash(password, 8);
     const verificationCode = generateVerificationCode();
 
+    // Check if this is the first user
+    const userCount = await User.countDocuments();
+    const role = userCount === 0 ? "admin" : "user"; // Assign admin role to the first user
+
+    // Create the user
     const user = new User({
       email,
       password: hashedPassword,
       name,
       userId,
+      role, // Assign role dynamically
       verificationCode,
-      verificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      verificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours expiry
     });
 
-    const mailApiUrl = "https://wanderlust-voyages-service.onrender.com/api/v1/signup-mail";
+    // Mail API for sending verification email
+    const mailApiUrl =
+      "https://wanderlust-voyages-service.onrender.com/api/v1/signup-mail";
 
     const saveUser = user.save();
     const sendEmail = axios.post(mailApiUrl, {
@@ -43,22 +52,27 @@ export const signup = async (req, res) => {
       verificationCode,
     });
 
+    // Wait for both saving user and sending email to complete
     const [savedUser, emailResponse] = await Promise.all([saveUser, sendEmail]);
 
     if (emailResponse.status !== 200) {
-      return res.status(500).json({ message: "Error sending verification email" });
+      return res
+        .status(500)
+        .json({ message: "Error sending verification email" });
     }
 
+    // Generate token and set it in a cookie
     generateTokenAndSetCookie(res, savedUser._id);
 
     return res.status(201).json({
       message: "User created successfully. Verification email sent.",
-      user: { ...savedUser._doc, password: undefined }
+      user: { ...savedUser._doc, password: undefined }, // Exclude password from response
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
+
 
 export const signin = async (req, res) => {
   const { email, password } = req.body;
