@@ -13,10 +13,31 @@ const usersSlice = createSlice({
   name: 'users',
   initialState: {
     data: [],
+    filteredData: [], // Filtered user data for search
+    searchQuery: '', // Current search query
     loading: false,
     error: null
   },
-  reducers: {},
+  reducers: {
+  // Reducer for handling search functionality
+    setSearchQuery: (state, action) => {
+      const searchQuery = action.payload;
+
+    // Check if the searchQuery is a string
+      if (typeof searchQuery === "string") {
+        state.searchQuery = searchQuery;
+        state.filteredData = state.data.filter((user) =>
+          user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      } else {
+      // Handle the case where the payload is not a string
+        console.error("Search query must be a string");
+      // Optionally, you can reset the filtered data or handle it differently
+        state.filteredData = state.data;
+      }
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllUsers.pending, (state) => {
@@ -25,6 +46,7 @@ const usersSlice = createSlice({
       .addCase(fetchAllUsers.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;  // Populate users state with API data
+        state.filteredData = action.payload;
       })
       .addCase(fetchAllUsers.rejected, (state, action) => {
         state.loading = false;
@@ -32,5 +54,7 @@ const usersSlice = createSlice({
       });
   }
 });
+
+export const { setSearchQuery } = usersSlice.actions;
 
 export default usersSlice.reducer;

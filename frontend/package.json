@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^5.5.2",
     "@reduxjs/toolkit": "^2.4.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -21,12 +22,12 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-"scripts": {
-  "dev": "env-cmd -f .env.development react-scripts start",
-  "start": "env-cmd -f .env.production react-scripts start",
-  "build": "react-scripts build",
-  "test": "react-scripts test"
-},
+  "scripts": {
+    "dev": "env-cmd -f .env.development react-scripts start",
+    "start": "env-cmd -f .env.production react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
