@@ -10,7 +10,6 @@ import { fetchUserById } from "../../store/userByIdSlice";
 import { VscAccount } from "react-icons/vsc";
 import { IoLogOutOutline } from "react-icons/io5";
 import { MdOutlineDashboard } from "react-icons/md";
-import { fetchAllUsers } from "../../store/userSlice";
 
 const { Title } = Typography;
 
@@ -25,7 +24,6 @@ const Navbar = () => {
 
   useEffect(() => {
     dispatch(fetchUserById());
-    dispatch(fetchAllUsers());
   }, [dispatch]);
 
   const handleLogOut = () => {
