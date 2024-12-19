@@ -7,13 +7,12 @@ dotenv.config();
 export const signup_mail = async (req, res) => {
   const { email, verificationCode } = req.body;
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.elasticemail.com", // Elastic Email SMTP server
-      port: 2525, // SMTP port
-     auth: {
-        user: process.env.ELASTIC_EMAIL, // Your Elastic Email address
-        pass: process.env.ELASTIC_API_KEY, // Your Elastic Email API Key
-      },
+ const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.APP_PASSWORD,
+    },
   });
 
   const verification_link = `${process.env.API_BASE_URL}/api/v1/verify/${verificationCode}`;
@@ -28,7 +27,7 @@ export const signup_mail = async (req, res) => {
     .replace("{{otpCode}}", verificationCode);
 
   const mailOptions = {
-    from: process.env.ELASTIC_EMAIL,
+    from: process.env.EMAIL,
     to: email,
     subject: "Email Verification",
     html: htmlContent,
@@ -48,12 +47,11 @@ export const forgotPassword_mail = async (req, res) => {
   const { email, resetPasswordToken } = req.body;
 
   const transporter = nodemailer.createTransport({
-    host: "smtp.elasticemail.com", // Elastic Email SMTP server
-      port: 2525, // SMTP port
-     auth: {
-        user: process.env.ELASTIC_EMAIL, // Your Elastic Email address
-        pass: process.env.ELASTIC_API_KEY, // Your Elastic Email API Key
-      },
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.APP_PASSWORD,
+    },
   });
 
   const resetPassword_link = `${process.env.API_BASE_URL}/api/v1/reset-password/${resetPasswordToken}`;
@@ -67,7 +65,7 @@ export const forgotPassword_mail = async (req, res) => {
     .replace("{{resetLink}}", resetPassword_link)
 
   const mailOptions = {
-     from: process.env.ELASTIC_EMAIL,
+    from: process.env.EMAIL,
     to: email,
     subject: "Reset Password",
     html: htmlContent,
