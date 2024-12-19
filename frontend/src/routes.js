@@ -16,7 +16,9 @@ const routes = [
     path: '/admin',
     element: <MainLayout />,
     children: [
-      { path: 'dashboard', element: <AllUsers /> }
+      { path: 'users', element: <AllUsers /> },
+      { path: 'dashboard', element: <div>dashboard</div> },
+      { path: 'chat', element: <div>chat</div> }
     ]
   }
 ];

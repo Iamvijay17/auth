@@ -1,18 +1,22 @@
+import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import fs from "fs";
+
+dotenv.config();
 
 export const signup_mail = async (req, res) => {
   const { email, verificationCode } = req.body;
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.APP_PASSWORD,
-    },
+    host: "smtp.elasticemail.com", // Elastic Email SMTP server
+      port: 2525, // SMTP port
+     auth: {
+        user: process.env.ELASTIC_EMAIL, // Your Elastic Email address
+        pass: process.env.ELASTIC_API_KEY, // Your Elastic Email API Key
+      },
   });
 
-  const verification_link = `https://wanderlust-voyages-service.onrender.com/api/v1/verify/${verificationCode}`;
+  const verification_link = `${process.env.API_BASE_URL}/api/v1/verify/${verificationCode}`;
 
   let htmlContent = fs.readFileSync(
     "./templates/verification.html",
@@ -24,7 +28,7 @@ export const signup_mail = async (req, res) => {
     .replace("{{otpCode}}", verificationCode);
 
   const mailOptions = {
-    from: process.env.EMAIL,
+    from: process.env.ELASTIC_EMAIL,
     to: email,
     subject: "Email Verification",
     html: htmlContent,
@@ -44,14 +48,15 @@ export const forgotPassword_mail = async (req, res) => {
   const { email, resetPasswordToken } = req.body;
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.APP_PASSWORD,
-    },
+    host: "smtp.elasticemail.com", // Elastic Email SMTP server
+      port: 2525, // SMTP port
+     auth: {
+        user: process.env.ELASTIC_EMAIL, // Your Elastic Email address
+        pass: process.env.ELASTIC_API_KEY, // Your Elastic Email API Key
+      },
   });
 
-  const resetPassword_link = `https://wanderlust-voyages-service.onrender.com/api/v1/reset-password/${resetPasswordToken}`;
+  const resetPassword_link = `${process.env.API_BASE_URL}/api/v1/reset-password/${resetPasswordToken}`;
 
   let htmlContent = fs.readFileSync(
     "./templates/resetPassword.html",
@@ -62,7 +67,7 @@ export const forgotPassword_mail = async (req, res) => {
     .replace("{{resetLink}}", resetPassword_link)
 
   const mailOptions = {
-    from: process.env.EMAIL,
+     from: process.env.ELASTIC_EMAIL,
     to: email,
     subject: "Reset Password",
     html: htmlContent,

@@ -11,9 +11,13 @@
   }
 }
 
-:global .ant-modal .ant-modal-content {
+/* :global .ant-modal .ant-modal-content {
   padding: 0 0 0 0 !important;
   border-radius: 20px !important;
   overflow: hidden  !important;
+} */
+
+.ant-modal .ant-modal-content {
+  padding: 0 !important; /* Ensure no padding inside the modal content */
 }
 

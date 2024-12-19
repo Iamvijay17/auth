@@ -1,7 +1,6 @@
 import {
   DesktopOutlined,
   FileOutlined,
-  PieChartOutlined,
   TeamOutlined,
   UserOutlined
 } from "@ant-design/icons";
@@ -11,7 +10,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { MdOutlineDashboard } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { deleteCookie, getCookie } from "../utils/cookies";
 import { getColorFromName } from "../utils";
 import { fetchUserById } from "../store/userByIdSlice";
@@ -19,36 +18,32 @@ import { fetchAllUsers } from "../store/userSlice";
 
 const { Header, Content, Sider } = Layout;
 
-function getItem(label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label
-  };
+// Helper function for menu items
+function getItem(label, key, icon, path, children) {
+  return { key, icon, path, children, label };
 }
 
+// Menu items definition
 const items = [
-  getItem("Option 1", "1", <PieChartOutlined />),
-  getItem("Option 2", "2", <DesktopOutlined />),
-  getItem("User", "sub1", <UserOutlined />, [
-    getItem("Tom", "3"),
-    getItem("Bill", "4"),
-    getItem("Alex", "5")
+  getItem("Dashboard", "dashboard", <DesktopOutlined />, "/admin/dashboard"),
+  getItem("Users", "users", <MdOutlineDashboard />, "/admin/users"),
+  getItem("User", "user", <UserOutlined />, null, [
+    getItem("Tom", "tom", null, "/user/tom"),
+    getItem("Bill", "bill", null, "/user/bill"),
+    getItem("Alex", "alex", null, "/user/alex")
   ]),
-  getItem("Team", "sub2", <TeamOutlined />, [
-    getItem("Team 1", "6"),
-    getItem("Team 2", "8")
+  getItem("Team", "team", <TeamOutlined />, null, [
+    getItem("Team 1", "team1", null, "/team/1"),
+    getItem("Team 2", "team2", null, "/team/2")
   ]),
-  getItem("Files", "9", <FileOutlined />)
+  getItem("Chat", "chat", <FileOutlined />, "/admin/chat")
 ];
 
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer, borderRadiusLG }
-  } = theme.useToken();
+  const { token } = theme.useToken();
   const navigate = useNavigate();
+  const location = useLocation();
   const accessToken = getCookie("accessToken");
   const userById = useSelector((state) => state.userById);
 
@@ -65,11 +60,19 @@ const MainLayout = () => {
     navigate("/");
   };
 
-  const DropdownMenuHandleClick = (e) => {
-    if (e.key === "3") {
-      handleLogOut();
+  // Recursive function to find the key of the current path
+  const findCurrentKey = (menuItems, path) => {
+    for (const item of menuItems) {
+      if (item.path === path) return item.key;
+      if (item.children) {
+        const childKey = findCurrentKey(item.children, path);
+        if (childKey) return childKey;
+      }
     }
+    return null;
   };
+
+  const currentKey = findCurrentKey(items, location.pathname) || "dashboard";
 
   const dropdownItems = [
     {
@@ -102,16 +105,21 @@ const MainLayout = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-      >
+      <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
         <div className="demo-logo-vertical" />
-        <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" items={items} />
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[currentKey]}
+          onClick={({ key }) => {
+            const selectedItem = items.find((item) => item.key === key) || {};
+            if (selectedItem.path) {
+              navigate(selectedItem.path);
+            }
+          }}
+          items={items}
+        />
       </Sider>
-     
       <Layout>
         <Header
           style={{
@@ -119,7 +127,7 @@ const MainLayout = () => {
             justifyContent: "space-between",
             alignItems: "center",
             padding: "0 16px",
-            background: colorBgContainer
+            background: token.colorBgContainer
           }}
         >
           <div className="logo" style={{ fontSize: "18px", fontWeight: "bold" }}>
@@ -129,7 +137,9 @@ const MainLayout = () => {
             <Dropdown
               menu={{
                 items: dropdownItems,
-                onClick: DropdownMenuHandleClick
+                onClick: ({ key }) => {
+                  if (key === "3") handleLogOut();
+                }
               }}
               trigger={["click"]}
             >
@@ -148,19 +158,14 @@ const MainLayout = () => {
         </Header>
         <Content
           style={{
-            margin: "16px"
+            margin: "16px",
+            padding: 24,
+            minHeight: 360,
+            background: token.colorBgContainer,
+            borderRadius: token.borderRadiusLG
           }}
         >
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG
-            }}
-          >
-            <Outlet />
-          </div>
+          <Outlet />
         </Content>
       </Layout>
     </Layout>

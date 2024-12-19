@@ -1,9 +1,9 @@
+import { FilterOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Input } from 'antd';
 import React from 'react';
-import { Input } from 'antd';
-
 const { Search } = Input;
 
-const Toolbar = ({ onChange, placeholder }) => {
+const Toolbar = ({ onChange, placeholder, handleMenuClick, items }) => {
 
   const handleSearchChange = (e) => {
     if (onChange) {
@@ -11,9 +11,20 @@ const Toolbar = ({ onChange, placeholder }) => {
     }
   };
 
+  const menuProps = {
+    items,
+    selectable: true,
+    onClick: handleMenuClick
+  };
+
   return (
-    <div className="flex justify-end w-full p-4">
+    <div className="flex justify-end w-full p-4 gap-3">
       <Search className="w-[15rem]"  placeholder={placeholder ? placeholder : 'search'} onChange={handleSearchChange} allowClear enterButton />
+      <Dropdown menu={menuProps}>
+        <Button>
+          <FilterOutlined />
+        </Button>
+      </Dropdown>
     </div>
   );
 };

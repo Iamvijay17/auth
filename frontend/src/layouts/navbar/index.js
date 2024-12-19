@@ -38,6 +38,12 @@ const Navbar = () => {
     }
   };
 
+  const modalStyle = {
+    padding: '0',
+    borderRadius: '1rem',
+    overflow: 'hidden'
+  };
+
   return (
     <div className={styles.wrapper}>
       <div>Logo</div>
@@ -130,6 +136,8 @@ const Navbar = () => {
 
       <>
         <Modal
+          style={modalStyle}
+          wrapperClassName="custom-modal-wrapper"
           open={isModalOpen}
           onCancel={() => setIsModalOpen(false)}
           footer={null}
@@ -138,9 +146,7 @@ const Navbar = () => {
           closeIcon={null}
           centered
         >
-          <div className="!border-rounded-lg">
-            <Signup setIsModalOpen={setIsModalOpen} />
-          </div>
+          <Signup setIsModalOpen={setIsModalOpen} />
         </Modal>
       </>
     </div>

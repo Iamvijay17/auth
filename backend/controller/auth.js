@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import dotenv from "dotenv";
 import bcryptjs from "bcryptjs";
 import {
   generateAccessToken,
@@ -9,6 +10,7 @@ import {
 import axios from "axios";
 import fs from "fs";
 import nodemailer from "nodemailer";
+dotenv.config();
 
 export const signup = async (req, res) => {
   const { email, password, name, userId } = req.body;
@@ -43,8 +45,7 @@ export const signup = async (req, res) => {
     });
 
     // Mail API for sending verification email
-    const mailApiUrl =
-      "https://wanderlust-voyages-service.onrender.com/api/v1/signup-mail";
+    const mailApiUrl = `${process.env.API_BASE_URL}/api/v1/signup-mail`;
 
     const saveUser = user.save();
     const sendEmail = axios.post(mailApiUrl, {

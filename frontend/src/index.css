@@ -23,3 +23,10 @@ code {
 a.active .ant-typography{
   color: var(--primary-color) !important;
 }
+
+
+.custom-modal-wrapper .ant-modal-content {
+  padding: 0 !important;
+  border-radius: 1rem !important;
+  overflow: hidden !important;
+}
