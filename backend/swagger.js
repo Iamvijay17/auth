@@ -1,8 +1,10 @@
 import fs from "fs";
+import path from "path";
 
 const loadJson = () => {
   try {
-    const file = fs.readFileSync("./swagger.json", "utf8"); // Adjust path as needed
+    const filePath = path.resolve(process.cwd(), "swagger.json"); // Resolves to the project's root directory
+    const file = fs.readFileSync(filePath, "utf8");
     return JSON.parse(file);
   } catch (error) {
     console.error("Error loading Swagger JSON file:", error.message);
