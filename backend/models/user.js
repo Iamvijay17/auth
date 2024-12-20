@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    totpSecret: { type: String }, // Store the user's TOTP secret
+    is2FAEnabled: { type: Boolean, default: false },
+    recoveryCodes: [String], // Optional: Store hashed recovery codes
   },
   {
     timestamps: true,
