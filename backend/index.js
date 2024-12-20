@@ -23,8 +23,6 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(cors(corsOptions));
-
 // Apply compression for response optimization
 app.use(compression());
 
