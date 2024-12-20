@@ -1,4 +1,5 @@
 import compression from "compression";
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
@@ -6,7 +7,6 @@ import { connectDB } from "./DB/connect.js";
 import AuthRouter from "./routes/auth.js";
 import userRouter from "./routes/userRoutes.js";
 import swaggerSpec from "./swagger.js";
-import cors from "cors";
 
 // Load environment variables
 dotenv.config();
