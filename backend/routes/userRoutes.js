@@ -1,20 +1,111 @@
-import express from 'express';
-import authenticateUser from '../middleware/index.js';
-import { deleteUserById, getAllUsers, getUserById, updateUserById } from '../controller/user.js';
+import express from "express";
+import authenticateUser from "../middleware/index.js";
+import {
+  deleteUserById,
+  getAllUsers,
+  getUserById,
+  updateUserById,
+} from "../controller/user.js";
 
 const userRouter = express.Router();
 
-// Route to fetch a user by userId
-userRouter.get('/user/:userId', authenticateUser, getUserById);
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management operations
+ */
 
+/**
+ * @swagger
+ * /api/v1/user/{userId}:
+ *   get:
+ *     summary: Get User by ID
+ *     description: Fetches details of a user by their ID.
+ *     tags: [Users]
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         description: ID of the user to fetch
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User details fetched successfully.
+ *       404:
+ *         description: User not found.
+ */
+userRouter.get("/user/:userId", authenticateUser, getUserById);
 
-// Route to update a user by userId
-userRouter.put('/user/:userId', authenticateUser, updateUserById);
+/**
+ * @swagger
+ * /api/v1/user/{userId}:
+ *   put:
+ *     summary: Update User by ID
+ *     description: Updates a user's details by their ID.
+ *     tags: [Users]
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         description: ID of the user to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John Doe
+ *               email:
+ *                 type: string
+ *                 example: john.doe@example.com
+ *     responses:
+ *       200:
+ *         description: User updated successfully.
+ *       404:
+ *         description: User not found.
+ */
+userRouter.put("/user/:userId", authenticateUser, updateUserById);
 
-// Route to delete a user by userId
-userRouter.delete('/user/:userId', authenticateUser, deleteUserById);
+/**
+ * @swagger
+ * /api/v1/user/{userId}:
+ *   delete:
+ *     summary: Delete User by ID
+ *     description: Deletes a user by their ID.
+ *     tags: [Users]
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         description: ID of the user to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted successfully.
+ *       404:
+ *         description: User not found.
+ */
+userRouter.delete("/user/:userId", authenticateUser, deleteUserById);
 
-// Route to fetch all users
-userRouter.get('/users', authenticateUser, getAllUsers);
+/**
+ * @swagger
+ * /api/v1/users:
+ *   get:
+ *     summary: Get All Users
+ *     description: Fetches details of all users.
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of all users fetched successfully.
+ */
+userRouter.get("/users", authenticateUser, getAllUsers);
 
 export default userRouter;
