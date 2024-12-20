@@ -15,14 +15,14 @@ const port = process.env.PORT || 3000;
 const version = process.env.API_VERSION || "v1";
 
 // Update the CORS configuration based on environment
-// const corsOptions = {
-//   origin: process.env.NODE_ENV === "production" ? "https://your-frontend-domain.com" : "*", // Use your actual frontend domain in production
-//   methods: "GET, POST, PUT, DELETE, OPTIONS",
-//   allowedHeaders: "Content-Type, Authorization",
-//   credentials: true,
-// };
+const corsOptions = {
+  origin: "*", // Use your actual frontend domain in production
+  methods: "GET, POST, PUT, DELETE, OPTIONS",
+  allowedHeaders: "Content-Type, Authorization",
+  credentials: true,
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // Allow from any origin

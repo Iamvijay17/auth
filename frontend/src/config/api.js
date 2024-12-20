@@ -11,10 +11,7 @@ if (process.env.REACT_APP_ENV === "development") {
 }
 
 // Set the API host based on the environment (development or production)
-const HOST =
-  process.env.REACT_APP_ENV === "production"
-    ? "https://wanderlust-voyages-service.onrender.com"
-    : "http://localhost:5000"; // or another local API endpoint for development
+const HOST = process.env.REACT_APP_API_URL;
 
 // API Version
 export const VERSION = "v1";
