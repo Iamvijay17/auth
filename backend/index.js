@@ -6,6 +6,7 @@ import { connectDB } from "./DB/connect.js";
 import AuthRouter from "./routes/auth.js";
 import userRouter from "./routes/userRoutes.js";
 import swaggerSpec from "./swagger.js";
+import cors from "cors";
 
 // Load environment variables
 dotenv.config();
