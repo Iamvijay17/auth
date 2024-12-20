@@ -45,7 +45,12 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./routes/auth.js", "./routes/userRoutes.js"],
+  apis: [
+    "./routes/auth.js",
+    "./routes/userRoutes.js",
+    "./backend/routes/auth.js",
+    "./backend/routes/userRoutes.js",
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
