@@ -24,6 +24,7 @@ const router = express.Router();
  *     summary: User Signup
  *     description: Registers a new user.
  *     tags: [Auth]
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
@@ -32,6 +33,9 @@ const router = express.Router();
  *             type: object
  *             properties:
  *               username:
+ *                 type: string
+ *                 example: john_doe
+ *               userId:
  *                 type: string
  *                 example: john_doe
  *               email:
@@ -55,6 +59,7 @@ router.post("/signup", signup);
  *     summary: User Signin
  *     description: Authenticates a user.
  *     tags: [Auth]
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:

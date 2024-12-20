@@ -25,10 +25,10 @@ const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "API",
+      title: "Wanderlust Voyages API",
       version: "1.0.0",
       description:
-        "API for managing users, including creating, updating, deleting, and fetching user details.",
+        "APIs for all operations concerning Wanderlust Voyages. This API is part of the Wanderlust Voyages project. © Vijay",
     },
     components: {
       securitySchemes: {

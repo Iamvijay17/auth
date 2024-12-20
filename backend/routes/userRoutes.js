@@ -33,8 +33,27 @@ const userRouter = express.Router();
  *     responses:
  *       200:
  *         description: User details fetched successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 email:
+ *                   type: string
  *       404:
  *         description: User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found.
  */
 userRouter.get("/user/:userId", authenticateUser, getUserById);
 

@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 });
 
 // Set up Swagger documentation
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Define API routes with versioning
 app.use(`/api/${version}`, AuthRouter);
