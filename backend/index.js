@@ -16,21 +16,24 @@ const port = process.env.PORT || 3000;
 const version = process.env.API_VERSION || "v1";
 
 // Update the CORS configuration based on environment
+const allowedOrigins = [
+  "https://your-frontend-domain.vercel.app", // Replace with your actual frontend domain
+];
+
 const corsOptions = {
-  origin: "*", // Use your actual frontend domain in production
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: "GET, POST, PUT, DELETE, OPTIONS",
   allowedHeaders: "Content-Type, Authorization",
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*"); // Allow from any origin
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
 
 // Apply compression for response optimization
 app.use(compression());
@@ -40,7 +43,7 @@ app.use(express.json());
 
 // Test endpoint
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("API is running! ✅");
 });
 
 // Set up Swagger documentation
