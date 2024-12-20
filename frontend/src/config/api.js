@@ -4,11 +4,6 @@ import { getCookie } from "../utils/cookies";
 // Get access token from cookies
 const accessToken = getCookie("accessToken");
 
-// Log environment variables for debugging (only in development)
-if (process.env.REACT_APP_ENV === "development") {
-  console.log("Environment:", process.env.REACT_APP_ENV);
-  console.log("Access Token:", accessToken);
-}
 
 // Set the API host based on the environment (development or production)
 const HOST = process.env.REACT_APP_API_URL;
