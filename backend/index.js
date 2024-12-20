@@ -15,23 +15,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 const version = process.env.API_VERSION || "v1";
 
-// Update the CORS configuration based on environment
-const allowedOrigins = [
-  "https://wanderlustvoyages.vercel.app" || "http://localhost:3000", // Replace with your actual frontend domain
-];
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+// Enable CORS
+app.use(cors({
+  origin: "*", // Replace with your frontend URL in production
   methods: "GET, POST, PUT, DELETE, OPTIONS",
   allowedHeaders: "Content-Type, Authorization",
-  credentials: true,
-};
+  credentials: true
+}));
 
 app.use(cors(corsOptions));
 
