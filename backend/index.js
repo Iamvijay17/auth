@@ -17,7 +17,7 @@ const version = process.env.API_VERSION || "v1";
 
 // Update the CORS configuration based on environment
 const allowedOrigins = [
-  "https://your-frontend-domain.vercel.app", // Replace with your actual frontend domain
+  "https://wanderlustvoyages.vercel.app" || "http://localhost:3000", // Replace with your actual frontend domain
 ];
 
 const corsOptions = {
