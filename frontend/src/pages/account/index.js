@@ -13,15 +13,18 @@ import { generateId } from "../../utils";
 import { getCookie, setCookie } from "../../utils/cookies";
 import { fetchUserById } from "../../store/userByIdSlice";
 import { useDispatch } from "react-redux";
-
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 const Signup = ({setIsModalOpen}) => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
-  const [showFrom, setShowFrom] = useState('signin');
+  const [showFrom, setShowFrom] = useState("signin");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleCreateFinish = (values) => {
-    values['userId'] = generateId('USR');
+    values["userId"] = generateId("USR");
     setIsLoading(true);
     AccountServiceAPI.createAccount(values).then(
       (res) => {
@@ -29,8 +32,8 @@ const Signup = ({setIsModalOpen}) => {
         setIsLoading(false);
         message.success("Account created successfully");
         message.warning("Please verify your email");
-        setCookie('userId', res.user.userId);
-        setShowFrom('otp');
+        setCookie("userId", res.user.userId);
+        setShowFrom("otp");
       },
       (err) => {
         setIsLoading(false);
@@ -43,9 +46,11 @@ const Signup = ({setIsModalOpen}) => {
       .then((res) => {
         setIsLoading(false);
         setIsModalOpen(false);
-        setCookie('accessToken', res?.accessToken);
-        setCookie('userId', res.user?.userId);
+        setCookie("accessToken", res?.accessToken);
+        setCookie("userId", res.user?.userId);
         dispatch(fetchUserById());
+        login({ email : values.email, role: "admin" });
+        navigate("/admin/dashboard");
         message.success("Login successful");
       })
       .catch((err) => {
@@ -54,19 +59,19 @@ const Signup = ({setIsModalOpen}) => {
         message.error(err.response?.data?.message);
 
         if (err.response?.data?.message === "User not verified. Please check your email to verify your account.") {
-          setShowFrom('otp');
+          setShowFrom("otp");
         }
       });
   };
 
   const handleOtpFinish = (values) => {
     setIsLoading(true);
-    values['userId'] = getCookie('userId');
+    values["userId"] = getCookie("userId");
     AccountServiceAPI.verifyOtp(values)
       .then((res) => {
         setIsLoading(false);
         setIsModalOpen(false);
-        setCookie('accessToken', res.accessToken);
+        setCookie("accessToken", res.accessToken);
         message.success("Login successful");
       })
       .catch((err) => {
@@ -117,19 +122,19 @@ const Signup = ({setIsModalOpen}) => {
           <div className={`${styles.left} ${styles.right}`}>
             <div className="flex justify-center h-[100%] p-5">
               {
-                showFrom === 'signin' && <SigninForm handleFinish={handleSigninFinish} setShowFrom={setShowFrom} form={form}/>
+                showFrom === "signin" && <SigninForm handleFinish={handleSigninFinish} setShowFrom={setShowFrom} form={form}/>
               }
               {
-                showFrom === 'signup' && <SignupForm handleFinish={handleCreateFinish} setShowFrom={setShowFrom} form={form}/>
+                showFrom === "signup" && <SignupForm handleFinish={handleCreateFinish} setShowFrom={setShowFrom} form={form}/>
               }
               {
-                showFrom === 'otp' && <OtpForm handleFinish={handleOtpFinish} setShowFrom={setShowFrom} form={form}/>
+                showFrom === "otp" && <OtpForm handleFinish={handleOtpFinish} setShowFrom={setShowFrom} form={form}/>
               }
               {
-                showFrom === 'forgot' && <ForgotForm handleFinish={handleForgotFinish} setShowFrom={setShowFrom} form={form}/>
+                showFrom === "forgot" && <ForgotForm handleFinish={handleForgotFinish} setShowFrom={setShowFrom} form={form}/>
               }
               {
-                showFrom === 'changepassword' && <ChangePasswordForm handleFinish={handleChangePasswordFinish} setShowFrom={setShowFrom} form={form}/>
+                showFrom === "changepassword" && <ChangePasswordForm handleFinish={handleChangePasswordFinish} setShowFrom={setShowFrom} form={form}/>
               }
             </div>
           </div>

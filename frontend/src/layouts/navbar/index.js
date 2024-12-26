@@ -8,7 +8,7 @@ import { deleteCookie, getCookie } from "../../utils/cookies";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserById } from "../../store/userByIdSlice";
 import { VscAccount } from "react-icons/vsc";
-import { IoLogOutOutline } from "react-icons/io5";
+import { IoLogOutOutline, IoSettingsOutline  } from "react-icons/io5";
 import { MdOutlineDashboard } from "react-icons/md";
 
 const { Title } = Typography;
@@ -33,15 +33,15 @@ const Navbar = () => {
   };
 
   const DropdownMenuHandleClick = (e) => {
-    if (e.key === "3") {
+    if (e.key === "5") {
       handleLogOut();
     }
   };
 
   const modalStyle = {
-    padding: '0',
-    borderRadius: '1rem',
-    overflow: 'hidden'
+    padding: "0",
+    borderRadius: "1rem",
+    overflow: "hidden"
   };
 
   return (
@@ -49,7 +49,6 @@ const Navbar = () => {
       <div>Logo</div>
       <div className={styles.menu}>
         <div>
-          {" "}
           <NavLink to="/">
             <Title level={5} className="hover:text-primary-color">
               Home
@@ -58,7 +57,6 @@ const Navbar = () => {
         </div>
         <div>
           <NavLink to="destination">
-            {" "}
             <Title level={5} className="hover:text-primary-color">
               Destination
             </Title>
@@ -93,6 +91,11 @@ const Navbar = () => {
                   },
                   {
                     key: "2",
+                    label: <Link to="/settings">Settings</Link>,
+                    icon: <IoSettingsOutline  size={16} />
+                  },
+                  {
+                    key: "3",
                     label: <Link to="/dashboard">Dashboard</Link>,
                     icon: <MdOutlineDashboard size={16} />
                   },
@@ -107,7 +110,7 @@ const Navbar = () => {
                     type: "divider"
                   },
                   {
-                    key: "3",
+                    key: "5",
                     label: "Logout",
                     danger: true,
                     icon: <IoLogOutOutline size={18} />

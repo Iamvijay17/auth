@@ -1,5 +1,5 @@
-import Title from 'antd/es/typography/Title';
-import React from 'react';
+import Title from "antd/es/typography/Title";
+import React from "react";
 
 const Home = () => {
   return (

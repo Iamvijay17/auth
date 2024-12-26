@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Dropdown, Layout, Menu, theme } from "antd";
 import React, { useEffect, useState } from "react";
-import { IoLogOutOutline } from "react-icons/io5";
+import { IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineDashboard } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
@@ -82,6 +82,11 @@ const MainLayout = () => {
     },
     {
       key: "2",
+      label: <Link to="/settings">Settings</Link>,
+      icon: <IoSettingsOutline size={16} />
+    },
+    {
+      key: "3",
       label: <Link to="/dashboard">Dashboard</Link>,
       icon: <MdOutlineDashboard size={16} />
     },
@@ -96,7 +101,7 @@ const MainLayout = () => {
       : []),
     { type: "divider" },
     {
-      key: "3",
+      key: "5",
       label: "Logout",
       danger: true,
       icon: <IoLogOutOutline size={18} />
@@ -138,7 +143,7 @@ const MainLayout = () => {
               menu={{
                 items: dropdownItems,
                 onClick: ({ key }) => {
-                  if (key === "3") handleLogOut();
+                  if (key === "5") handleLogOut();
                 }
               }}
               trigger={["click"]}
