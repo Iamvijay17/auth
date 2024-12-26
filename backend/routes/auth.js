@@ -5,8 +5,8 @@ import {
   signin,
   signup,
   verify,
-} from "../controller/auth.js";
-import { forgotPassword_mail, signup_mail } from "../controller/mail.js";
+} from "../controllers/auth.js";
+import { forgotPassword_mail, signup_mail } from "../controllers/mail.js";
 
 const router = express.Router();
 

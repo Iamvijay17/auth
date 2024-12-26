@@ -102,7 +102,7 @@ export const signin = async (req, res) => {
     }
 
     generateTokenAndSetCookie(res, user.userId);
-    const accessToken = generateAccessToken(user.userId);
+    const accessToken = generateAccessToken(user.userId, user.role);
 
     return res.status(200).json({
       message: "User signed in successfully",

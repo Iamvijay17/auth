@@ -1,24 +1,48 @@
 import jwt from 'jsonwebtoken';
 
-const authenticateUser = (req, res, next) => {
-  // Get token from Authorization header (it should start with "Bearer ")
-  const token = req.header('Authorization')?.split(' ')[1]; // Get the token part after "Bearer"
-
+/**
+ * Middleware to verify JWT and user roles.
+ */
+export const verifyToken = (req, res, next) => {
+  // Extract token from Authorization header
+  const token = req.headers.authorization?.split(' ')[1]; // Assuming "Bearer <token>"
+  
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+    return res.status(403).json({ message: "Token is missing" });
   }
 
-  try {
-    // Verify the token using jwt.verify
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  // Verify the token
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or expired token" });
+    }
 
-    // Attach the decoded user information to the request object
-    req.user = decoded;
-    next();  // Pass the request to the next middleware or route handler
-  } catch (error) {
-    console.error('Token verification error:', error);
-    return res.status(400).json({ message: 'Unauthorized: Invalid or expired token' });
-  }
+    // Check for required fields in the payload
+    if (!decoded.userId || !decoded.role) {
+      return res.status(403).json({ message: "Token is invalid or missing role information" });
+    }
+
+    // Attach the user data to the request object
+    req.user = decoded; // Contains the userId, role, and other payload data
+    next(); // Continue to the next middleware or route handler
+  });
 };
 
-export default authenticateUser;
+
+export const authorizeRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    // Ensure `verifyToken` middleware has already run
+    if (!req.user) {
+      return res.status(403).json({ message: "User not authenticated" });
+    }
+
+    // Check if the user's role is in the allowedRoles array
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({
+        message: `Access denied. Required roles: ${allowedRoles.join(', ')}`,
+      });
+    }
+
+    next(); // Continue to the next middleware or route handler
+  };
+};

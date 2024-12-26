@@ -12,14 +12,21 @@ const userSchema = new mongoose.Schema(
     resetPasswordExpires: { type: Date },
     verificationCode: { type: String },
     verificationExpires: { type: Date },
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
+    role: { type: String, enum: ['user', 'admin'], default: 'user',},
+    permissions: {
+      type: [String],
+      default: ["manageUsers", "manageDestinations", "viewReports"], // List of admin permissions
     },
-    totpSecret: { type: String }, // Store the user's TOTP secret
-    is2FAEnabled: { type: Boolean, default: false },
-    recoveryCodes: [String], // Optional: Store hashed recovery codes
+     settings: {
+      language: {
+        type: String,
+        default: 'en',  // Default language: English
+      },
+      notificationsEnabled: {
+        type: Boolean,
+        default: true,  // Default: Notifications enabled
+      },
+  },
   },
   {
     timestamps: true,

@@ -1,13 +1,27 @@
 import express from "express";
-import authenticateUser from "../middleware/index.js";
+import { verifyToken, authorizeRoles } from "../middleware/index.js";
 import {
   deleteUserById,
   getAllUsers,
   getUserById,
   updateUserById,
-} from "../controller/user.js";
+} from "../controllers/userController.js";
 
 const userRouter = express.Router();
+
+
+userRouter.get("/user/:userId", verifyToken, authorizeRoles("admin", "user"), getUserById);
+
+
+userRouter.put("/user/:userId", verifyToken, authorizeRoles("admin", "user"), updateUserById);
+
+
+userRouter.delete("/user/:userId", verifyToken, authorizeRoles("admin"), deleteUserById);
+
+
+userRouter.get("/users", verifyToken, authorizeRoles("admin"), getAllUsers);
+
+export default userRouter;
 
 /**
  * @swagger
@@ -55,7 +69,6 @@ const userRouter = express.Router();
  *                   type: string
  *                   example: User not found.
  */
-userRouter.get("/user/:userId", authenticateUser, getUserById);
 
 /**
  * @swagger
@@ -90,7 +103,6 @@ userRouter.get("/user/:userId", authenticateUser, getUserById);
  *       404:
  *         description: User not found.
  */
-userRouter.put("/user/:userId", authenticateUser, updateUserById);
 
 /**
  * @swagger
@@ -112,7 +124,6 @@ userRouter.put("/user/:userId", authenticateUser, updateUserById);
  *       404:
  *         description: User not found.
  */
-userRouter.delete("/user/:userId", authenticateUser, deleteUserById);
 
 /**
  * @swagger
@@ -125,6 +136,3 @@ userRouter.delete("/user/:userId", authenticateUser, deleteUserById);
  *       200:
  *         description: List of all users fetched successfully.
  */
-userRouter.get("/users", authenticateUser, getAllUsers);
-
-export default userRouter;
