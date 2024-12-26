@@ -18,6 +18,7 @@ import mapRoutes from "./routes/mapRoutes.js";
 import packageRoutes from "./routes/packageRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import NotificationRoutes from "./routes/notificationsRoutes.js";
+import travelAgencyRoutes from "./routes/travelAgencyRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -63,6 +64,7 @@ app.get(`/api/${version}/notifications`, NotificationRoutes);
 app.get(`/api/${version}/packages`, packageRoutes);
 app.get(`/api/${version}/payment`, paymentRoutes);
 app.get(`/api/${version}/payment`, reviewsRoutes);
+app.get(`/api/${version}/travel-agencies`, travelAgencyRoutes);
 
 
 

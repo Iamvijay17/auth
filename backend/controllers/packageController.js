@@ -47,3 +47,41 @@ export const deletePackage = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const createPackageForTravelAgency = async (req, res) => {
+  try {
+    const { id } = req.params; // Travel agency ID
+    const { destinationId, packageName, price, description } = req.body;
+
+    const travelAgency = await TravelAgency.findById(id);
+    if (!travelAgency) return res.status(404).json({ message: 'Travel agency not found' });
+
+    const travelPackage = new TravelPackage({
+      travelAgencyId: id,
+      destinationId,
+      packageName,
+      price,
+      description,
+    });
+
+    await travelPackage.save();
+    res.status(201).json({ message: 'Package created successfully', travelPackage });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const getTravelAgenciesForDestination = async (req, res) => {
+  try {
+    const { id } = req.params; // Destination ID
+    const travelPackages = await TravelPackage.find({ destinationId: id }).populate('travelAgencyId');
+
+    if (travelPackages.length === 0) {
+      return res.status(404).json({ message: 'No travel agencies found for this destination' });
+    }
+
+    res.status(200).json(travelPackages);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};

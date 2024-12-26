@@ -98,3 +98,43 @@ export const deleteReview = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// controllers/reviewController.js
+export const addReviewForTravelAgency = async (req, res) => {
+  try {
+    const { id } = req.params; // Travel agency ID
+    const { rating, reviewText } = req.body; // Review details
+
+    // Assuming TravelAgency and Review models exist
+    const travelAgency = await TravelAgency.findById(id);
+    if (!travelAgency) return res.status(404).json({ message: 'Travel Agency not found' });
+
+    const review = new Review({
+      travelAgencyId: id,
+      rating,
+      reviewText,
+      userId: req.user._id, // Assuming user is authenticated
+    });
+
+    await review.save();
+    res.status(201).json({ message: 'Review added successfully', review });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const getReviewsForTravelAgency = async (req, res) => {
+  try {
+    const { id } = req.params; // Travel agency ID
+    const reviews = await Review.find({ travelAgencyId: id });
+
+    if (reviews.length === 0) {
+      return res.status(404).json({ message: 'No reviews found for this travel agency' });
+    }
+
+    res.status(200).json(reviews);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+

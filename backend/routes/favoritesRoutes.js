@@ -26,7 +26,7 @@ export default favoritesRoutes;
 
 /**
  * @swagger
- * /api/favorites/add:
+ * /api/v1/favorites/add:
  *   post:
  *     summary: Add a destination to favorites
  *     description: Add a destination to the user's list of favorites. Requires authentication.
@@ -58,7 +58,7 @@ export default favoritesRoutes;
 
 /**
  * @swagger
- * /api/favorites:
+ * /api/v1/favorites:
  *   get:
  *     summary: Get favorite destinations
  *     description: Retrieve all destinations marked as favorites by the user. Requires authentication.
@@ -92,7 +92,7 @@ export default favoritesRoutes;
 
 /**
  * @swagger
- * /api/favorites/{destinationId}:
+ * /api/v1/favorites/{destinationId}:
  *   delete:
  *     summary: Remove a destination from favorites
  *     description: Remove a destination from the user's list of favorites by ID. Requires authentication.
