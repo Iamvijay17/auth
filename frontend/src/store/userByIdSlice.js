@@ -1,17 +1,17 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { storeServicesAPI } from './store.services';
-import { getCookie } from '../utils/cookies';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { storeServicesAPI } from "./store.services";
+import { getCookie } from "../utils/cookies";
 
 
-export const fetchUserById = createAsyncThunk('user/fetchById', async() => {
-  const userId = getCookie('userId');
-  const response = await storeServicesAPI.getUserById(userId);
+export const fetchUserById = createAsyncThunk("user/fetchById", async(id) => {
+  const userId = getCookie("userId");
+  const response = await storeServicesAPI.getUserById(id ? id : userId);
   return response;
 });
 
 
 const userByIdSlice = createSlice({
-  name: 'userById',
+  name: "userById",
   initialState: {
     data: null,
     loading: false,

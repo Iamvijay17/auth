@@ -5,10 +5,16 @@ import Navbar from "./layouts/navbar";
 import heroBg from "./assets/hero/background.jpg";
 import routes from "./routes"; // Import the routes from routes.js
 import { AuthProvider } from "./context/AuthContext"; // Ensure AuthProvider is imported
+import { Layout } from "antd";
+
+const { Footer } = Layout;
 
 function App() {
   const location = useLocation();
-  const isAdminPath = location.pathname.includes("admin");
+
+  const hideNavbarPaths = ["admin", "vendor", "settings"];
+
+  const shouldHideNavbar = hideNavbarPaths.some((path) => location.pathname.includes(path));
 
   return (
     <AuthProvider> {/* Wrap the entire app in AuthProvider */}
@@ -22,7 +28,7 @@ function App() {
             />
           )}
 
-          {!isAdminPath && (
+          {!shouldHideNavbar && (
             <div className="sticky top-0 z-20 bg-opacity-80 backdrop-blur-sm bg-white">
               <Navbar />
             </div>
@@ -44,6 +50,19 @@ function App() {
               ))}
             </Routes>
           </div>
+
+          {/* Footer */}
+          {!shouldHideNavbar && <Footer
+            style={{
+              textAlign: "center",
+              background: "#001529",
+              color: "#fff"
+            }}
+          >
+        © 2024 Wanderlust Voyages. All rights reserved.
+          </Footer>
+          }
+          
         </div>
       </div>
     </AuthProvider>

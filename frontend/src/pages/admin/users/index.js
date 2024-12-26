@@ -1,10 +1,10 @@
-import { BarsOutlined, CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Dropdown, Menu, Modal, Space, Table, Tag } from 'antd';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Toolbar from '../../../components/toolbar';
-import { setSearchQuery } from '../../../store/userSlice';
-import { getColorFromName } from '../../../utils';
+import { BarsOutlined, CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Dropdown, Menu, Modal, Space, Table, Tag } from "antd";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Toolbar from "../../../components/toolbar";
+import { setSearchQuery } from "../../../store/userSlice";
+import { getColorFromName } from "../../../utils";
 
 const AllUsers = () => {
   const dispatch = useDispatch();
@@ -32,14 +32,14 @@ const AllUsers = () => {
 
   // Handle edit action
   const handleEdit = (record) => {
-    console.log('Editing user:', record);
+    console.log("Editing user:", record);
     // Add your edit logic here
   };
   
   // Handle delete action
   const handleDelete = (record) => {
     setIsDeleteModalVisible(true);
-    console.log('Deleting user:', record);
+    console.log("Deleting user:", record);
     // Add your delete logic here
   };
 
@@ -55,27 +55,27 @@ const AllUsers = () => {
 
   const items = [
     {
-      label: 'Users',
-      key: 'user',
+      label: "Users",
+      key: "user",
       icon: <UserOutlined />
     },
     {
-      label: 'Admin',
-      key: 'admin',
+      label: "Admin",
+      key: "admin",
       icon: <UserOutlined />
     },
     {
-      label: 'Vendors',
-      key: 'vendor',
+      label: "Vendors",
+      key: "vendor",
       icon: <UserOutlined />
     }
   ];
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
       render: (text) => (
         <div className='flex items-center gap-2'>
           <Avatar size="small" style={{ backgroundColor: getColorFromName(text) }}>{text.charAt(0).toUpperCase()}</Avatar>
@@ -84,36 +84,36 @@ const AllUsers = () => {
       )
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email'
+      title: "Email",
+      dataIndex: "email",
+      key: "email"
     },
     {
-      title: 'Role',
-      key: 'role',
-      dataIndex: 'role',
+      title: "Role",
+      key: "role",
+      dataIndex: "role",
       render: (_, { role }) => (
-        <Tag color={'geekblue'} key={role}>
+        <Tag color={"geekblue"} key={role}>
           {role.toUpperCase()}
         </Tag>
       )
     },
     {
-      title: 'Verified Status',
-      dataIndex: 'isVerified',
-      key: 'isVerified',
+      title: "Verified Status",
+      dataIndex: "isVerified",
+      key: "isVerified",
       render: (verified) => (
-        <Tag color={verified ? 'green' : 'red'} key={verified} icon={verified ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <CloseCircleTwoTone twoToneColor={"#cf1322"}/>}>
-          {verified ? 'Verified' : 'Not Verified'}
+        <Tag color={verified ? "green" : "red"} key={verified} icon={verified ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <CloseCircleTwoTone twoToneColor={"#cf1322"}/>}>
+          {verified ? "Verified" : "Not Verified"}
         </Tag>
       )
     },
     {
-      title: 'Action',
-      key: 'action',
+      title: "Action",
+      key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Dropdown overlay={menu(record)} trigger={['click']}>
+          <Dropdown overlay={menu(record)} trigger={["click"]}>
             <Button type="text">
               <BarsOutlined />
             </Button>

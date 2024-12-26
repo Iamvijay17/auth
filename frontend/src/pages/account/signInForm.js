@@ -18,7 +18,7 @@ const SigninForm = ({ handleFinish, setShowFrom, form }) => {
         <Form
           name="signin"
           onFinish={handleSubmit}
-        // onFinishFailed={onFinishFailed}
+          // onFinishFailed={onFinishFailed}
           autoComplete="off"
           form={form}
         >
@@ -27,7 +27,7 @@ const SigninForm = ({ handleFinish, setShowFrom, form }) => {
             rules={[
               {
                 required: true,
-                message: 'Please enter your email!'
+                message: "Please enter your email!"
               }
             ]}
           >
@@ -39,7 +39,7 @@ const SigninForm = ({ handleFinish, setShowFrom, form }) => {
             rules={[
               {
                 required: true,
-                message: 'Please enter your password!'
+                message: "Please enter your password!"
               }
             ]}>
             <Input placeholder="Enter your password" size="large" type="password" />
