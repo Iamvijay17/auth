@@ -63,8 +63,7 @@ const swaggerOptions = {
     "./routes/vendorRoutes.js",
     "./routes/hotelRoutes.js",
     "./routes/travelAgencyRoutes.js",
-    "./backend/routes/auth.js",
-    "./backend/routes/userRoutes.js",
+    "./routes/uploadRoutes.js",
   ],
 };
 

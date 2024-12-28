@@ -1,7 +1,8 @@
 import { EditOutlined, EnvironmentOutlined, MailOutlined, PhoneOutlined, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Card, Col, Form, Input, Layout, message, Row, Select, Space, Switch, Typography, Upload } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { ProfileServiceAPI } from "./profile.service";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -9,32 +10,93 @@ const { Option } = Select;
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [avatar, setAvatar] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(null);
 
   const [form] = Form.useForm();
+  const userById = useSelector((state) => state.userById);
 
-  const userById = useSelector((state) => state.userById); // You can replace this with the user data from the Redux store or API response
+  useEffect(() => {
+    // Fetch the avatar when the component loads
+    if (userById?.data?.avatar) {
+      fetchAvatar(userById.data.avatar);
+    }
+  }, [userById]);
 
-
+  // Function to handle form submission
   const handleFinish = (values) => {
     console.log("Updated Values: ", values);
     setIsEditing(false);
     message.success("Profile updated successfully!");
   };
 
-  const handleAvatarChange = (info) => {
-    if (info.file.status === "done") {
-      // Successfully uploaded file
-      message.success(`${info.file.name} uploaded successfully`);
-      setAvatar(URL.createObjectURL(info.file.originFileObj)); // Update the avatar
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} upload failed`);
+  const fetchAvatar = async(filename) => {
+    try {
+      const response = await ProfileServiceAPI.getAvatar({
+        responseType: "blob"
+      });
+
+      // Convert Blob to an Object URL and set it as the avatar URL
+      const avatarObjectUrl = URL.createObjectURL(response.data);
+      setAvatarUrl(avatarObjectUrl);
+    } catch (err) {
+      console.error("Error fetching avatar:", err);
+      setAvatarUrl(""); // Set to empty string in case of an error
+    }
+  };
+
+  const handleAvatarChange = async(info) => {
+    const { file } = info;
+    if (file.status === "uploading") {
+      message.loading("Uploading avatar...");
+      return;
+    }
+
+    if (file.status === "done") {
+      try {
+        // Prepare form data
+        const formData = new FormData();
+        formData.append("avatar", file.originFileObj);
+
+        // Send file to the server
+        const response = await ProfileServiceAPI.updateAvatar(formData);
+
+        // Assuming response contains the new avatar URL
+        setAvatarUrl(response.data.avatarUrl);
+
+        // Show success message
+        message.success("Avatar uploaded successfully!");
+      } catch (err) {
+        console.error("Error uploading avatar:", err);
+        message.error("Failed to upload avatar.");
+      }
+    } else if (file.status === "error") {
+      message.error("Avatar upload failed.");
+    }
+  };
+
+
+  const props = {
+    name: "files",
+    action: "https://localhost:5000/api/v1/upload/upload-avatar",
+    data:{service:"organization", module:"user"},
+    headers: {
+      // Authorization: `Bearer ${getCookie("accessToken")}`
+    },
+    onChange(info) {
+      console.log(info);
+
+      handleAvatarChange(info);
+      if (info.file.status !== "uploading") {
+      
+      }
+      if (info.file.status === "done") {
+      } else if (info.file.status === "error") {
+      }
     }
   };
 
   return (
     <Layout style={{ minHeight: "90vh" }}>
-      {/* Content */}
       <Content
         style={{
           padding: "20px",
@@ -70,15 +132,15 @@ const ProfilePage = () => {
                   borderRadius: "8px 8px 0 0"
                 }}
               >
-                <Upload
+                <Upload {...props}
                   showUploadList={false}
-                  beforeUpload={() => false} // Prevent upload to the server
-                  onChange={handleAvatarChange} // Handle avatar upload change
+                  beforeUpload={() => false}
+                  // onChange={handleAvatarChange}
                 >
                   <Avatar
                     size={120}
                     icon={<UserOutlined />}
-                    src={avatar || userById["data"]?.avatar} // Show updated avatar or default
+                    src={avatarUrl || userById?.data?.avatar} // Show updated avatar or default
                     style={{ border: "4px solid white", position: "relative" }}
                   />
                   {isEditing && (
@@ -116,23 +178,23 @@ const ProfilePage = () => {
             ]}
           >
             <Title level={3} style={{ margin: "0" }}>
-              {userById["data"]?.name}
+              {userById?.data?.name}
             </Title>
             <Text type="secondary">
-              {userById["data"]?.role.toUpperCase()} •{" "}
-              {userById["data"]?.isVerified ? "Verified" : "Not Verified"}
+              {userById?.data?.role.toUpperCase()} •{" "}
+              {userById?.data?.isVerified ? "Verified" : "Not Verified"}
             </Text>
             <div style={{ marginTop: "10px" }}>
               <Text>
-                <MailOutlined /> {userById["data"]?.email}
+                <MailOutlined /> {userById?.data?.email}
               </Text>
               <br />
               <Text>
-                <PhoneOutlined /> {userById["data"]?.phone}
+                <PhoneOutlined /> {userById?.data?.phone}
               </Text>
               <br />
               <Text>
-                <EnvironmentOutlined /> {userById["data"]?.address}
+                <EnvironmentOutlined /> {userById?.data?.address}
               </Text>
             </div>
           </Card>
@@ -148,7 +210,7 @@ const ProfilePage = () => {
               <Form
                 form={form}
                 layout="vertical"
-                initialValues={userById["data"]}
+                initialValues={userById?.data}
                 onFinish={handleFinish}
               >
                 <Row gutter={[16, 16]}>
