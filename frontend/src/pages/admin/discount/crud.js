@@ -15,10 +15,12 @@ const DiscountCrud = ({ form, initialValues, onFinish }) => {
     
   useEffect(() => {
     const couponCode = generateCouponCode();
-    if(!initialValues) {
-      form.setFieldsValue({"code": couponCode});
+    
+    // Check if initialValues is not null and doesn't already have a 'code' value
+    if (!initialValues || !initialValues.code) {
+      form.setFieldsValue({ code: couponCode });
     }
-  }, []);
+  }, [form, initialValues]);
 
   const PercentageInput = ({ value, onChange }) => {
    

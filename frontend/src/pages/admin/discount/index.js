@@ -1,6 +1,7 @@
 import { Tabs } from "antd";
 import React from "react";
 import DiscountTable from "./table";
+import EmptyPage from "../../../components/empty";
 
 const Discount = () => {
   const tabItems = [
@@ -12,7 +13,7 @@ const Discount = () => {
     {
       label: "Unused Discount",
       key: "2",
-      children: <DiscountTable />
+      children: <EmptyPage status={"underconstruction"}/>
     }
   ];
 

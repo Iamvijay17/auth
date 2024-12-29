@@ -1,21 +1,30 @@
 import { BarsOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Avatar, Button, Dropdown, Form, Menu, Modal, Space, Table, Tag , Typography} from "antd";
-import React, { useState } from "react";
+import { Avatar, Button, Dropdown, Form, Menu, message, Modal, Space, Table, Tag , Typography} from "antd";
+import React, { useEffect, useState } from "react";
 import { generateId, getColorFromName } from "../../../utils";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Toolbar from "../../../components/toolbar";
 import DiscountCrud from "./crud";
 import { AdminServiceAPI } from "../admin.service";
+import { fetchAllDiscounts } from "../../../store/discountSlice";
 
 const { Paragraph } = Typography;
 
 const DiscountTable = () => {
+
+  const dispatch = useDispatch();
+
   const { filteredData: discountFilteredData } = useSelector((state) => state.discounts);
   const { filteredData: userFilteredData } = useSelector((state) => state.users);
   const [form] = Form.useForm();
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const [isOpenDiscountModal, setIsOpenDiscountModal] = useState(false);
+
+
+  useEffect(() => {
+    dispatch(fetchAllDiscounts());
+  }, [dispatch]);
 
 
 
@@ -26,10 +35,10 @@ const DiscountTable = () => {
     if(!values.codeId) {
       values["codeId"] = generateId("COD");
     }
-
+    form.resetFields();
     setIsOpenDiscountModal(false);
     AdminServiceAPI.createDiscount(values).then((res) => {
-      console.log(res);
+      message.success("Discount created successfully");
     });
   };
 
