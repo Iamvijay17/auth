@@ -2,13 +2,12 @@ import { DatePicker, Form, Input, InputNumber } from "antd";
 import FormBuilder from "antd-form-builder";
 import React, { useEffect } from "react";
 import { generateCouponCode } from "../../../utils";
+import moment from "moment";
 
 const { TextArea } = Input;
 
 const DiscountCrud = ({ form, initialValues, onFinish }) => {
 
-
-    
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, [initialValues, form]);
@@ -38,8 +37,8 @@ const DiscountCrud = ({ form, initialValues, onFinish }) => {
   const DatePick = ({ value, onChange }) => {
     return (
       <DatePicker
-        value={value}
-        onChange={onChange}
+        value={value ? moment(value) : null}
+        onChange={date => onChange(date)}
         format="DD-MM-YYYY"
         style={{ width: "100%" }}
       />

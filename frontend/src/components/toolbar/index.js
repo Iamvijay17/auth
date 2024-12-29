@@ -4,7 +4,7 @@ import React from "react";
 
 const { Search } = Input;
 
-const Toolbar = ({ onChange, placeholder, handleMenuClick, items, extraLeft, extraRight }) => {
+const Toolbar = ({ onChange, placeholder, handleMenuClick, items, extraLeft, extraRight, filter }) => {
 
   const handleSearchChange = (e) => {
     if (onChange) {
@@ -34,12 +34,13 @@ const Toolbar = ({ onChange, placeholder, handleMenuClick, items, extraLeft, ext
           enterButton
         />
         
-        {/* Filter Dropdown */}
-        <Dropdown menu={menuProps}>
-          <Button>
-            <FilterOutlined />
-          </Button>
-        </Dropdown>
+        { filter &&
+          <Dropdown menu={menuProps}>
+            <Button>
+              <FilterOutlined />
+            </Button>
+          </Dropdown>
+        }
 
         {extraRight && <div>{extraRight}</div>}
 

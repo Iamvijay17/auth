@@ -127,7 +127,7 @@ const AllUsers = () => {
 
   return (
     <div>
-      <Toolbar placeholder="Search users..." items={items} onChange={handleSearch} handleMenuClick={handleMenuClick} enterButton
+      <Toolbar filter placeholder="Search users..." items={items} onChange={handleSearch} handleMenuClick={handleMenuClick} enterButton
         extraLeft={
           <Space>
             <Radio.Group value={view} onChange={(e) => setView(e.target.value)}>

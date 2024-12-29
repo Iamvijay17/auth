@@ -1,12 +1,13 @@
 import { BarsOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Avatar, Button, Dropdown, Form, Menu, message, Modal, Space, Table, Tag , Typography} from "antd";
+import { Avatar, Button, Dropdown, Form, message, Modal, Space, Table, Tag, Typography } from "antd";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { generateId, getColorFromName } from "../../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import Toolbar from "../../../components/toolbar";
-import DiscountCrud from "./crud";
-import { AdminServiceAPI } from "../admin.service";
 import { fetchAllDiscounts } from "../../../store/discountSlice";
+import { generateId, getColorFromName } from "../../../utils";
+import { AdminServiceAPI } from "../admin.service";
+import DiscountCrud from "./crud";
 
 const { Paragraph } = Typography;
 
@@ -18,13 +19,17 @@ const DiscountTable = () => {
   const { filteredData: userFilteredData } = useSelector((state) => state.users);
   const [form] = Form.useForm();
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-
   const [isOpenDiscountModal, setIsOpenDiscountModal] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState(null);
 
 
   useEffect(() => {
     dispatch(fetchAllDiscounts());
   }, [dispatch]);
+
+  useEffect(() => {
+    form.resetFields();
+  }, [isOpenDiscountModal]);
 
 
 
@@ -42,23 +47,29 @@ const DiscountTable = () => {
     });
   };
 
-  const menu = (record) => (
-    <Menu>
-      <Menu.Item key="1" onClick={() => {}}>
-        <Space>
-          <EditOutlined />
-          Edit
-        </Space>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="2" danger onClick={() =>{}}>
-        <Space>
-          <DeleteOutlined />
-          Delete
-        </Space>
-      </Menu.Item>
-    </Menu>
-  );
+  const handleEdit = (record) => {
+    console.log("Editing user:", record);
+    setIsOpenDiscountModal(true);
+  };
+
+  const handleDelete = (record) => {
+    setIsDeleteModalVisible(true);
+  };
+
+  const menuItems = [
+    {
+      label: "Edit",
+      key: "edit",
+      icon: <EditOutlined />,
+      onClick: handleEdit
+    },
+    {
+      label: "Delete",
+      key: "delete",
+      icon: <DeleteOutlined />,
+      onClick: handleDelete
+    }
+  ];
 
   const columns = [
     {
@@ -90,6 +101,12 @@ const DiscountTable = () => {
       render: (text) => <Paragraph copyable>{text}</Paragraph>
     },
     {
+      title: "Percentage",
+      dataIndex: "discountPercentage",
+      key: "discountPercentage",
+      render: (text) => <Paragraph>{text} %</Paragraph>
+    },
+    {
       title: "Role",
       key: "isActive",
       dataIndex: "isActive",
@@ -108,13 +125,25 @@ const DiscountTable = () => {
           {verified ? "Verified" : "Not Verified"}
         </Tag>
       )
+    },{
+      title: "Validity",
+      dataIndex: "validTo",
+      key: "validTo",
+      render: (text) => {
+        return moment(text).format("DD-MMM-YYYY");
+      }
     },
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Dropdown overlay={menu(record)} trigger={["click"]}>
+          <Dropdown
+            menu={{
+              items: menuItems
+            }}
+            onClick={(e) => setCurrentRecord(record)}
+            trigger={["click"]}>
             <Button type="text">
               <BarsOutlined />
             </Button>
@@ -126,9 +155,10 @@ const DiscountTable = () => {
 
   return (
     <div>
-      <Toolbar extraRight={
-        <Button type="primary" onClick={() => setIsOpenDiscountModal(true)}>Create Discount</Button>
-      } />
+      <Toolbar
+        extraRight={
+          <Button type="primary" onClick={() => setIsOpenDiscountModal(true)}>Create Discount</Button>
+        } />
       <Table columns={columns} dataSource={discountFilteredData} />
 
       <Modal
@@ -140,12 +170,12 @@ const DiscountTable = () => {
           <>
             <Button onClick={() => setIsOpenDiscountModal(false)}>Cancel</Button>
             <Button type="primary" onClick={() => form.submit()}>
-            Create
+              {currentRecord ? "Update" : "Create"}
             </Button>
           </>
         }
       >
-        <DiscountCrud form={form} initialValues={{}} onFinish={handleSubmit}/>
+        <DiscountCrud form={form} initialValues={currentRecord} onFinish={handleSubmit}/>
       </Modal>
 
       <Modal

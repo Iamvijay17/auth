@@ -17,7 +17,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.get('/vendor', verifyToken, authorizeRoles('vendor'), getVendorOrders);
+router.get('/vendor', verifyToken, authorizeRoles("admin", 'vendor'), getVendorOrders);
 
 /**
  * @swagger
