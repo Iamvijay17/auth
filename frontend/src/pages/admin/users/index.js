@@ -1,6 +1,6 @@
 import { BarsOutlined, CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, EditOutlined, IdcardOutlined, TableOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Dropdown, Menu, Modal, Radio, Space, Table, Tag } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Toolbar from "../../../components/toolbar";
 import { setSearchQuery } from "../../../store/userSlice";
@@ -10,7 +10,7 @@ import UserProfileCards from "../components/UserProfileCard";
 const AllUsers = () => {
   const dispatch = useDispatch();
   const { filteredData } = useSelector((state) => state.users);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = React.useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [view, setView] = React.useState("card");
 
   // Define the menu for the dropdown

@@ -6,7 +6,7 @@ export const createBooking = async (req, res) => {
     const { destinationId, bookingDate, startDate, endDate, numberOfGuests, totalPrice } = req.body;
 
     const newBooking = new Booking({
-      userId: req.user.id,
+      userId: req.user.userId,
       destinationId,
       bookingDate,
       startDate,
@@ -15,6 +15,7 @@ export const createBooking = async (req, res) => {
       totalPrice,
     });
 
+    console.log(newBooking);
     const savedBooking = await newBooking.save();
     res.status(201).json({ message: 'Booking created successfully', booking: savedBooking });
   } catch (error) {
@@ -25,7 +26,7 @@ export const createBooking = async (req, res) => {
 // Get all bookings (Admin)
 export const getAllBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find().populate('userId', 'name email').populate('destinationId', 'name location');
+    const bookings = await Booking.find().populate('userId', 'name email').populate('destinationId', 'name location').select(' -_id -__v');
     res.status(200).json(bookings);
   } catch (error) {
     res.status(500).json({ error: error.message });

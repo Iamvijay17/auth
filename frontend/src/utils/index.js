@@ -1,9 +1,9 @@
-import { customAlphabet } from 'nanoid';
+import { customAlphabet } from "nanoid";
 
 export const generateId=(key) => {
-  let prefix = key.toLowerCase() + '';
-  const nanoid = customAlphabet('1234567890abcdef', 10);
-  let id =   prefix+'-' + nanoid().toLowerCase();
+  let prefix = key.toLowerCase() + "";
+  const nanoid = customAlphabet("1234567890abcdef", 10);
+  let id =   prefix+"-" + nanoid().toLowerCase();
   return id;
 };
 
@@ -30,3 +30,16 @@ export const getColorFromName = (name) => {
 
   return color;
 };
+
+export const generateCouponCode = (length = 8) => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let couponCode = "WONDER"; // Adding the prefix "wonder"
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    couponCode += characters[randomIndex];
+  }
+
+  return couponCode;
+};
+

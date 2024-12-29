@@ -4,7 +4,7 @@ import React from "react";
 
 const { Search } = Input;
 
-const Toolbar = ({ onChange, placeholder, handleMenuClick, items, extraLeft }) => {
+const Toolbar = ({ onChange, placeholder, handleMenuClick, items, extraLeft, extraRight }) => {
 
   const handleSearchChange = (e) => {
     if (onChange) {
@@ -20,21 +20,29 @@ const Toolbar = ({ onChange, placeholder, handleMenuClick, items, extraLeft }) =
 
   return (
     <div className="flex justify-between w-full p-4 gap-3">
+      {/* Render extraLeft if it is passed */}
       {extraLeft && <div className="flex items-center">{extraLeft}</div>}
 
-      <div className="flex items-center gap-3">
+      {/* This div will push the content to the right */}
+      <div className="flex items-center gap-3 ml-auto">
+        {/* Search Input */}
         <Search
           className="w-[15rem]"
-          placeholder={placeholder ? placeholder : "search"}
+          placeholder={placeholder || "Search"}
           onChange={handleSearchChange}
           allowClear
           enterButton
         />
+        
+        {/* Filter Dropdown */}
         <Dropdown menu={menuProps}>
           <Button>
             <FilterOutlined />
           </Button>
         </Dropdown>
+
+        {extraRight && <div>{extraRight}</div>}
+
       </div>
     </div>
   );

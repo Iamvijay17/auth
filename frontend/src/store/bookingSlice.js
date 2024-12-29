@@ -2,14 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { storeServicesAPI } from "./store.service";
 
 
-export const fetchAllUsers = createAsyncThunk("users/fetchAllUsers", async() => {
-  const response = await storeServicesAPI.getAllUsers();
+export const fetchAllBookings = createAsyncThunk("bookings/fetchAllBookings", async() => {
+  const response = await storeServicesAPI.getAllBookings();
   return response;
-  
 });
 
-const usersSlice = createSlice({
-  name: "users",
+const BookingSlice = createSlice({
+  name: "bookings",
   initialState: {
     data: [],
     filteredData: [],
@@ -23,10 +22,10 @@ const usersSlice = createSlice({
 
       if (typeof searchQuery === "string") {
         state.searchQuery = searchQuery;
-        state.filteredData = state.data.filter((user) =>
-          user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.role.toLowerCase().includes(searchQuery.toLowerCase())
+        state.filteredData = state.data.filter((booking) =>
+          booking.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          booking.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          booking.role.toLowerCase().includes(searchQuery.toLowerCase())
         );
       } else {
         console.error("Search query must be a string");
@@ -36,21 +35,21 @@ const usersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllUsers.pending, (state) => {
+      .addCase(fetchAllBookings.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+      .addCase(fetchAllBookings.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
         state.filteredData = action.payload;
       })
-      .addCase(fetchAllUsers.rejected, (state, action) => {
+      .addCase(fetchAllBookings.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
   }
 });
 
-export const { setSearchQuery } = usersSlice.actions;
+export const { setSearchQuery } = BookingSlice.actions;
 
-export default usersSlice.reducer;
+export default BookingSlice.reducer;

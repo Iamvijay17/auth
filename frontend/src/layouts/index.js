@@ -15,8 +15,11 @@ import { deleteCookie, getCookie } from "../utils/cookies";
 import { getColorFromName } from "../utils";
 import { fetchUserById } from "../store/userByIdSlice";
 import { fetchAllUsers } from "../store/userSlice";
+import { fetchAllBookings } from "../store/bookingSlice";
+import { fetchAllDiscounts } from "../store/discountSlice";
 
 const { Header, Content, Sider } = Layout;
+const { SubMenu } = Menu;
 
 // Helper function for menu items
 function getItem(label, key, icon, path, children) {
@@ -27,15 +30,9 @@ function getItem(label, key, icon, path, children) {
 const items = [
   getItem("Dashboard", "dashboard", <DesktopOutlined />, "/admin/dashboard"),
   getItem("Users", "users", <MdOutlineDashboard />, "/admin/users"),
-  getItem("User", "user", <UserOutlined />, null, [
-    getItem("Tom", "tom", null, "/user/tom"),
-    getItem("Bill", "bill", null, "/user/bill"),
-    getItem("Alex", "alex", null, "/user/alex")
-  ]),
-  getItem("Team", "team", <TeamOutlined />, null, [
-    getItem("Team 1", "team1", null, "/team/1"),
-    getItem("Team 2", "team2", null, "/team/2")
-  ]),
+  getItem("Booking", "bookings", <UserOutlined />, "/admin/bookings"),
+  getItem("Discount", "discounts", <UserOutlined />, "/admin/discounts"),
+  getItem("Team", "team", <TeamOutlined />, "/admin/team"),
   getItem("Chat", "chat", <FileOutlined />, "/admin/chat")
 ];
 
@@ -52,12 +49,19 @@ const MainLayout = () => {
   useEffect(() => {
     dispatch(fetchUserById());
     dispatch(fetchAllUsers());
+    dispatch(fetchAllBookings());
+    dispatch(fetchAllDiscounts());
+
+
+    if (!accessToken) {
+      navigate("/");
+    }
   }, [dispatch]);
 
   const handleLogOut = () => {
     deleteCookie("accessToken");
     deleteCookie("userId");
-    navigate("/");
+    navigate("/"); // Redirect to the homepage or login page
   };
 
   // Recursive function to find the key of the current path
@@ -108,6 +112,13 @@ const MainLayout = () => {
     }
   ];
 
+  const handleMenuClick = ({ key, keyPath }) => {
+    const selectedItem = items.find((item) => item.key === key);
+    if (selectedItem && selectedItem.path) {
+      navigate(selectedItem.path); // Navigate to the path of the selected item
+    }
+  };
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
@@ -116,14 +127,24 @@ const MainLayout = () => {
           theme="dark"
           mode="inline"
           selectedKeys={[currentKey]}
-          onClick={({ key }) => {
-            const selectedItem = items.find((item) => item.key === key) || {};
-            if (selectedItem.path) {
-              navigate(selectedItem.path);
-            }
-          }}
-          items={items}
-        />
+          onClick={handleMenuClick}
+        >
+          {items.map((item) =>
+            item.children ? (
+              <SubMenu key={item.key} icon={item.icon} title={item.label}>
+                {item.children.map((child) => (
+                  <Menu.Item key={child.key} path={child.path}>
+                    {child.label}
+                  </Menu.Item>
+                ))}
+              </SubMenu>
+            ) : (
+              <Menu.Item key={item.key} icon={item.icon}>
+                {item.label}
+              </Menu.Item>
+            )
+          )}
+        </Menu>
       </Sider>
       <Layout>
         <Header
@@ -151,12 +172,14 @@ const MainLayout = () => {
               <Avatar
                 size={34}
                 shape="circle"
+                alt="User"
+                src={userById.data.avatar}
                 style={{
                   backgroundColor: getColorFromName(userById.data.name),
                   cursor: "pointer"
                 }}
               >
-                {userById.data.name.charAt(0).toUpperCase() ?? ""}
+                {userById.data.avatar ? "" : userById.data.name.charAt(0).toUpperCase()}
               </Avatar>
             </Dropdown>
           )}

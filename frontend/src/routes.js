@@ -8,20 +8,24 @@ import AllUsers from "./pages/admin/users";
 import CommonLayout from "./layouts/commonLayout";
 import Settings from "./pages/settings";
 import ProfilePage from "./pages/profile";
+import AllBookings from "./pages/admin/booking";
+import Discount from "./pages/admin/discount";
 
 const routes = [
   { path: "/", element: <Home /> },
   { path: "/destination", element: <Destination /> },
   { path: "/stories", element: <Stories /> },
   { path: "/reviews", element: <Reviews /> },
-  {path: "/profile", element: <ProfilePage />},
+  { path: "/profile", element: <ProfilePage /> },
   {
     path: "/admin",
     element: <MainLayout />,
     children: [
       { path: "users", element: <AllUsers /> },
       { path: "dashboard", element: <div>dashboard</div> },
-      { path: "chat", element: <div>chat</div> }
+      { path: "chat", element: <div>chat</div> },
+      { path: "bookings", element: <AllBookings /> },
+      { path: "discounts", element: <Discount /> }
     ]
   },
   {

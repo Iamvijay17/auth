@@ -1,11 +1,13 @@
 import express from 'express';
 import { verifyToken } from '../middleware/index.js';
-import { applyDiscount } from '../controllers/discountController.js';
+import { applyDiscount, createDiscount, getAllDiscounts } from '../controllers/discountController.js';
 
 const router = express.Router();
 
 
+router.get('/', verifyToken, getAllDiscounts);
 router.post('/apply', verifyToken, applyDiscount);
+router.post('/create', verifyToken, createDiscount);
 
 const discountRoutes = router;
 

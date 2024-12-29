@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { storeServicesAPI } from "./store.services";
+import { storeServicesAPI } from "./store.service";
 import { getCookie } from "../utils/cookies";
 
 

@@ -9,6 +9,9 @@ const discountSchema = new mongoose.Schema(
       uppercase: true,
       trim: true,
     },
+     codeId: {
+      type: String,
+    },
     description: {
       type: String,
       required: true,
@@ -31,6 +34,29 @@ const discountSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    deletedAt: {
+      type: Date,
+    },
+    deletedBy: {
+      type: String,
+    },
+    createdBy: {
+      type: String,
+    },
+usedBy: [
+  {
+    type: String
+  }
+]
+
   },
   { timestamps: true }
 );
