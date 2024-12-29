@@ -68,7 +68,7 @@ app.use(`/api/${version}/notifications`, NotificationRoutes);
 app.use(`/api/${version}/packages`, packageRoutes);
 app.use(`/api/${version}/payment`, paymentRoutes);
 app.use(`/api/${version}/travel-agencies`, travelAgencyRoutes);
-app.use(`/api/${version}/upload`, uploadRoutes); // Mount the upload routes
+app.use(`/api/${version}/upload`, uploadRoutes);
 
 // Serve static files (like avatars) from the "uploads" directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

@@ -10,6 +10,7 @@ import Settings from "./pages/settings";
 import ProfilePage from "./pages/profile";
 import AllBookings from "./pages/admin/booking";
 import Discount from "./pages/admin/discount";
+import ChatAdminPage from "./pages/admin/chat";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -23,7 +24,7 @@ const routes = [
     children: [
       { path: "users", element: <AllUsers /> },
       { path: "dashboard", element: <div>dashboard</div> },
-      { path: "chat", element: <div>chat</div> },
+      { path: "chat", element: <ChatAdminPage /> },
       { path: "bookings", element: <AllBookings /> },
       { path: "discounts", element: <Discount /> }
     ]
