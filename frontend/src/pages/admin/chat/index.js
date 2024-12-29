@@ -1,7 +1,7 @@
-import { PlusOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, Col, Input, Layout, List, Menu, Row } from "antd";
+import { PlusOutlined, SendOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Input, Layout, List, Menu } from "antd";
+import { Picker } from "emoji-mart";
 import React, { useState } from "react";
-import EmptyPage from "../../../components/empty";
 
 const { Header, Content, Sider } = Layout;
 
@@ -13,14 +13,22 @@ const ChatAdminPage = () => {
     {
       id: 1,
       name: "John Doe",
-      messages: [{ text: "Hello! How can I help you?", sender: "customer", read: true }]
+      messages: [
+        { text: "Hello! How can I help you?", sender: "customer", read: true, timestamp: new Date() },
+        { text: "Hello! How can I help you?", sender: "customer", read: true, timestamp: new Date() },
+        { text: "Hello! How can I help you?", sender: "customer", read: true, timestamp: new Date() }
+      ]
     },
     {
       id: 2,
       name: "Jane Smith",
-      messages: [{ text: "I need help with my order.", sender: "customer", read: false }]
+      messages: [
+        { text: "I need help with my order.", sender: "customer", read: false, timestamp: new Date() }
+      ]
     }
   ]);
+  
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const handleSelectChat = (id) => {
     setActiveChat(id);
@@ -30,7 +38,13 @@ const ChatAdminPage = () => {
     if (message.trim()) {
       const updatedChats = chatList.map((chat) =>
         chat.id === activeChat
-          ? { ...chat, messages: [...chat.messages, { text: message, sender: "admin", read: false }] }
+          ? {
+            ...chat,
+            messages: [
+              ...chat.messages,
+              { text: message, sender: "admin", read: false, timestamp: new Date() }
+            ]
+          }
           : chat
       );
       setChatList(updatedChats);
@@ -48,177 +62,142 @@ const ChatAdminPage = () => {
     }, 1500);
   };
 
-  const handleMessageRead = (msgIndex) => {
-    const updatedChats = chatList.map((chat) =>
-      chat.id === activeChat
-        ? {
-          ...chat,
-          messages: chat.messages.map((msg, index) =>
-            index === msgIndex ? { ...msg, read: true } : msg
-          )
-        }
-        : chat
-    );
-    setChatList(updatedChats);
+  const handleEmojiSelect = (emoji) => {
+    setMessage(message + emoji.native);
+    setShowEmojiPicker(false); // Hide the emoji picker after selection
   };
-  console.log(handleMessageRead);
+
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
   return (
-    <Layout style={{ minHeight: "100vh", overflow: "hidden" }}>
-      <Sider width={300} style={{ background: "#f0f2f5" }}>
-        <div style={{ padding: "16px", background: "#fff", textAlign: "center" }}>
-          <h2>Customer Support</h2>
+    <Layout className="h-[80vh]">
+      <Sider className="bg-gray-100" width={300}>
+        <div className="text-center p-4 bg-white">
+          <h2 className="text-xl font-bold">Customer Support</h2>
         </div>
-        <Menu mode="inline" selectedKeys={[activeChat ? String(activeChat) : ""]} style={{ height: "100%", borderRight: 0 }}>
+        <Menu mode="inline" selectedKeys={[activeChat ? String(activeChat) : ""]} className="h-full border-0">
           {chatList.map((chat) => (
-            <Menu.Item key={chat.id} onClick={() => handleSelectChat(chat.id)}>
-              <Avatar icon={<UserOutlined />} style={{ marginRight: 10 }} />
-              {chat.name}
+            <Menu.Item
+              key={chat.id}
+              onClick={() => handleSelectChat(chat.id)}
+              className="flex items-center py-3 hover:bg-gray-200"
+            >
+              <Avatar icon={<UserOutlined />} className="mr-3" />
+              <span className="text-lg">{chat.name}</span>
             </Menu.Item>
           ))}
-          <Menu.Item icon={<PlusOutlined />} style={{ marginTop: "auto" }}>
+          <Menu.Item icon={<PlusOutlined />} className="mt-auto py-3 text-center">
             Add New Chat
           </Menu.Item>
         </Menu>
       </Sider>
 
-      <Layout style={{ padding: "0 24px 24px", display: "flex", flexDirection: "column" }}>
-        <Header
-          style={{
-            padding: 0,
-            background: "#fff",
-            borderBottom: "1px solid #f0f0f0",
-            textAlign: "center"
-          }}
-        >
-          <h3>{activeChat ? `Chat with ${chatList.find((chat) => chat.id === activeChat)?.name}` : ""}</h3>
+      <Layout className="overflow-hidden">
+        <Header className="bg-white text-center shadow-md">
+          <h3 className="text-xl">{activeChat ? `Chat with ${chatList.find((chat) => chat.id === activeChat)?.name}` : ""}</h3>
         </Header>
 
-        <Content
-          style={{
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-            flex: 1,
-            display: "flex",
-            flexDirection: "column-reverse",
-            justifyContent: "flex-start",
-            overflowY: "auto",
-            maxHeight: "calc(100vh - 140px)"
-          }}
-        >
+        <Content className="px-4 flex flex-col bg-gray-50">
           {activeChat ? (
             <List
+              className="flex-1 overflow-y-auto"
               dataSource={chatList.find((chat) => chat.id === activeChat)?.messages}
               renderItem={(msg, index) => (
                 <List.Item
                   key={index}
-                  style={{
-                    display: "flex",
-                    justifyContent: msg.sender === "admin" ? "flex-end" : "flex-start",
-                    marginBottom: "10px",
-                    padding: "0"
-                  }}
+                  className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    style={{
-                      maxWidth: "70%",
-                      padding: "12px",
-                      background: msg.sender === "admin" ? "#0078fe" : "#e4e6eb",
-                      color: msg.sender === "admin" ? "#fff" : "#000",
-                      borderRadius: "20px",
-                      position: "relative",
-                      wordBreak: "break-word"
-                    }}
+                    className={`max-w-3/4 p-3 rounded-lg ${msg.sender === "admin" ? "bg-blue-500 text-white" : "bg-gray-300 text-black"}`}
                   >
-                    {msg.text}
-                    <div
-                      style={{
-                        fontSize: "12px",
-                        marginTop: "5px",
-                        textAlign: msg.sender === "admin" ? "right" : "left"
-                      }}
-                    >
-                      {msg.sender === "admin" && msg.read ? (
-                        <span style={{ color: "green" }}>✔️✔️</span>
-                      ) : (
-                        <span style={{ color: "gray" }}>✔️</span>
-                      )}
-                    </div>
-                    {msg.sender === "customer" && !msg.read && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: "-4px",
-                          right: "-4px",
-                          background: "rgba(0, 0, 0, 0.4)",
-                          color: "white",
-                          padding: "2px 4px",
-                          borderRadius: "50%",
-                          fontSize: "10px"
-                        }}
-                      >
-                        📖
+                    <p>{msg.text}</p>
+                    <div className={`text-xs mt-2 ${msg.sender === "admin" ? "text-right" : "text-left"} flex items-center justify-between`}>
+                      <span>{formatTimestamp(msg.timestamp)}</span>
+                      <div className="flex items-center">
+                        {msg.sender === "admin" && msg.read && (
+                          <span className="ml-2 text-green-500 flex items-center">
+                            <svg
+                              viewBox="0 0 16 11"
+                              height={11}
+                              width={16}
+                              preserveAspectRatio="xMidYMid meet"
+                              fill="none"
+                            >
+                              <title>{"msg-dblcheck"}</title>
+                              <path
+                                d="M11.0714 0.652832C10.991 0.585124 10.8894 0.55127 10.7667 0.55127C10.6186 0.55127 10.4916 0.610514 10.3858 0.729004L4.19688 8.36523L1.79112 6.09277C1.7488 6.04622 1.69802 6.01025 1.63877 5.98486C1.57953 5.95947 1.51817 5.94678 1.45469 5.94678C1.32351 5.94678 1.20925 5.99544 1.11192 6.09277L0.800883 6.40381C0.707784 6.49268 0.661235 6.60482 0.661235 6.74023C0.661235 6.87565 0.707784 6.98991 0.800883 7.08301L3.79698 10.0791C3.94509 10.2145 4.11224 10.2822 4.29844 10.2822C4.40424 10.2822 4.5058 10.259 4.60313 10.2124C4.70046 10.1659 4.78086 10.1003 4.84434 10.0156L11.4903 1.59863C11.5623 1.5013 11.5982 1.40186 11.5982 1.30029C11.5982 1.14372 11.5348 1.01888 11.4078 0.925781L11.0714 0.652832ZM8.6212 8.32715C8.43077 8.20866 8.2488 8.09017 8.0753 7.97168C7.99489 7.89128 7.8891 7.85107 7.75791 7.85107C7.6098 7.85107 7.4892 7.90397 7.3961 8.00977L7.10411 8.33984C7.01947 8.43717 6.97715 8.54508 6.97715 8.66357C6.97715 8.79476 7.0237 8.90902 7.1168 9.00635L8.1959 10.0791C8.33132 10.2145 8.49636 10.2822 8.69102 10.2822C8.79681 10.2822 8.89838 10.259 8.99571 10.2124C9.09304 10.1659 9.17556 10.1003 9.24327 10.0156L15.8639 1.62402C15.9358 1.53939 15.9718 1.43994 15.9718 1.32568C15.9718 1.1818 15.9125 1.05697 15.794 0.951172L15.4386 0.678223C15.3582 0.610514 15.2587 0.57666 15.1402 0.57666C14.9964 0.57666 14.8715 0.635905 14.7657 0.754395L8.6212 8.32715Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        )}
+                        {msg.sender === "admin" && !msg.read && (
+                          <span className="ml-2 text-gray-500 flex items-center">
+                            <svg
+                              viewBox="0 0 12 11"
+                              height={11}
+                              width={16}
+                              preserveAspectRatio="xMidYMid meet"
+                              fill="none"
+                            >
+                              <title>{"msg-check"}</title>
+                              <path
+                                d="M11.1549 0.652832C11.0745 0.585124 10.9729 0.55127 10.8502 0.55127C10.7021 0.55127 10.5751 0.610514 10.4693 0.729004L4.28038 8.36523L1.87461 6.09277C1.8323 6.04622 1.78151 6.01025 1.72227 5.98486C1.66303 5.95947 1.60166 5.94678 1.53819 5.94678C1.407 5.94678 1.29275 5.99544 1.19541 6.09277L0.884379 6.40381C0.79128 6.49268 0.744731 6.60482 0.744731 6.74023C0.744731 6.87565 0.79128 6.98991 0.884379 7.08301L3.88047 10.0791C4.02859 10.2145 4.19574 10.2822 4.38194 10.2822C4.48773 10.2822 4.58929 10.259 4.68663 10.2124C4.78396 10.1659 4.86436 10.1003 4.92784 10.0156L11.5738 1.59863C11.6458 1.5013 11.6817 1.40186 11.6817 1.30029C11.6817 1.14372 11.6183 1.01888 11.4913 0.925781L11.1549 0.652832Z"
+                                fill="white"
+                              />
+                            </svg>
+                          </span>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </div>
                 </List.Item>
               )}
             />
+
           ) : (
-            <div style={{ textAlign: "center" }}>
-              <EmptyPage status={"underconstruction"} />
-            </div>
+            <div className="flex items-center justify-center text-gray-500">Select a chat to start</div>
           )}
         </Content>
 
         {activeChat && (
-          <Row gutter={8} style={{ marginTop: "auto", alignItems: "center" }}>
-            <Col span={1}>
-              <Button
-                type="text"
-                size="large"
-                icon={<PlusOutlined />}
-                style={{ width: "100%", borderRadius: "5px" }}
-              />
-            </Col>
-            <Col span={20}>
-              <Input
-                placeholder="Type a message"
-                value={message}
-                size="large"
-                onChange={(e) => setMessage(e.target.value)}
-                onPressEnter={handleSendMessage}
-                allowClear
-                prefix={
-                  <Button
-                    type="text"
-                    size="large"
-                    icon={<SmileOutlined />}
-                    style={{
-                      width: "30px",
-                      borderRadius: "5px",
-                      padding: 0
-                    }}
-                  />
-                }
-                onFocus={handleTyping}
-              />
-              {typing && <div style={{ fontStyle: "italic", color: "gray" }}>Typing...</div>}
-            </Col>
-            <Col span={3}>
-              <Button
-                type="primary"
-                size="large"
-                onClick={handleSendMessage}
-                style={{
-                  width: "100%",
-                  borderRadius: "5px"
-                }}
-              >
-                Send
-              </Button>
-            </Col>
-          </Row>
+          <div className="flex items-center py-4 bg-white shadow-md">
+            <Input
+              placeholder="Type a message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onPressEnter={handleSendMessage}
+              onFocus={handleTyping}
+              className="flex-1 mr-3"
+              suffix={
+                [
+                  <Button type="text" key={1} icon={<SmileOutlined />} className="text-xl" onClick={() => setShowEmojiPicker(!showEmojiPicker)} />,
+                  <Button type="text" key={2} icon={<PlusOutlined />} className="text-xl" />
+                ]
+              }
+            />
+            <Button
+              icon={<SendOutlined />}
+              size="large"
+              type="primary"
+              onClick={handleSendMessage}
+              className="ml-2 bg-blue-500 text-white"
+            >
+              Send
+            </Button>
+          </div>
+        )}
+
+        {/* Emoji Picker */}
+        {showEmojiPicker && (
+          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-50">
+            <Picker onSelect={handleEmojiSelect} />
+          </div>
         )}
       </Layout>
     </Layout>
