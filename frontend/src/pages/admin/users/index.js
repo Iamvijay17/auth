@@ -1,15 +1,17 @@
-import { BarsOutlined, CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, EditOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, Dropdown, Menu, Modal, Space, Table, Tag } from "antd";
+import { BarsOutlined, CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, EditOutlined, IdcardOutlined, TableOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, Dropdown, Menu, Modal, Radio, Space, Table, Tag } from "antd";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Toolbar from "../../../components/toolbar";
 import { setSearchQuery } from "../../../store/userSlice";
 import { getColorFromName } from "../../../utils";
+import UserProfileCards from "../components/UserProfileCard";
 
 const AllUsers = () => {
   const dispatch = useDispatch();
-  const {filteredData} = useSelector((state) => state.users);
+  const { filteredData } = useSelector((state) => state.users);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = React.useState(false);
+  const [view, setView] = React.useState("card");
 
   // Define the menu for the dropdown
   const menu = (record) => (
@@ -35,7 +37,7 @@ const AllUsers = () => {
     console.log("Editing user:", record);
     // Add your edit logic here
   };
-  
+
   // Handle delete action
   const handleDelete = (record) => {
     setIsDeleteModalVisible(true);
@@ -103,7 +105,7 @@ const AllUsers = () => {
       dataIndex: "isVerified",
       key: "isVerified",
       render: (verified) => (
-        <Tag color={verified ? "green" : "red"} key={verified} icon={verified ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <CloseCircleTwoTone twoToneColor={"#cf1322"}/>}>
+        <Tag color={verified ? "green" : "red"} key={verified} icon={verified ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <CloseCircleTwoTone twoToneColor={"#cf1322"} />}>
           {verified ? "Verified" : "Not Verified"}
         </Tag>
       )
@@ -125,12 +127,30 @@ const AllUsers = () => {
 
   return (
     <div>
-      <Toolbar placeholder="Search users..." items={items}  onChange={handleSearch} handleMenuClick={handleMenuClick} enterButton/>
+      <Toolbar placeholder="Search users..." items={items} onChange={handleSearch} handleMenuClick={handleMenuClick} enterButton
+        extraLeft={
+          <Space>
+            <Radio.Group value={view} onChange={(e) => setView(e.target.value)}>
+              <Radio.Button value="card"><IdcardOutlined /></Radio.Button>
+              <Radio.Button value="list"><TableOutlined /></Radio.Button>
+            </Radio.Group>
+          </Space>
+        }
+      />
       <div>
-        <Table columns={columns} dataSource={filteredData} />
+        {view === "list" && <Table columns={columns} dataSource={filteredData} />}
+        {view === "card" && filteredData.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
+            {filteredData.map((user) => (
+              <div key={user.userId}>
+                <UserProfileCards user={user} />
+              </div>
+            ))}
+          </div>
+        ) }
       </div>
 
-      
+
 
       <Modal
         title="Delete User"

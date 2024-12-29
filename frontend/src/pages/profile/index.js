@@ -13,7 +13,8 @@ const ProfilePage = () => {
   const [avatarUrl, setAvatarUrl] = useState(null);
   const userById = useSelector((state) => state.userById);
   const [isEditing, setIsEditing] = useState(false);
-  console.log(avatarUrl, "userById", userById);
+  const [hovered, setHovered] = useState(false);
+  
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -34,8 +35,6 @@ const ProfilePage = () => {
       if (!response || !response?.avatarUrl) {
         throw new Error("Invalid server response");
       }
-
-
       setAvatarUrl(response.avatarUrl);
 
       // Display success message
@@ -96,30 +95,54 @@ const ProfilePage = () => {
                   borderRadius: "8px 8px 0 0"
                 }}
               >
-                <Upload {...props}>
-                  <Avatar
-                    size={120}
-                    icon={<UserOutlined />}
-                    src={avatarUrl}
-                    style={{ border: "4px solid white", position: "relative" }}
-                  />
-                  {isEditing && (
-                    <Button
-                      icon={<UploadOutlined />}
+                <div
+                  style={{ position: "relative", display: "inline-block" }}
+                  onMouseEnter={() => setHovered(true)}
+                  onMouseLeave={() => setHovered(false)}
+                >
+                  <Upload {...props} style={{ position: "relative" }}>
+                    <Avatar
+                      size={120}
+                      icon={<UserOutlined />}
+                      src={avatarUrl}
                       style={{
-                        position: "absolute",
-                        bottom: 0,
-                        right: 0,
-                        background: "#1890ff",
-                        color: "#fff",
-                        borderRadius: "50%",
-                        border: "none",
-                        padding: "5px"
+                        border: "4px solid white",
+                        position: "relative",
+                        cursor: isEditing ? "pointer" : "default"
                       }}
-                      shape="circle"
                     />
-                  )}
-                </Upload>
+                    {isEditing && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          right: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "#1890ff",
+                          borderRadius: "50%",
+                          width: "36px",
+                          height: "36px",
+                          opacity: hovered ? 1 : 0,
+                          transition: "opacity 0.3s ease-in-out"
+                        }}
+                      >
+                        <Button
+                          icon={<UploadOutlined />}
+                          style={{
+                            background: "transparent",
+                            color: "#fff",
+                            border: "none",
+                            padding: 0,
+                            boxShadow: "none"
+                          }}
+                          shape="circle"
+                        />
+                      </div>
+                    )}
+                  </Upload>
+                </div>
               </div>
             }
             actions={[
@@ -150,11 +173,11 @@ const ProfilePage = () => {
               </Text>
               <br />
               <Text>
-                <PhoneOutlined /> {userById?.data?.phone}
+                <PhoneOutlined /> {userById?.data?.phone ?? "Not Provided"}
               </Text>
               <br />
               <Text>
-                <EnvironmentOutlined /> {userById?.data?.address}
+                <EnvironmentOutlined /> {userById?.data?.address ?? "Not Provided"}
               </Text>
             </div>
           </Card>

@@ -2,15 +2,12 @@ import { Button, Card, Col, Form, Row, Tabs } from "antd";
 import React, { useState } from "react";
 import { IoSettingsOutline } from "react-icons/io5";
 import SettingsForm from "./settings";
+import { useSelector } from "react-redux";
 
 const Settings = () => {
-  const [activeKey, setActiveKey] = useState("1");
+  const userById = useSelector((state) => state.userById);
+  const [activeKey, setActiveKey] = useState("2");
   const [form] = Form.useForm();
-
-  const initialValues = {
-    name: "John Doe",
-    email: "john.doe@example.com"
-  };
 
   const items = [
     {
@@ -29,7 +26,7 @@ const Settings = () => {
           <IoSettingsOutline style={{ marginRight: 8 }} /> Settings
         </span>
       ),
-      children: <SettingsForm form={form} initialValues={initialValues} />
+      children: <SettingsForm form={form} initialValues={userById["data"]} />
     }
   ];
 
@@ -78,7 +75,7 @@ const Settings = () => {
             }}
           >
             <Tabs
-              defaultActiveKey="1"
+              defaultActiveKey="2"
               activeKey={activeKey}
               onChange={(key) => setActiveKey(key)}
               items={items}
