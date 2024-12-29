@@ -94,12 +94,14 @@ const CommonLayout = () => {
               <Avatar
                 size={34}
                 shape="circle"
+                alt={userById.data.name}
+                src={userById.data.avatar}
                 style={{
-                  backgroundColor: getColorFromName(userById.data.name),
+                  backgroundColor: userById.data.avatar ? "" : getColorFromName(userById.data.name),
                   cursor: "pointer"
                 }}
               >
-                {userById.data.name.charAt(0).toUpperCase() ?? ""}
+                {userById.data.avatar && userById.data.name.charAt(0).toUpperCase() }
               </Avatar>
             </Dropdown>
           )}

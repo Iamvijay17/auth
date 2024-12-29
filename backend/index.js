@@ -2,37 +2,40 @@ import compression from "compression";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import path from "path";
 import swaggerUi from "swagger-ui-express";
-import { connectDB } from "./DB/connect.js";
-import AuthRouter from "./routes/auth.js";
-import userRouter from "./routes/userRoutes.js";
-import swaggerSpec from "./swagger.js";
-import destinationRoutes from "./routes/destinationRoutes.js";
-import bookingRoutes from "./routes/bookingRoutes.js";
-import reviewsRoutes from "./routes/reviewsRoutes.js";
-import searchRoutes from "./routes/searchRoutes.js";
+import { fileURLToPath } from "url"; // Import this for __dirname
+import { connectDB } from "./DB/connect.js"; // Database connection function
 import adminRoutes from "./routes/adminRoutes.js";
+import AuthRouter from "./routes/auth.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
+import destinationRoutes from "./routes/destinationRoutes.js";
 import discountRoutes from "./routes/discountRoutes.js";
 import favoritesRoutes from "./routes/favoritesRoutes.js";
 import mapRoutes from "./routes/mapRoutes.js";
+import NotificationRoutes from "./routes/notificationsRoutes.js";
 import packageRoutes from "./routes/packageRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
-import NotificationRoutes from "./routes/notificationsRoutes.js";
+import reviewsRoutes from "./routes/reviewsRoutes.js";
+import searchRoutes from "./routes/searchRoutes.js";
 import travelAgencyRoutes from "./routes/travelAgencyRoutes.js";
-import uploadRoutes from "./routes/uploadRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js"; // Import upload routes
+import userRouter from "./routes/userRoutes.js";
+import swaggerSpec from "./swagger.js";
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 const version = process.env.API_VERSION || "v1";
 
+// Define __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Enable CORS
 app.use(cors({
   origin: "*", // Replace with your frontend URL in production
-  methods: "GET, POST, PUT, DELETE, OPTIONS",
-  allowedHeaders: "Content-Type, Authorization",
   credentials: true
 }));
 
@@ -64,16 +67,16 @@ app.use(`/api/${version}/map`, mapRoutes);
 app.use(`/api/${version}/notifications`, NotificationRoutes);
 app.use(`/api/${version}/packages`, packageRoutes);
 app.use(`/api/${version}/payment`, paymentRoutes);
-app.use(`/api/${version}/payment`, reviewsRoutes);
 app.use(`/api/${version}/travel-agencies`, travelAgencyRoutes);
-app.use(`/api/${version}/upload`, uploadRoutes);
+app.use(`/api/${version}/upload`, uploadRoutes); // Mount the upload routes
 
-
+// Serve static files (like avatars) from the "uploads" directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
+  res.status(500).json({ error: "Something went wrong!", message: err.message });
 });
 
 // Start the server and connect to the database

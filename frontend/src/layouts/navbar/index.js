@@ -120,8 +120,8 @@ const Navbar = () => {
               }}
               trigger={["click"]}
             >
-              <Avatar size={34} shape="circle">
-                {userById.data.name.charAt(0).toUpperCase() ?? ""}
+              <Avatar size={34} shape="circle" src={userById.data?.avatar} className="cursor-pointer">
+                {userById.data?.avatar && userById.data.name.charAt(0).toUpperCase() }
               </Avatar>
             </Dropdown>
           ) : null
