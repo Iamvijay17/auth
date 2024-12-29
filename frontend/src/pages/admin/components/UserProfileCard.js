@@ -75,27 +75,7 @@ const UserProfileCards = ({ user }) => {
                   </div>
                 </div>
                 <div className="flex flex-row items-center">
-                  <div className="flex">
-                    {/* You can add rating stars here */}
-                    {/* Example SVG for rating stars */}
-                    <svg className="w-5 h-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M10 15l-5 3 1.5-6.5L0 7h6.5L10 0l3.5 7H20l-6.5 4.5L15 18z" />
-                    </svg>
-                    {/* Add more stars if needed */}
-                  </div>
-                  <div className="flex-1 inline-flex hidden items-center">
-                    {/* Use correct paths to icons or SVG */}
-                    <img
-                      className="w-5 h-5"
-                      src="data:image/svg+xml;base64,..." // Replace with actual image path or base64 encoding
-                      alt="icon"
-                    />
-                    <img
-                      className="w-5 h-5"
-                      src="data:image/svg+xml;base64,..." // Replace with actual image path or base64 encoding
-                      alt="icon"
-                    />
-                  </div>
+                  {/* Extra content here */}
                 </div>
               </div>
             </div>
