@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import { mkdirSync, renameSync } from "fs";
-import { uploadAvatar, handleAvatarUpload } from "../controllers/uploadController.js";
+import { handleAvatarUpload } from "../controllers/uploadController.js";
 import { authorizeRoles, verifyToken } from "../middleware/index.js";
 
 const router = express.Router();
@@ -26,30 +26,7 @@ router.get("/avatars/:filename", verifyToken, authorizeRoles("vendor", "admin", 
 // File Upload Route
 router.post("/upload-avatar", verifyToken, authorizeRoles("vendor", "admin", "user"), upload.single("file"), handleAvatarUpload );
 
-// File Upload Route
-router.post("/upload_file", verifyToken, authorizeRoles("vendor", "admin", "user"), upload.single("file"), async (request, response) => {
-    try {
-      if (!request.file) {
-        console.error("No file received");
-        return response.status(400).json({ message: "File is required" });
-      }
 
-      const date = Date.now();
-      const fileDir = path.resolve(`uploads/files/${date}`);
-      const fileName = path.join(fileDir, request.file.originalname);
-
-      mkdirSync(fileDir, { recursive: true });
-
-      console.log("Moving file from", request.file.path, "to", fileName);
-      renameSync(request.file.path, fileName);
-
-      return response.status(200).json({ status: "success", filePath: `files/${date}/${request.file.originalname}` });
-    } catch (error) {
-      console.error("Upload Error:", error);
-      return response.status(500).json({ message: "Internal Server Error" });
-    }
-  }
-);
 
 const uploadRoutes = router;
 
