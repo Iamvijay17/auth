@@ -15,20 +15,20 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     permissions: {
       type: [String],
-      default: ["manageUsers", "manageDestinations", "viewReports"], // List of admin permissions
+      default: ["manageUsers", "manageDestinations", "viewReports"],
     },
     settings: {
-      language: { type: String, default: 'en' }, // Default language: English
-      notificationsEnabled: { type: Boolean, default: true },  // Default: Notifications enabled
+      language: { type: String, default: 'en' },
+      notificationsEnabled: { type: Boolean, default: true },
       theme: { type: String, enum: ['light', 'dark'], default: 'light' },
       preferredLanguage: { type: String, default: 'en' },
       is2FAEnabled: { type: Boolean, default: false },
-      emailNotifications: { type: [String], default: [] }, // For example, ['promotions', 'activityUpdates']
+      emailNotifications: { type: [String], default: [] },
       isAccountDeactivated: { type: Boolean, default: false },
       profileVisibility: { type: String, enum: ['public', 'private', 'friends'], default: 'public' }
     },
     lastActivity: { type: Date, default: Date.now },
-    avatar: { type: String },  // Store the URL or path to the avatar image
+    avatar: { type: String },
     address: {
       street: { type: String },
       city: { type: String },
@@ -46,9 +46,10 @@ const userSchema = new mongoose.Schema(
     },
     deletedAt: { type: Date },
     preferences: {
-      theme: { type: String, default: 'light' }, // For UI theme preference
-      timezone: { type: String, default: 'UTC' }, // For time zone preference
+      theme: { type: String, default: 'light' },
+      timezone: { type: String, default: 'UTC' },
     },
+    onlineStatus: { type: Boolean, default: false },
   },
   {
     timestamps: true,

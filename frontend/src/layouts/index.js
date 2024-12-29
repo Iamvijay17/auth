@@ -4,19 +4,20 @@ import {
   TeamOutlined,
   UserOutlined
 } from "@ant-design/icons";
-import { Avatar, Dropdown, Layout, Menu, theme } from "antd";
+import { Avatar, Badge, Dropdown, Layout, Menu, message, theme } from "antd";
 import React, { useEffect, useState } from "react";
 import { IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineDashboard } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { deleteCookie, getCookie } from "../utils/cookies";
-import { getColorFromName } from "../utils";
-import { fetchUserById } from "../store/userByIdSlice";
-import { fetchAllUsers } from "../store/userSlice";
+import io from "socket.io-client";
 import { fetchAllBookings } from "../store/bookingSlice";
 import { fetchAllDiscounts } from "../store/discountSlice";
+import { fetchUserById } from "../store/userByIdSlice";
+import { fetchAllUsers } from "../store/userSlice";
+import { getColorFromName } from "../utils";
+import { deleteCookie, getCookie } from "../utils/cookies";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -37,26 +38,60 @@ const items = [
 ];
 
 const MainLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const { token } = theme.useToken();
   const navigate = useNavigate();
   const location = useLocation();
   const accessToken = getCookie("accessToken");
   const userById = useSelector((state) => state.userById);
-
   const dispatch = useDispatch();
 
+  const [socketUsers, setSocketUsers] = useState(null);
+
+  const myCurrentStatus = socketUsers?.find((user) => user.userId === userById?.data?.userId)?.onlineStatus;
+
+
   useEffect(() => {
+    if (!accessToken) {
+      navigate("/"); // Redirect to login page if no token is present
+      return; // Prevent further execution
+    }
+
     dispatch(fetchUserById());
     dispatch(fetchAllUsers());
     dispatch(fetchAllBookings());
     dispatch(fetchAllDiscounts());
+  }, [dispatch, accessToken, navigate]);
 
+  useEffect(() => {
+    // Ensure userById and userId are available before connecting to socket
+    if (!userById?.data?.userId) return;
 
-    if (!accessToken) {
-      navigate("/");
-    }
-  }, [dispatch]);
+    const socket = io("http://localhost:5000/api/v1/notifications", {
+      transports: ["websocket"],
+      auth: {
+        token: accessToken
+      }
+    });
+
+    socket.on("newNotification", (notification) => {
+      message.success(notification.notification, 5); // Display notification
+    });
+    socket.emit("setOnlineStatus", { userId: userById.data.userId });
+
+    socket.on("allUsersDetails", (data) => {
+      setSocketUsers(data);
+      console.log(data);
+    });
+    console.log(myCurrentStatus, socketUsers);
+
+    return () => {
+      // Remove listeners before disconnecting
+      socket.off("newNotification");
+      socket.off("allUsersDetails");
+      socket.disconnect();
+    };
+  }, [userById, accessToken]);
 
   const handleLogOut = () => {
     deleteCookie("accessToken");
@@ -64,7 +99,6 @@ const MainLayout = () => {
     navigate("/"); // Redirect to the homepage or login page
   };
 
-  // Recursive function to find the key of the current path
   const findCurrentKey = (menuItems, path) => {
     for (const item of menuItems) {
       if (item.path === path) return item.key;
@@ -112,10 +146,14 @@ const MainLayout = () => {
     }
   ];
 
-  const handleMenuClick = ({ key, keyPath }) => {
-    const selectedItem = items.find((item) => item.key === key);
-    if (selectedItem && selectedItem.path) {
-      navigate(selectedItem.path); // Navigate to the path of the selected item
+  const handleMenuClick = ({ key }) => {
+    if (key === "5") {
+      handleLogOut();
+    } else {
+      const selectedItem = items.find((item) => item.key === key);
+      if (selectedItem && selectedItem.path) {
+        navigate(selectedItem.path); // Navigate to the path of the selected item
+      }
     }
   };
 
@@ -163,24 +201,27 @@ const MainLayout = () => {
             <Dropdown
               menu={{
                 items: dropdownItems,
-                onClick: ({ key }) => {
-                  if (key === "5") handleLogOut();
-                }
+                onClick: ({ key }) => handleMenuClick({ key })
               }}
               trigger={["click"]}
             >
-              <Avatar
-                size={34}
-                shape="circle"
-                alt="User"
-                src={userById.data.avatar}
-                style={{
-                  backgroundColor: getColorFromName(userById.data.name),
-                  cursor: "pointer"
-                }}
+              
+              <Badge dot={myCurrentStatus} color={myCurrentStatus ? "green" : "red"} size="large"
+                offset={[-4, 45]}
               >
-                {userById.data.avatar ? "" : userById.data.name.charAt(0).toUpperCase()}
-              </Avatar>
+                <Avatar
+                  size={34}
+                  shape="circle"
+                  alt="User"
+                  src={userById.data.avatar}
+                  style={{
+                    backgroundColor: getColorFromName(userById.data.name),
+                    cursor: "pointer"
+                  }}
+                >
+                  {userById.data.avatar ? "" : userById.data.name.charAt(0).toUpperCase()}
+                </Avatar>
+              </Badge>
             </Dropdown>
           )}
         </Header>

@@ -1,5 +1,5 @@
 import { BarsOutlined, CheckCircleTwoTone, CloseCircleTwoTone, DeleteOutlined, EditOutlined, IdcardOutlined, TableOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, Dropdown, Menu, Modal, Radio, Space, Table, Tag } from "antd";
+import { Avatar, Badge, Button, Dropdown, Menu, Modal, Radio, Space, Table, Tag } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Toolbar from "../../../components/toolbar";
@@ -78,10 +78,28 @@ const AllUsers = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => (
-        <div className='flex items-center gap-2'>
-          <Avatar size="small" style={{ backgroundColor: getColorFromName(text) }}>{text.charAt(0).toUpperCase()}</Avatar>
-          {text}
+      render: (text, record) => (
+        <div className="flex items-center gap-2">
+          <Badge
+            dot
+            color={record.onlineStatus ? "green" : "red"}
+            size="large"
+            offset={[-2, 20]}  // Adjusting the offset to position the dot near the top-right of the avatar
+          >
+            <Avatar
+              size="small"
+              style={{
+                backgroundColor: getColorFromName(text),
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+              src={record.avatar}
+            >
+              {!record.avatar && text.charAt(0).toUpperCase()}
+            </Avatar>
+          </Badge>
+          <span style={{ fontWeight: 500 }}>{text}</span> {/* Consistent styling for the text */}
         </div>
       )
     },

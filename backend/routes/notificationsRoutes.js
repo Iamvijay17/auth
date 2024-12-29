@@ -1,12 +1,14 @@
 import express from 'express';
-import { createNotification, getUnreadNotifications, markAsRead } from '../controllers/notificationsController.js';
+import { createNotification, getUnreadNotifications, markAsRead  } from '../controllers/notificationsController.js';
 import { verifyToken } from '../middleware/index.js';
 
 const router = express.Router();
 
+
 router.post('/', verifyToken, createNotification);
 router.get('/unread', verifyToken, getUnreadNotifications);
 router.patch('/:id', verifyToken, markAsRead);
+
 
 const NotificationRoutes = router;
 

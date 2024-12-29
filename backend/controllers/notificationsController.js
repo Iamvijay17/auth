@@ -1,8 +1,6 @@
 import Notification from '../models/Notification.js';
 
-/**
- * Create a notification for a user
- */
+
 export const createNotification = async (req, res) => {
   const { userId, message, type } = req.body;
 
@@ -12,16 +10,21 @@ export const createNotification = async (req, res) => {
       message,
       type,
     });
+
     await notification.save();
+
+    
+    if (io) {
+      io.emit('new_notification', { userId, message, type });
+    }
+
     res.status(200).json({ message: 'Notification created successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-/**
- * Get unread notifications for a user
- */
+
 export const getUnreadNotifications = async (req, res) => {
   const userId = req.user.id;
 
