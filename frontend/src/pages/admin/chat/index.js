@@ -19,12 +19,13 @@ import {
 } from "antd";
 import { Picker } from "emoji-mart";
 import moment from "moment";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import { fetchAllUsers } from "../../../store/userSlice";
 import { generateId } from "../../../utils";
 import { getCookie } from "../../../utils/cookies";
+import UnreadIcon from "../../../assets/icons/unreadIcon";
 
 const accessToken = getCookie("accessToken");
 const { Header, Content, Sider } = Layout;
@@ -47,6 +48,7 @@ const ChatAdminPage = () => {
   const { filteredData } = useSelector((state) => state.users);
 
   const currentUserId = getCookie("userId");
+  const scrollRef = useRef(null);
 
   // Socket initialization
   useEffect(() => {
@@ -59,13 +61,18 @@ const ChatAdminPage = () => {
 
     socketInstance.on("connect", () => console.log("Connected to server"));
     socketInstance.on("recentChats", setRecentChats);
-    socketInstance.on("typingStatus", ({ senderId, typing }) =>
-      setTypingStatus((prev) => ({ ...prev, [senderId]: typing })));
-    socketInstance.on("receiveMessage", (newMessage) => {
-      if (newMessage.senderId === currentChat?.chatWith) {
-        setMessages((prev) => [...prev, newMessage]);
-      }
+
+    // Listen for the typing status event
+    socketInstance.on("typingStatus", ({ userId, isTyping }) => {
+      setTypingStatus((prev) => ({ ...prev, [userId]: isTyping }));
     });
+
+    socketInstance.on("receiveMessage", (newMessage) => {
+      setMessages((prevMessages) => {
+        return [...prevMessages, newMessage]; // Append new message
+      });
+    });
+
     socketInstance.on("messageStatus", ({ messageId, status }) => {
       setMessages((prev) =>
         prev.map((msg) =>
@@ -99,7 +106,7 @@ const ChatAdminPage = () => {
       setMessages([]);
       socket?.emit("getChatHistory", { receiverId: chatWith }, (chatHistory) => {
         console.log("Received chat history:", chatHistory);
-        setMessages(chatHistory);
+        setMessages(chatHistory); // Set the chat history
       });
     },
     [recentChats, socket]
@@ -113,7 +120,7 @@ const ChatAdminPage = () => {
   const handleSelectUser = (user) => {
     socket?.emit("getChatHistory", { receiverId: user.userId }, (chatHistory) => {
       console.log("Received chat history:", chatHistory);
-      setMessages(chatHistory);
+      setMessages(chatHistory); // Set the chat history
     });
 
     setCurrentChat({
@@ -142,19 +149,16 @@ const ChatAdminPage = () => {
       status: "sent"
     });
 
+    // Emit "typingStatus" with false after sending the message
+    socket?.emit("typingStatus", {
+      receiverId: currentChat.chatWith,
+      isTyping: false
+    });
+
+    // Append the sent message to the messages state
     setMessages((prev) => [...prev, newMessage]);
     setMessageInput("");
-    socket.on("recentChats", setRecentChats);
   };
-
-  const handleTyping = useCallback(() => {
-    if (currentChat?.chatWith) {
-      socket?.emit("typing", {
-        receiverId: currentChat.chatWith,
-        typing: messageInput.trim() !== ""
-      });
-    }
-  }, [currentChat, messageInput, socket]);
 
   const handleEmojiSelect = (emoji) => {
     setMessageInput((prev) => prev + emoji.native);
@@ -162,7 +166,6 @@ const ChatAdminPage = () => {
   };
 
   const toggleEmojiPicker = (event) => {
-    console.log("Toggle emoji picker");
     setShowEmojiPicker(!showEmojiPicker);
     const { top, left } = event.target.getBoundingClientRect();
     setEmojiPickerPosition({ top: top + 30, left: left }); // Position emoji picker below the input
@@ -208,6 +211,51 @@ const ChatAdminPage = () => {
   // Group messages by date
   const groupedMessages = groupMessagesByDate(messages);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, typingStatus]); // Trigger after messages update
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("typingStatus", ({ senderId, isTyping }) => {
+        setTypingStatus((prev) => ({
+          ...prev,
+          [senderId]: isTyping
+        }));
+      });
+
+      return () => {
+        socket.off("typingStatus");
+      };
+    }
+  }, [socket]);
+  let typingStatusTimeout = useRef(null);
+  const handleTyping = useCallback(() => {
+    if (currentChat?.chatWith) {
+      socket?.emit("typingStatus", {
+        receiverId: currentChat.chatWith,
+        isTyping: messageInput.trim() !== ""
+      });
+    }
+
+    if (messageInput.trim() === "") {
+      clearTimeout(typingStatusTimeout);
+    } else {
+      typingStatusTimeout = setTimeout(() => {
+        socket?.emit("typingStatus", {
+          receiverId: currentChat.chatWith,
+          isTyping: false // Clear typing status
+        });
+      }, 1000);
+    }
+  
+
+  }, [currentChat, messageInput, socket]);
+
+  console.log("Typing status:", typingStatus);
+
   return (
     <Layout className="h-[80vh]">
       <Sider className="bg-gray-100" width={300}>
@@ -229,7 +277,7 @@ const ChatAdminPage = () => {
               onClick={() => handleSelectChat(chat.chatWith)}
               className="flex items-center py-3 hover:bg-gray-200"
             >
-              <Badge dot={!!typingStatus[chat.chatWith]}>
+              <Badge dot={chat.chatUser?.onlineStatus} color="green" offset={[-18, 35]}>
                 <Avatar icon={<UserOutlined />} src={chat.chatUser?.avatar} className="mr-3" />
               </Badge>
               <span className="text-lg">{chat.chatUser?.name}</span>
@@ -255,7 +303,7 @@ const ChatAdminPage = () => {
         <Content className="px-4 flex flex-col bg-gray-50">
           {currentChat ? (
             <>
-              <div className="flex flex-col flex-1 overflow-y-auto">
+              <div className="flex flex-col flex-1 overflow-y-auto" ref={scrollRef}>
                 {Object.keys(groupedMessages).map((date) => (
                   <div key={date} className="mb-4">
                     <div className="text-center text-gray-500 text-sm">{date}</div>
@@ -266,17 +314,41 @@ const ChatAdminPage = () => {
                           key={msg.messageId}
                           className={`flex ${msg.senderId === currentUserId ? "justify-end" : "justify-start"}`}
                         >
-                          <div
-                            className={`max-w-3/4 p-3 rounded-lg ${msg.senderId === currentUserId
-                              ? "bg-primary-color text-white"
-                              : "bg-gray-300 text-black"
-                            }`}
-                          >
-                            <p>{msg.message}</p>
+                          <div className="">
+                            {/* Message bubble */}
+                            <div
+                              className={`p-3 rounded-lg ${msg.senderId === currentUserId
+                                ? "bg-primary-color text-white"
+                                : "bg-gray-300 text-black"
+                              }`}
+                            >
+                              <p>{msg.message}</p>
+                            </div>
+                            {/* Timestamp */}
+                            <div
+                              className={`text-xs mt-1 flex items-center ${msg.senderId === currentUserId ? "text-gray-500 text-right" : "text-gray-500 text-left"}`}
+                            >
+                              <span>{moment(msg.timestamp).format("hh:mm A")}</span>
+  
+                              {msg.senderId === currentUserId && msg.status === "sent" && (
+                                <UnreadIcon width={17} height={17} className="ml-2" />
+                              )}
+                            </div>
+
+                            
+                          
                           </div>
                         </List.Item>
                       )}
                     />
+                    {/* Typing Indicator */}
+                    {typingStatus[currentChat?.chatWith] && (
+                      <div className="flex items-center justify-start mt-2 text-gray-500 text-sm">
+                        <span>{currentChat?.chatUser?.name} is typing...</span>
+                      </div>
+                    )}
+
+
                   </div>
                 ))}
               </div>

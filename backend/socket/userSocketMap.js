@@ -182,6 +182,13 @@ export const handleUserConnections = (notificationNamespace) => {
             }
         });
 
+        // Handle typing event
+        socket.on('typingStatus', ({ receiverId, isTyping }) => {
+            if (userSocketMap[receiverId]) {
+                notificationNamespace.to(userSocketMap[receiverId]).emit('typingStatus', { userId, isTyping });
+            }
+        });
+
         socket.on('disconnect', async () => {
             try {
                 await User.findByIdAndUpdate(userId, { onlineStatus: false });
