@@ -1,205 +1,379 @@
-import { PlusOutlined, SendOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, Input, Layout, List, Menu } from "antd";
+import {
+  PaperClipOutlined,
+  PlusOutlined,
+  SendOutlined,
+  SmileOutlined,
+  UserOutlined
+} from "@ant-design/icons";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Divider,
+  Input,
+  Layout,
+  List,
+  Menu,
+  Modal,
+  Upload
+} from "antd";
 import { Picker } from "emoji-mart";
-import React, { useState } from "react";
+import moment from "moment";
+import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
+import { fetchAllUsers } from "../../../store/userSlice";
+import { generateId } from "../../../utils";
+import { getCookie } from "../../../utils/cookies";
 
+const accessToken = getCookie("accessToken");
 const { Header, Content, Sider } = Layout;
 
 const ChatAdminPage = () => {
+  const [socket, setSocket] = useState(null);
+  const [recentChats, setRecentChats] = useState([]);
+  const [typingStatus, setTypingStatus] = useState({});
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [messageInput, setMessageInput] = useState("");
   const [activeChat, setActiveChat] = useState(null);
-  const [message, setMessage] = useState("");
-  const [typing, setTyping] = useState(false);
-  const [chatList, setChatList] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      messages: [
-        { text: "Hello! How can I help you?", sender: "customer", read: true, timestamp: new Date() },
-        { text: "Hello! How can I help you?", sender: "customer", read: true, timestamp: new Date() },
-        { text: "Hello! How can I help you?", sender: "customer", read: true, timestamp: new Date() }
-      ]
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      messages: [
-        { text: "I need help with my order.", sender: "customer", read: false, timestamp: new Date() }
-      ]
-    }
-  ]);
-  
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [users, setUsers] = useState([]);
+  const [showUserList, setShowUserList] = useState(false);
+  const [emojiPickerPosition, setEmojiPickerPosition] = useState({ top: 0, left: 0 });
 
-  const handleSelectChat = (id) => {
-    setActiveChat(id);
+  const dispatch = useDispatch();
+  const { filteredData } = useSelector((state) => state.users);
+
+  const currentUserId = getCookie("userId");
+
+  // Socket initialization
+  useEffect(() => {
+    const socketInstance = io("http://localhost:5000/api/v1/notifications", {
+      transports: ["websocket"],
+      auth: { token: accessToken }
+    });
+
+    setSocket(socketInstance);
+
+    socketInstance.on("connect", () => console.log("Connected to server"));
+    socketInstance.on("recentChats", setRecentChats);
+    socketInstance.on("typingStatus", ({ senderId, typing }) =>
+      setTypingStatus((prev) => ({ ...prev, [senderId]: typing })));
+    socketInstance.on("receiveMessage", (newMessage) => {
+      if (newMessage.senderId === currentChat?.chatWith) {
+        setMessages((prev) => [...prev, newMessage]);
+      }
+    });
+    socketInstance.on("messageStatus", ({ messageId, status }) => {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.messageId === messageId ? { ...msg, status } : msg
+        )
+      );
+    });
+    socketInstance.on("error", (err) => console.error("Socket error:", err));
+
+    return () => socketInstance.disconnect();
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (socket) socket.emit("getRecentChats");
+  }, [socket]);
+
+  useEffect(() => {
+    setUsers(filteredData);
+  }, [filteredData]);
+
+  const handleSelectChat = useCallback(
+    (chatWith) => {
+      const selectedChat = recentChats.find((chat) => chat.chatWith === chatWith);
+      if (selectedChat) {
+        setCurrentChat({
+          chatWith: chatWith,
+          chatUser: selectedChat.chatUser || []
+        });
+      }
+      setActiveChat(chatWith);
+      setMessages([]);
+      socket?.emit("getChatHistory", { receiverId: chatWith }, (chatHistory) => {
+        console.log("Received chat history:", chatHistory);
+        setMessages(chatHistory);
+      });
+    },
+    [recentChats, socket]
+  );
+
+  const handleAddNewChat = () => {
+    setShowUserList(true);
+    dispatch(fetchAllUsers());
+  };
+
+  const handleSelectUser = (user) => {
+    socket?.emit("getChatHistory", { receiverId: user.userId }, (chatHistory) => {
+      console.log("Received chat history:", chatHistory);
+      setMessages(chatHistory);
+    });
+
+    setCurrentChat({
+      chatWith: user.userId,
+      chatUser: user // Ensure it's an array for consistency
+    });
+
+    setActiveChat(user.userId);
+    setShowUserList(false);
   };
 
   const handleSendMessage = () => {
-    if (message.trim()) {
-      const updatedChats = chatList.map((chat) =>
-        chat.id === activeChat
-          ? {
-            ...chat,
-            messages: [
-              ...chat.messages,
-              { text: message, sender: "admin", read: false, timestamp: new Date() }
-            ]
-          }
-          : chat
-      );
-      setChatList(updatedChats);
-      setMessage("");
-      setTyping(false);
-    }
+    if (!messageInput.trim()) return;
+
+    const newMessage = {
+      message: messageInput,
+      messageId: generateId("MSG"),
+      senderId: currentUserId,
+      receiverId: currentChat.chatWith,
+      timestamp: new Date()
+    };
+
+    socket?.emit("sendMessage", newMessage);
+    socket?.emit("messageStatus", {
+      messageId: newMessage.messageId,
+      status: "sent"
+    });
+
+    setMessages((prev) => [...prev, newMessage]);
+    setMessageInput("");
+    socket.on("recentChats", setRecentChats);
   };
 
-  const handleTyping = () => {
-    if (!typing) {
-      setTyping(true);
+  const handleTyping = useCallback(() => {
+    if (currentChat?.chatWith) {
+      socket?.emit("typing", {
+        receiverId: currentChat.chatWith,
+        typing: messageInput.trim() !== ""
+      });
     }
-    setTimeout(() => {
-      setTyping(false);
-    }, 1500);
-  };
+  }, [currentChat, messageInput, socket]);
 
   const handleEmojiSelect = (emoji) => {
-    setMessage(message + emoji.native);
-    setShowEmojiPicker(false); // Hide the emoji picker after selection
+    setMessageInput((prev) => prev + emoji.native);
+    setShowEmojiPicker(false);
   };
 
-  const formatTimestamp = (timestamp) => {
-    const date = new Date(timestamp);
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${hours}:${minutes}`;
+  const toggleEmojiPicker = (event) => {
+    console.log("Toggle emoji picker");
+    setShowEmojiPicker(!showEmojiPicker);
+    const { top, left } = event.target.getBoundingClientRect();
+    setEmojiPickerPosition({ top: top + 30, left: left }); // Position emoji picker below the input
   };
+
+  const filteredChats = recentChats.filter((chat) =>
+    chat.chatWith.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  // Utility function to format the message timestamp
+  const formatMessageDate = (timestamp) => {
+    const messageDate = moment(timestamp);
+    const today = moment().startOf("day");
+    const yesterday = moment().subtract(1, "days").startOf("day");
+    const twoDaysAgo = moment().subtract(2, "days").startOf("day");
+    const sevenDaysAgo = moment().subtract(7, "days").startOf("day");
+
+    if (messageDate.isSame(today, "day")) {
+      return "Today";
+    } else if (messageDate.isSame(yesterday, "day")) {
+      return "Yesterday";
+    } else if (messageDate.isSame(twoDaysAgo, "day")) {
+      return messageDate.format("dddd");
+    } else if (messageDate.isAfter(sevenDaysAgo)) {
+      return messageDate.format("dddd");
+    } else {
+      return messageDate.format("DD-MM-YYYY");
+    }
+  };
+
+  // Function to group messages by date
+  const groupMessagesByDate = (messages) => {
+    return messages.reduce((groups, message) => {
+      const dateKey = formatMessageDate(message.timestamp);
+      if (!groups[dateKey]) {
+        groups[dateKey] = [];
+      }
+      groups[dateKey].push(message);
+      return groups;
+    }, {});
+  };
+
+  // Group messages by date
+  const groupedMessages = groupMessagesByDate(messages);
 
   return (
     <Layout className="h-[80vh]">
       <Sider className="bg-gray-100" width={300}>
-        <div className="text-center p-4 bg-white">
-          <h2 className="text-xl font-bold">Customer Support</h2>
+        <div className="p-4 bg-white text-center">
+          <Input
+            placeholder="Search chats"
+            onChange={(e) => setSearchText(e.target.value)}
+            className="mt-2"
+          />
         </div>
-        <Menu mode="inline" selectedKeys={[activeChat ? String(activeChat) : ""]} className="h-full border-0">
-          {chatList.map((chat) => (
+        <Menu
+          mode="inline"
+          selectedKeys={[String(activeChat)]}
+          className="h-[80vh] border-0"
+        >
+          {filteredChats.map((chat) => (
             <Menu.Item
-              key={chat.id}
-              onClick={() => handleSelectChat(chat.id)}
+              key={chat.chatWith}
+              onClick={() => handleSelectChat(chat.chatWith)}
               className="flex items-center py-3 hover:bg-gray-200"
             >
-              <Avatar icon={<UserOutlined />} className="mr-3" />
-              <span className="text-lg">{chat.name}</span>
+              <Badge dot={!!typingStatus[chat.chatWith]}>
+                <Avatar icon={<UserOutlined />} src={chat.chatUser?.avatar} className="mr-3" />
+              </Badge>
+              <span className="text-lg">{chat.chatUser?.name}</span>
             </Menu.Item>
           ))}
-          <Menu.Item icon={<PlusOutlined />} className="mt-auto py-3 text-center">
+          <Menu.Item
+            icon={<PlusOutlined />}
+            className="mt-auto py-3 text-center"
+            onClick={handleAddNewChat}
+          >
             Add New Chat
           </Menu.Item>
         </Menu>
+
       </Sider>
 
-      <Layout className="overflow-hidden">
-        <Header className="bg-white text-center shadow-md">
-          <h3 className="text-xl">{activeChat ? `Chat with ${chatList.find((chat) => chat.id === activeChat)?.name}` : ""}</h3>
+      <Layout>
+        <Header className="bg-white text-center shadow-md" style={{ height: "2rem" }}>
+          <h3 className="text-xl">
+            {currentChat ? `Chat with ${currentChat.chatUser?.name}` : ""}
+          </h3>
         </Header>
-
         <Content className="px-4 flex flex-col bg-gray-50">
-          {activeChat ? (
-            <List
-              className="flex-1 overflow-y-auto"
-              dataSource={chatList.find((chat) => chat.id === activeChat)?.messages}
-              renderItem={(msg, index) => (
-                <List.Item
-                  key={index}
-                  className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}
-                >
+          {currentChat ? (
+            <>
+              <div className="flex flex-col flex-1 overflow-y-auto">
+                {Object.keys(groupedMessages).map((date) => (
+                  <div key={date} className="mb-4">
+                    <div className="text-center text-gray-500 text-sm">{date}</div>
+                    <List
+                      dataSource={groupedMessages[date]} // Use groupedMessages[date] instead of messages
+                      renderItem={(msg) => (
+                        <List.Item
+                          key={msg.messageId}
+                          className={`flex ${msg.senderId === currentUserId ? "justify-end" : "justify-start"}`}
+                        >
+                          <div
+                            className={`max-w-3/4 p-3 rounded-lg ${msg.senderId === currentUserId
+                              ? "bg-primary-color text-white"
+                              : "bg-gray-300 text-black"
+                            }`}
+                          >
+                            <p>{msg.message}</p>
+                          </div>
+                        </List.Item>
+                      )}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center py-4 bg-white shadow-md px-4">
+                <Button
+                  icon={<SmileOutlined />}
+                  type="text"
+                  disabled
+                  onClick={toggleEmojiPicker}
+                  className="mr-2"
+                />
+                {showEmojiPicker && (
                   <div
-                    className={`max-w-3/4 p-3 rounded-lg ${msg.sender === "admin" ? "bg-blue-500 text-white" : "bg-gray-300 text-black"}`}
+                    style={{
+                      position: "absolute",
+                      top: emojiPickerPosition.top,
+                      left: emojiPickerPosition.left,
+                      zIndex: 1000
+                    }}
                   >
-                    <p>{msg.text}</p>
-                    <div className={`text-xs mt-2 ${msg.sender === "admin" ? "text-right" : "text-left"} flex items-center justify-between`}>
-                      <span>{formatTimestamp(msg.timestamp)}</span>
-                      <div className="flex items-center">
-                        {msg.sender === "admin" && msg.read && (
-                          <span className="ml-2 text-green-500 flex items-center">
-                            <svg
-                              viewBox="0 0 16 11"
-                              height={11}
-                              width={16}
-                              preserveAspectRatio="xMidYMid meet"
-                              fill="none"
-                            >
-                              <title>{"msg-dblcheck"}</title>
-                              <path
-                                d="M11.0714 0.652832C10.991 0.585124 10.8894 0.55127 10.7667 0.55127C10.6186 0.55127 10.4916 0.610514 10.3858 0.729004L4.19688 8.36523L1.79112 6.09277C1.7488 6.04622 1.69802 6.01025 1.63877 5.98486C1.57953 5.95947 1.51817 5.94678 1.45469 5.94678C1.32351 5.94678 1.20925 5.99544 1.11192 6.09277L0.800883 6.40381C0.707784 6.49268 0.661235 6.60482 0.661235 6.74023C0.661235 6.87565 0.707784 6.98991 0.800883 7.08301L3.79698 10.0791C3.94509 10.2145 4.11224 10.2822 4.29844 10.2822C4.40424 10.2822 4.5058 10.259 4.60313 10.2124C4.70046 10.1659 4.78086 10.1003 4.84434 10.0156L11.4903 1.59863C11.5623 1.5013 11.5982 1.40186 11.5982 1.30029C11.5982 1.14372 11.5348 1.01888 11.4078 0.925781L11.0714 0.652832ZM8.6212 8.32715C8.43077 8.20866 8.2488 8.09017 8.0753 7.97168C7.99489 7.89128 7.8891 7.85107 7.75791 7.85107C7.6098 7.85107 7.4892 7.90397 7.3961 8.00977L7.10411 8.33984C7.01947 8.43717 6.97715 8.54508 6.97715 8.66357C6.97715 8.79476 7.0237 8.90902 7.1168 9.00635L8.1959 10.0791C8.33132 10.2145 8.49636 10.2822 8.69102 10.2822C8.79681 10.2822 8.89838 10.259 8.99571 10.2124C9.09304 10.1659 9.17556 10.1003 9.24327 10.0156L15.8639 1.62402C15.9358 1.53939 15.9718 1.43994 15.9718 1.32568C15.9718 1.1818 15.9125 1.05697 15.794 0.951172L15.4386 0.678223C15.3582 0.610514 15.2587 0.57666 15.1402 0.57666C14.9964 0.57666 14.8715 0.635905 14.7657 0.754395L8.6212 8.32715Z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        )}
-                        {msg.sender === "admin" && !msg.read && (
-                          <span className="ml-2 text-gray-500 flex items-center">
-                            <svg
-                              viewBox="0 0 12 11"
-                              height={11}
-                              width={16}
-                              preserveAspectRatio="xMidYMid meet"
-                              fill="none"
-                            >
-                              <title>{"msg-check"}</title>
-                              <path
-                                d="M11.1549 0.652832C11.0745 0.585124 10.9729 0.55127 10.8502 0.55127C10.7021 0.55127 10.5751 0.610514 10.4693 0.729004L4.28038 8.36523L1.87461 6.09277C1.8323 6.04622 1.78151 6.01025 1.72227 5.98486C1.66303 5.95947 1.60166 5.94678 1.53819 5.94678C1.407 5.94678 1.29275 5.99544 1.19541 6.09277L0.884379 6.40381C0.79128 6.49268 0.744731 6.60482 0.744731 6.74023C0.744731 6.87565 0.79128 6.98991 0.884379 7.08301L3.88047 10.0791C4.02859 10.2145 4.19574 10.2822 4.38194 10.2822C4.48773 10.2822 4.58929 10.259 4.68663 10.2124C4.78396 10.1659 4.86436 10.1003 4.92784 10.0156L11.5738 1.59863C11.6458 1.5013 11.6817 1.40186 11.6817 1.30029C11.6817 1.14372 11.6183 1.01888 11.4913 0.925781L11.1549 0.652832Z"
-                                fill="white"
-                              />
-                            </svg>
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                    <Picker onSelect={handleEmojiSelect} />
+                  </div>
+                )}
+                <Upload>
+                  <Button icon={<PaperClipOutlined />} type="text" className="mr-2" />
+                </Upload>
+                <Input
+                  placeholder="Type a message"
+                  value={messageInput}
+                  onPressEnter={handleSendMessage}
+                  size="large"
+                  onChange={(e) => setMessageInput(e.target.value)}
+                  onKeyUp={handleTyping}
+                  className="flex-1"
+                />
+                <Button
+                  type="primary"
+                  size="large"
+                  icon={<SendOutlined />}
+                  onClick={handleSendMessage}
+                  disabled={!messageInput.trim()}
+                  className="ml-2"
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center justify-center flex-1 text-center text-gray-500">
+              <span>Select a chat to start messaging</span>
+            </div>
+          )}
+        </Content>
+      </Layout>
+
+
+      <Modal
+        title="Add New Chat"
+        open={showUserList}
+        onCancel={() => setShowUserList(false)}
+        footer={null}
+        width={400}
+        centered
+      >
+        <div className="p-4">
+          {/* Search input */}
+          <Input
+            placeholder="Search users"
+            value={searchText}
+            // onChange={handleSearch}
+            className="mb-4"
+          />
+
+          {/* User list */}
+          <div className="user-list">
+            <List
+              dataSource={users}
+              renderItem={(user) => (
+                <List.Item
+                  key={user.userId}
+                  onClick={() => handleSelectUser(user)}
+                  className="cursor-pointer hover:bg-gray-100 p-3 rounded-lg transition-all"
+                >
+                  <div className="flex justify-items-start gap-4 items-center w-full">
+                    <Avatar icon={<UserOutlined />} src={user.avatar} className="ml-3" />
+                    <span className="font-medium">{user.name}</span>
                   </div>
                 </List.Item>
               )}
             />
-
-          ) : (
-            <div className="flex items-center justify-center text-gray-500">Select a chat to start</div>
-          )}
-        </Content>
-
-        {activeChat && (
-          <div className="flex items-center py-4 bg-white shadow-md">
-            <Input
-              placeholder="Type a message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onPressEnter={handleSendMessage}
-              onFocus={handleTyping}
-              className="flex-1 mr-3"
-              suffix={
-                [
-                  <Button type="text" key={1} icon={<SmileOutlined />} className="text-xl" onClick={() => setShowEmojiPicker(!showEmojiPicker)} />,
-                  <Button type="text" key={2} icon={<PlusOutlined />} className="text-xl" />
-                ]
-              }
-            />
-            <Button
-              icon={<SendOutlined />}
-              size="large"
-              type="primary"
-              onClick={handleSendMessage}
-              className="ml-2 bg-blue-500 text-white"
-            >
-              Send
-            </Button>
           </div>
-        )}
 
-        {/* Emoji Picker */}
-        {showEmojiPicker && (
-          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-50">
-            <Picker onSelect={handleEmojiSelect} />
-          </div>
-        )}
-      </Layout>
+          {/* Divider */}
+          <Divider className="mt-4" />
+        </div>
+      </Modal>
+
+
+
     </Layout>
   );
 };

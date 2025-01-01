@@ -1,27 +1,31 @@
-// models/Message.js
+
 import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema({
   senderId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Assuming you have a User model
+    type: String,
+    ref: 'User', 
     required: true
   },
   receiverId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Assuming you have a User model
+    type: String,
+    ref: 'User', 
     required: true
   },
   message: {
     type: String,
-    required: false // Not required because it can be a file
+    required: false 
+  },
+  messageId: {
+    type: String,
+    required: false 
   },
   file: {
-    type: String, // URL to the file
-    required: false // Optional since not every message may contain a file
+    type: String, 
+    required: false 
   },
   fileType: {
-    type: String, // The type of the file, e.g., 'image', 'video', 'audio'
+    type: String, 
     required: false
   },
   status: {

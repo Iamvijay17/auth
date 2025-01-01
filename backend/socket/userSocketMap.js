@@ -1,166 +1,194 @@
 import jwt from 'jsonwebtoken';
-import Message from '../models/Message.js'; // Adjusted path for Message model
-import User from '../models/user.js'; // Adjusted import path for User model
+import Message from '../models/Message.js';
+import User from '../models/user.js';
 
-const userSocketMap = {}; // Store userId to socketId mappings
+const userSocketMap = {};
 
-
-// Exported function to handle user connections and message processing
 export const handleUserConnections = (notificationNamespace) => {
-
-    // Apply token validation middleware
     notificationNamespace.use((socket, next) => {
-        const token = socket.handshake.auth.token; // Extract token from the handshake
+        const token = socket.handshake.auth.token;
 
         if (!token) {
             return next(new Error('Authentication error: Token is missing'));
         }
 
-        // Verify the token using jwt.verify
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err) {
                 return next(new Error('Authentication error: Invalid or expired token'));
             }
 
-            if (!decoded.userId || !decoded.role) {
+            const { userId, role } = decoded;
+            if (!userId || !role) {
                 return next(new Error('Authentication error: Token is invalid or missing role information'));
             }
 
-            socket.user = decoded; // Attach the decoded user data to the socket object
-            next(); // Proceed with the connection
+            socket.user = decoded;
+            next();
         });
     });
 
-
     notificationNamespace.on('connection', (socket) => {
-        console.log('A user connected:', socket.id);
+        const { userId } = socket.user;
+        console.log(`User connected: ${userId}`);
 
-        notificationNamespace.emit('newNotification', {
-            notification: 'This is a new notification'
-        });
+        userSocketMap[userId] = socket.id;
 
+        User.findByIdAndUpdate(userId, { onlineStatus: true }, { new: true })
+            .then(() => {
+                notificationNamespace.emit('userStatusChange', { userId, online: true });
+            })
+            .catch((err) => console.error('Error updating online status:', err));
 
-        socket.on('setOnlineStatus', async (values) => {
-            const { userId } = socket.user; // Assuming userId is a custom field like "usr-5b187bbbf6"
+        socket.on('getRecentChats', async () => {
             try {
-                // Use the custom field (e.g., userId or customUserId) in the query
-                const updatedUser = await User.findOneAndUpdate(
-                    { userId: userId }, // Query by custom field "userId"
-                    { onlineStatus: true }, // Fields to update
-                    { new: true } // Return the updated document
-                );
+                const recentChats = await Message.aggregate([
+                    {
+                        $match: { $or: [{ senderId: userId }, { receiverId: userId }] },
+                    },
+                    {
+                        $sort: { timestamp: -1 },
+                    },
+                    {
+                        $group: {
+                            _id: {
+                                chatWith: {
+                                    $cond: [{ $eq: ['$senderId', userId] }, '$receiverId', '$senderId'],
+                                },
+                            },
+                            lastMessage: { $first: '$message' },
+                            lastMessageTime: { $first: '$timestamp' },
+                            lastMessageSender: { $first: '$senderId' },
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: '_id.chatWith',
+                            foreignField: 'userId',
+                            as: 'chatUser',
+                        },
+                    },
+                ]);
 
-                // If user is found, store socket ID
-                if (updatedUser) {
-                    userSocketMap[userId] = socket.id; // Store socket ID in userSocketMap
-                    const users = await User.find({}, 'name avatar onlineStatus userId'); // Select only name, avatar, and onlineStatus
-                    const userDetails = users.map(user => ({
-                        userId: user.userId,
-                        name: user.name,
-                        avatar: user.avatar,
-                        onlineStatus: user.onlineStatus,
-                    }));
-
-                    // Send the user details back to the client
-                    socket.emit('allUsersDetails', userDetails);
-                }
-            } catch (error) {
-                console.error('Error updating online status:', error);
-            }
-        });
-
-
-        // Event listener for getting all users' details (optional, only if you want clients to be able to request this data)
-        socket.on('getAllUsers', async () => {
-            try {
-                // Fetch all users' basic details from the database
-                const users = await User.find({}, 'name avatar onlineStatus');
-                const userDetails = users.map(user => ({
-                    userId: user.userId,
-                    name: user.name,
-                    avatar: user.avatar,
-                    onlineStatus: user.onlineStatus,
+                const formattedChats = recentChats.map((chat) => ({
+                    chatWith: chat._id.chatWith,
+                    lastMessage: chat.lastMessage,
+                    lastMessageTime: chat.lastMessageTime,
+                    lastMessageSender: chat.lastMessageSender,
+                    chatUser: {
+                        ...chat.chatUser[0],
+                        _id: undefined,
+                        __v: undefined,
+                        password: undefined,
+                    },
                 }));
 
-                // Send the user details back to the client
-                socket.emit('allUsersDetails', userDetails);
+                socket.emit('recentChats', formattedChats);
             } catch (error) {
-                console.error('Error fetching users details:', error);
-                socket.emit('error', 'Failed to fetch users details');
+                console.error('Error fetching recent chats:', error);
+                socket.emit('error', 'Failed to fetch recent chats');
             }
         });
 
+        socket.on('getChatHistory', async ({ receiverId }, callback) => {
+            try {
+                const chatHistory = await Message.aggregate([
+                    {
+                        $match: {
+                            $or: [
+                                { senderId: userId, receiverId },
+                                { senderId: receiverId, receiverId: userId },
+                            ],
+                        },
+                    },
+                    { $sort: { timestamp: 1 } },
+                    {
+                        $project: {
+                            _id: 0,
+                            __v: 0
+
+                        },
+                    },
+                ]);
+
+                callback(chatHistory);
+            } catch (error) {
+                console.error('Error fetching chat history:', error);
+                socket.emit('error', 'Failed to fetch chat history');
+            }
+        });
 
         socket.on('sendMessage', async (data) => {
-            const { message, receiverId, senderId } = data;
+            const { message, receiverId, timestamp } = data;
 
-            // Basic validation
-            if (!message || !receiverId || !senderId) {
+            if (!message || !receiverId) {
                 socket.emit('error', 'Invalid data received');
                 return;
             }
 
             try {
-                const newMessage = new Message({
+                const newMessage = await Message.create({
                     message,
-                    senderId,
+                    senderId: userId,
                     receiverId,
                     status: 'sent',
-                    timestamp: new Date(),
+                    timestamp: timestamp || new Date(),
                 });
 
-                await newMessage.save(); // Save the message to get _id
-
-                // Ensure receiver is connected before emitting
                 if (userSocketMap[receiverId]) {
-                    socket.to(userSocketMap[receiverId]).emit('receiveMessage', {
-                        message,
-                        senderId,
-                        receiverId,
-                        timestamp: new Date(),
-                        messageId: newMessage._id,
-                    });
+                    notificationNamespace
+                        .to(userSocketMap[receiverId])
+                        .emit('receiveMessage', { ...newMessage.toObject() });
                 } else {
-                    // Optionally handle the case where the receiver is offline
-                    console.log('Receiver is offline:', receiverId);
+                    console.log(`Receiver ${receiverId} is offline.`);
                 }
             } catch (error) {
-                console.error('Error saving message:', error);
+                console.error('Error sending message:', error);
                 socket.emit('error', 'Failed to send message');
-            }
-        });
-
-        socket.on('messageDelivered', async (messageId) => {
-            try {
-                await Message.findByIdAndUpdate(messageId, { status: 'delivered' });
-                socket.emit('messageStatus', { messageId, status: 'delivered' });
-            } catch (error) {
-                console.error('Error updating message status:', error);
-                socket.emit('error', 'Failed to update message status');
             }
         });
 
         socket.on('messageRead', async (messageId) => {
             try {
-                await Message.findByIdAndUpdate(messageId, { status: 'read' });
+                const message = await Message.findByIdAndUpdate(messageId, { status: 'read' }, { new: true });
+
                 socket.emit('messageStatus', { messageId, status: 'read' });
+
+                if (message && userSocketMap[message.senderId]) {
+                    notificationNamespace
+                        .to(userSocketMap[message.senderId])
+                        .emit('messageStatus', { messageId, status: 'read' });
+                }
             } catch (error) {
                 console.error('Error updating message status:', error);
                 socket.emit('error', 'Failed to update message status');
             }
         });
 
-        // When a user disconnects, set their online status to false
-        socket.on('disconnect', async () => {
-            const userId = socket.user.userId;
+        socket.on('deleteMessage', async (messageId) => {
             try {
-                // Find the user by socket ID and update their online status
-                const user = await User.findOne({ userId: userId }); // Assuming you store socketId with user
-                if (user) {
-                    await User.findByIdAndUpdate({ userId: userId }, { onlineStatus: false });
-                    delete userSocketMap[user._id]; // Remove from userSocketMap
-                    console.log(`User ${user._id} is now offline`);
+                const deletedMessage = await Message.findByIdAndDelete(messageId);
+
+                if (deletedMessage) {
+                    notificationNamespace
+                        .to(userSocketMap[deletedMessage.receiverId])
+                        .emit('messageDeleted', { messageId });
                 }
+
+                socket.emit('messageDeleted', { messageId });
+            } catch (error) {
+                console.error('Error deleting message:', error);
+                socket.emit('error', 'Failed to delete message');
+            }
+        });
+
+        socket.on('disconnect', async () => {
+            try {
+                await User.findByIdAndUpdate(userId, { onlineStatus: false });
+                delete userSocketMap[userId];
+
+                notificationNamespace.emit('userStatusChange', { userId, online: false });
+                console.log(`User ${userId} disconnected`);
             } catch (error) {
                 console.error('Error updating offline status:', error);
             }

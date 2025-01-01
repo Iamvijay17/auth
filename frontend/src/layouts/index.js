@@ -4,14 +4,13 @@ import {
   TeamOutlined,
   UserOutlined
 } from "@ant-design/icons";
-import { Avatar, Badge, Dropdown, Layout, Menu, message, theme } from "antd";
+import { Avatar, Badge, Dropdown, Layout, Menu, theme } from "antd";
 import React, { useEffect, useState } from "react";
 import { IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineDashboard } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import io from "socket.io-client";
 import { fetchAllBookings } from "../store/bookingSlice";
 import { fetchAllDiscounts } from "../store/discountSlice";
 import { fetchUserById } from "../store/userByIdSlice";
@@ -46,7 +45,7 @@ const MainLayout = () => {
   const userById = useSelector((state) => state.userById);
   const dispatch = useDispatch();
 
-  const [socketUsers, setSocketUsers] = useState(null);
+  const [socketUsers] = useState(null);
 
   const myCurrentStatus = socketUsers?.find((user) => user.userId === userById?.data?.userId)?.onlineStatus;
 
@@ -63,35 +62,6 @@ const MainLayout = () => {
     dispatch(fetchAllDiscounts());
   }, [dispatch, accessToken, navigate]);
 
-  useEffect(() => {
-    // Ensure userById and userId are available before connecting to socket
-    if (!userById?.data?.userId) return;
-
-    const socket = io("http://localhost:5000/api/v1/notifications", {
-      transports: ["websocket"],
-      auth: {
-        token: accessToken
-      }
-    });
-
-    socket.on("newNotification", (notification) => {
-      message.success(notification.notification, 5); // Display notification
-    });
-    socket.emit("setOnlineStatus", { userId: userById.data.userId });
-
-    socket.on("allUsersDetails", (data) => {
-      setSocketUsers(data);
-      console.log(data);
-    });
-    console.log(myCurrentStatus, socketUsers);
-
-    return () => {
-      // Remove listeners before disconnecting
-      socket.off("newNotification");
-      socket.off("allUsersDetails");
-      socket.disconnect();
-    };
-  }, [userById, accessToken]);
 
   const handleLogOut = () => {
     deleteCookie("accessToken");

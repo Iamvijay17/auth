@@ -19,7 +19,7 @@ userRouter.put("/user/:userId", verifyToken, authorizeRoles("admin", "user"), up
 userRouter.delete("/user/:userId", verifyToken, authorizeRoles("admin"), deleteUserById);
 
 
-userRouter.get("/users", verifyToken, authorizeRoles("admin"), getAllUsers);
+userRouter.get("/users", verifyToken, authorizeRoles("admin", "user"), getAllUsers);
 
 export default userRouter;
 
