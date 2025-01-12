@@ -13,5 +13,8 @@ export const storeServicesAPI = {
   },
   getAllDiscounts(data) {
     return api.get("/discount", data);
+  },
+  getAllDestinations(data) {
+    return api.get("/destinations", data);
   }
 };

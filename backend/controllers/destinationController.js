@@ -12,7 +12,7 @@ export const getAllDestinations = async (req, res) => {
     if (rating) filter.rating = { $gte: rating };
     if (categories) filter.categories = { $in: categories.split(",") }; // Filter by multiple categories
 
-    const destinations = await Destination.find(filter);
+    const destinations = await Destination.find(filter).select('-_id');
     res.status(200).json(destinations);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -21,14 +21,30 @@ export const getAllDestinations = async (req, res) => {
 
 // Get destination by ID
 export const getDestinationById = async (req, res) => {
+const { id } = req.params;
+
   try {
-    const destination = await Destination.findById(req.params.id);
-    if (!destination) return res.status(404).json({ message: 'Destination not found' });
+    if (!id) {
+      return res.status(400).json({ message: 'Invalid destination ID format' });
+    }
+
+    const destination = await Destination.findOne({destinationId : id});
+
+    if (!destination) {
+      return res.status(404).json({ message: 'Destination not found' });
+    }
+
+    // Return the destination if found
     res.status(200).json(destination);
   } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error fetching destination:', error);
+
+    // Handle any other errors
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Create a new destination
 export const createDestination = async (req, res) => {

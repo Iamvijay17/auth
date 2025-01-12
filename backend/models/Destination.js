@@ -14,6 +14,7 @@ const destinationSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     location: { type: String, required: true },
+    destinationId: { type: String, required: true, unique: true },
     description: { type: String, required: true },
     images: [{ type: String }], // URLs to images
     price: { type: Number, required: true }, // Price per person
@@ -43,7 +44,9 @@ const destinationSchema = new mongoose.Schema(
       weather: { type: String }, // Weather conditions
     },
   },
-  { timestamps: true }
+  { timestamps: true,
+    versionKey: false,
+   }
 );
 
 const Destination = mongoose.model("Destination", destinationSchema);

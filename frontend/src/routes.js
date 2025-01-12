@@ -15,8 +15,8 @@ import PlaceViewPage from "./pages/components/PlaceViewPage";
 
 const routes = [
   { path: "/", element: <Home /> },
-  { path: "/PlaceViewPage", element: <PlaceViewPage /> },
   { path: "/destination", element: <Destination /> },
+  { path: "/destination/:designationId", element: <PlaceViewPage /> },
   { path: "/stories", element: <Stories /> },
   { path: "/reviews", element: <Reviews /> },
   { path: "/profile", element: <ProfilePage /> },

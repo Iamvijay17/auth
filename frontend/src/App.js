@@ -61,7 +61,7 @@ function App() {
               color: "#fff"
             }}
           >
-            © 2024 Wanderlust Voyages. All rights reserved.
+            © 2025 Wanderlust Voyages. All rights reserved.
           </Footer>
           }
 

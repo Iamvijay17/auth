@@ -1,42 +1,45 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Row, Col, Card, Button, Descriptions, Rate, Carousel, Typography, Badge, Space } from "antd";
 import { EnvironmentOutlined, CalendarOutlined, DollarOutlined, CarOutlined } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
+import { PageServiceAPI } from "../../page.service";
+import Loader from "../../../components/loader";
 
 const { Title, Paragraph } = Typography;
 
-const productData = {
-  title: "Tropical Paradise Tour",
-  images: [
-    "https://images.unsplash.com/photo-1461301214746-1e109215d6d3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1507373318898-766a0e260b51?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1502147704994-6bfb9b28d71d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  ],
-  location: "Maldives",
-  duration: "5 Days / 4 Nights",
-  price: "$1500",
-  rating: 4.5,
-  description: `
-    Escape to paradise with our exclusive Maldives Tropical Paradise Tour. 
-    Enjoy luxurious stays, crystal-clear lagoons, white sandy beaches, and unforgettable adventures.
-  `,
-  features: ["Luxury Accommodation", "Guided Tours", "All-Inclusive Meals"]
-};
-
 const PlaceViewPage = () => {
   const [currentImage, setCurrentImage] = useState(0);
+  const [designationData, setDesignationData] = useState({});
   const carouselRef = useRef(null);
+  const [isLoading, setLoading] = useState(false);
 
-  const handleThumbnailClick = (index) => {
+  const { designationId } = useParams();
+  
+  // Fetch data with memoized function
+  const getDesignationData = useCallback(() => {
+    setLoading(true);
+    PageServiceAPI.getDesignations(designationId).then(
+      (res) => {
+        setLoading(false);
+        setDesignationData(res);
+      },
+      (err) => {
+        setLoading(false);
+      });
+  }, [designationId]);
+
+  useEffect(() => {
+    getDesignationData();
+  }, [getDesignationData]);
+
+  const handleThumbnailClick = useCallback((index) => {
     setCurrentImage(index);
     carouselRef.current.goTo(index);
-  };
-
-
+  }, []);
 
   const buttonStyles = {
     position: "relative",
     overflow: "hidden",
-    // backgroundColor: "#1890ff",
     border: "none",
     fontWeight: "bold",
     color: "#fff",
@@ -56,7 +59,6 @@ const PlaceViewPage = () => {
     position: "absolute",
     left: "-50px",
     top: "25%",
-    // transform: "translateY(-5%)",
     fontSize: "30px",
     color: "#fff",
     transition: "left 1s ease, transform 1s ease"
@@ -65,6 +67,10 @@ const PlaceViewPage = () => {
   const hoverButtonStyles = {
     // backgroundColor: "#0056b3"
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div style={{ padding: "40px", backgroundColor: "#f9f9f9", minHeight: "100vh" }}>
@@ -80,18 +86,20 @@ const PlaceViewPage = () => {
                   ref={carouselRef}
                   afterChange={(current) => setCurrentImage(current)}
                 >
-                  {productData.images.map((image, index) => (
+                  {designationData.images?.map((image, index) => (
                     <div key={index}>
-                      <img
-                        src={image}
-                        alt={`Slide ${index + 1}`}
-                        style={{
-                          width: "100%",
-                          borderRadius: "10px",
-                          height: "350px",
-                          objectFit: "cover"
-                        }}
-                      />
+                      {image && (
+                        <img
+                          src={image}
+                          alt={`Slide ${index + 1}`}
+                          style={{
+                            width: "100%",
+                            borderRadius: "10px",
+                            height: "350px",
+                            objectFit: "cover"
+                          }}
+                        />
+                      )}
                     </div>
                   ))}
                 </Carousel>
@@ -106,7 +114,7 @@ const PlaceViewPage = () => {
                     padding: "10px"
                   }}
                 >
-                  {productData.images.map((image, index) => (
+                  {designationData.images?.map((image, index) => (
                     <img
                       key={index}
                       src={image}
@@ -132,28 +140,28 @@ const PlaceViewPage = () => {
             <Space direction="vertical" size="large" style={{ width: "100%" }}>
               <div>
                 <Title level={2} style={{ marginBottom: 0 }}>
-                  {productData.title}
+                  {designationData.name}
                 </Title>
                 <Paragraph type="secondary" style={{ fontSize: "16px", marginBottom: "4px" }}>
-                  {productData.location} | {productData.duration}
+                  {designationData.location}
                 </Paragraph>
               </div>
 
-              <Paragraph style={{ lineHeight: "1.8" }}>{productData.description}</Paragraph>
+              <Paragraph style={{ lineHeight: "1.8" }}>{designationData.description}</Paragraph>
 
               <Descriptions bordered column={1} size="middle">
                 <Descriptions.Item label={<><EnvironmentOutlined /> Location</>}>
-                  {productData.location}
+                  {designationData.location}
                 </Descriptions.Item>
                 <Descriptions.Item label={<><CalendarOutlined /> Duration</>}>
-                  {productData.duration}
+                  {designationData.duration}
                 </Descriptions.Item>
                 <Descriptions.Item label={<><DollarOutlined /> Price</>}>
-                  <span style={{ color: "#52c41a", fontWeight: "bold" }}>{productData.price}</span>
+                  <span style={{ color: "#52c41a", fontWeight: "bold" }}>${designationData.price}</span>
                 </Descriptions.Item>
                 <Descriptions.Item label="Features">
                   <ul style={{ paddingLeft: "20px", margin: 0 }}>
-                    {productData.features.map((feature, index) => (
+                    {designationData.features?.map((feature, index) => (
                       <li key={index} style={{ marginBottom: "5px" }}>
                         {feature}
                       </li>
@@ -161,10 +169,10 @@ const PlaceViewPage = () => {
                   </ul>
                 </Descriptions.Item>
                 <Descriptions.Item label="Rating">
-                  <Rate value={productData.rating} allowHalf disabled /> ({productData.rating})
+                  <Rate value={designationData.rating} allowHalf disabled /> ({designationData.rating})
                 </Descriptions.Item>
               </Descriptions>
-           
+
               <div style={{ textAlign: "center", marginTop: "30px" }}>
                 <Button
                   type="primary"
@@ -191,7 +199,6 @@ const PlaceViewPage = () => {
                   <CarOutlined className="vehicle-icon" style={iconStyles} />
                 </Button>
               </div>
-             
             </Space>
           </Col>
         </Row>

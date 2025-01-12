@@ -10,6 +10,7 @@ import { fetchUserById } from "../../store/userByIdSlice";
 import { VscAccount } from "react-icons/vsc";
 import { IoLogOutOutline, IoSettingsOutline  } from "react-icons/io5";
 import { MdOutlineDashboard } from "react-icons/md";
+import { fetchAllDestinations } from "../../store/destinationSlice";
 
 const { Title } = Typography;
 
@@ -25,6 +26,10 @@ const Navbar = () => {
   useEffect(() => {
     dispatch(fetchUserById());
   }, [dispatch]);
+  
+  useEffect(() => {
+    dispatch(fetchAllDestinations());
+  }, [accessToken]);
 
   const handleLogOut = () => {
     deleteCookie("accessToken");
