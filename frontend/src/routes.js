@@ -12,11 +12,13 @@ import AllBookings from "./pages/admin/booking";
 import Discount from "./pages/admin/discount";
 import ChatAdminPage from "./pages/admin/chat";
 import PlaceViewPage from "./pages/components/PlaceViewPage";
+import Booking from "./pages/booking";
 
 const routes = [
   { path: "/", element: <Home /> },
   { path: "/destination", element: <Destination /> },
   { path: "/destination/:designationId", element: <PlaceViewPage /> },
+  { path: "/destination/book-now/:designationId", element: <Booking /> },
   { path: "/stories", element: <Stories /> },
   { path: "/reviews", element: <Reviews /> },
   { path: "/profile", element: <ProfilePage /> },

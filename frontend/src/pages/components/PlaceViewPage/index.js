@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Row, Col, Card, Button, Descriptions, Rate, Carousel, Typography, Badge, Space } from "antd";
 import { EnvironmentOutlined, CalendarOutlined, DollarOutlined, CarOutlined } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PageServiceAPI } from "../../page.service";
 import Loader from "../../../components/loader";
 
@@ -12,10 +12,10 @@ const PlaceViewPage = () => {
   const [designationData, setDesignationData] = useState({});
   const carouselRef = useRef(null);
   const [isLoading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const { designationId } = useParams();
   
-  // Fetch data with memoized function
   const getDesignationData = useCallback(() => {
     setLoading(true);
     PageServiceAPI.getDesignations(designationId).then(
@@ -66,6 +66,11 @@ const PlaceViewPage = () => {
 
   const hoverButtonStyles = {
     // backgroundColor: "#0056b3"
+  };
+
+  const handleBookNowClick = (designationId) => {
+    console.log(designationId);
+    navigate(`/destination/book-now/${designationId}`);
   };
 
   if (isLoading) {
@@ -178,6 +183,7 @@ const PlaceViewPage = () => {
                   type="primary"
                   size="large"
                   style={buttonStyles}
+                  onClick={() => handleBookNowClick(designationData?.destinationId)}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = hoverButtonStyles.backgroundColor;
                     const icon = e.currentTarget.querySelector(".vehicle-icon");
