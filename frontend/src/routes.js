@@ -11,9 +11,11 @@ import ProfilePage from "./pages/profile";
 import AllBookings from "./pages/admin/booking";
 import Discount from "./pages/admin/discount";
 import ChatAdminPage from "./pages/admin/chat";
+import PlaceViewPage from "./pages/components/PlaceViewPage";
 
 const routes = [
   { path: "/", element: <Home /> },
+  { path: "/PlaceViewPage", element: <PlaceViewPage /> },
   { path: "/destination", element: <Destination /> },
   { path: "/stories", element: <Stories /> },
   { path: "/reviews", element: <Reviews /> },
