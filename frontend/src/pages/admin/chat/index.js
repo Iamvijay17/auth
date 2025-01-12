@@ -26,6 +26,7 @@ import { fetchAllUsers } from "../../../store/userSlice";
 import { generateId } from "../../../utils";
 import { getCookie } from "../../../utils/cookies";
 import UnreadIcon from "../../../assets/icons/unreadIcon";
+import EmptyPage from "../../../components/empty";
 
 const accessToken = getCookie("accessToken");
 const { Header, Content, Sider } = Layout;
@@ -140,22 +141,17 @@ const ChatAdminPage = () => {
       messageId: generateId("MSG"),
       senderId: currentUserId,
       receiverId: currentChat.chatWith,
+      status: "sent",
       timestamp: new Date()
     };
-
     socket?.emit("sendMessage", newMessage);
-    socket?.emit("messageStatus", {
-      messageId: newMessage.messageId,
-      status: "sent"
-    });
-
-    // Emit "typingStatus" with false after sending the message
+    socket.emit("getRecentChats");
+    socket.on("recentChats", setRecentChats);
     socket?.emit("typingStatus", {
       receiverId: currentChat.chatWith,
       isTyping: false
     });
 
-    // Append the sent message to the messages state
     setMessages((prev) => [...prev, newMessage]);
     setMessageInput("");
   };
@@ -212,10 +208,17 @@ const ChatAdminPage = () => {
   const groupedMessages = groupMessagesByDate(messages);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (socket) {
+      return () => {
+        socket.off("recentChats");
+        socket.off("typingStatus");
+        socket.off("receiveMessage");
+        socket.off("messageStatus");
+      };
     }
-  }, [messages, typingStatus]); // Trigger after messages update
+  }, [socket]);
+
+
 
   useEffect(() => {
     if (socket) {
@@ -231,6 +234,7 @@ const ChatAdminPage = () => {
       };
     }
   }, [socket]);
+
   let typingStatusTimeout = useRef(null);
   const handleTyping = useCallback(() => {
     if (currentChat?.chatWith) {
@@ -254,7 +258,72 @@ const ChatAdminPage = () => {
 
   }, [currentChat, messageInput, socket]);
 
-  console.log("Typing status:", typingStatus);
+
+  const markMessagesAsRead = useCallback(() => {
+    if (!currentChat) return;
+
+    // Filter unread messages based on the receiverId and status
+    const unreadMessages = messages.filter(
+      (msg) => msg.receiverId === currentUserId && msg.status !== "read"
+    );
+
+    // If there are unread messages, mark them as read
+    if (unreadMessages.length > 0) {
+      const unreadMessageIds = unreadMessages.map((msg) => msg.messageId);
+
+      // Emit the 'messageRead' event with messageIds array
+      socket?.emit("messageRead", { messageIds: unreadMessageIds });
+
+      // Update the message statuses to 'read' in the local state
+      setMessages((prev) =>
+        prev.map((msg) =>
+          unreadMessageIds.includes(msg.messageId)
+            ? { ...msg, status: "read" }
+            : msg
+        )
+      );
+    }
+  }, [currentChat, currentUserId, messages, socket]);
+
+
+
+  useEffect(() => {
+  // Call markMessagesAsRead when a new chat is selected or opened
+    markMessagesAsRead();
+  }, [currentChat, markMessagesAsRead]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight
+      });
+      markMessagesAsRead();
+    }
+  }, [messages, typingStatus]);
+
+  const formatChatDate = (messageDate) => {
+    const today = moment().startOf("day");
+    const yesterday = moment().subtract(1, "days").startOf("day");
+    const twoDaysAgo = moment().subtract(2, "days").startOf("day");
+    const sevenDaysAgo = moment().subtract(7, "days").startOf("day");
+    const twentyFourHoursAgo = moment().subtract(24, "hours");
+
+    if (messageDate.isSame(today, "day")) {
+      return messageDate.format("hh:mm A"); // Show time if it's today
+    } else if (messageDate.isSame(yesterday, "day")) {
+      return "Yesterday";
+    } else if (messageDate.isSame(twoDaysAgo, "day")) {
+      return messageDate.format("dddd");
+    } else if (messageDate.isAfter(sevenDaysAgo)) {
+      return messageDate.format("dddd");
+    } else if (messageDate.isAfter(twentyFourHoursAgo)) {
+      return messageDate.format("hh:mm A"); // Show time if within the last 24 hours
+    } else {
+      return messageDate.format("DD-MM-YYYY");
+    }
+  };
+
+
 
   return (
     <Layout className="h-[80vh]">
@@ -269,20 +338,40 @@ const ChatAdminPage = () => {
         <Menu
           mode="inline"
           selectedKeys={[String(activeChat)]}
-          className="h-[80vh] border-0"
-        >
+          className="h-[80vh] border-0">
           {filteredChats.map((chat) => (
             <Menu.Item
               key={chat.chatWith}
               onClick={() => handleSelectChat(chat.chatWith)}
-              className="flex items-center py-3 hover:bg-gray-200"
+              className="flex items-center py-6 hover:bg-gray-200 transition-all rounded-lg"
             >
-              <Badge dot={chat.chatUser?.onlineStatus} color="green" offset={[-18, 35]}>
-                <Avatar icon={<UserOutlined />} src={chat.chatUser?.avatar} className="mr-3" />
-              </Badge>
-              <span className="text-lg">{chat.chatUser?.name}</span>
+              <div className="flex justify-start items-start w-full space-x-3">
+                {/* Profile and online status */}
+                <Badge dot={chat.chatUser?.onlineStatus} color="green" offset={[-18, 35]}>
+                  <Avatar
+                    icon={<UserOutlined />}
+                    src={chat.chatUser?.avatar}
+                    className="mr-2"
+                    size={40}
+                  />
+                </Badge>
+
+                <div className="flex flex-col justify-between w-full">
+                  {/* Name and Timestamp */}
+                  <div className="flex items-center justify-between w-full">
+                    <span className="font-semibold text-md">{chat.chatUser?.name}</span>
+                    <span className="text-gray-500 text-xs">{formatChatDate(moment(chat.lastMessageTime))}</span>
+                  </div>
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-gray-600 text-xs truncate">{chat.lastMessage}</span>
+                    <span className="text-gray-500 text-xs">{formatChatDate(moment(chat.lastMessageTime))}</span>
+                  </div>
+                  {/* Last Message */}
+                </div>
+              </div>
             </Menu.Item>
           ))}
+
           <Menu.Item
             icon={<PlusOutlined />}
             className="mt-auto py-3 text-center"
@@ -331,7 +420,10 @@ const ChatAdminPage = () => {
                               <span>{moment(msg.timestamp).format("hh:mm A")}</span>
   
                               {msg.senderId === currentUserId && msg.status === "sent" && (
-                                <UnreadIcon width={17} height={17} className="ml-2" />
+                                <UnreadIcon width={17} height={17} className="ml-2"/>
+                              )}
+                              {msg.senderId === currentUserId && msg.status === "read" && (
+                                <UnreadIcon width={17} height={17} className="ml-2" color="#22c55e"/>
                               )}
                             </div>
 
@@ -348,7 +440,7 @@ const ChatAdminPage = () => {
                       </div>
                     )}
 
-
+ 
                   </div>
                 ))}
               </div>
@@ -396,7 +488,7 @@ const ChatAdminPage = () => {
             </>
           ) : (
             <div className="flex items-center justify-center flex-1 text-center text-gray-500">
-              <span>Select a chat to start messaging</span>
+              <EmptyPage />
             </div>
           )}
         </Content>

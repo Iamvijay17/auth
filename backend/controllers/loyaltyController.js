@@ -1,4 +1,4 @@
-import User from '../models/user.js';
+import User from '../models/User.js';
 
 /**
  * Award loyalty points to a user based on their total bookings

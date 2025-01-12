@@ -1,94 +1,73 @@
-import { Button, Card, Col, Form, Row, Tabs } from "antd";
 import React, { useState } from "react";
-import { IoSettingsOutline } from "react-icons/io5";
-import SettingsForm from "./settings";
+
+import {
+  BellOutlined,
+  SafetyOutlined,
+  SettingOutlined,
+  TeamOutlined,
+  UserOutlined,
+  WalletOutlined
+} from '@ant-design/icons';
+import { Form, Menu, Typography } from 'antd';
+import AccountSettings from "./AccountSettings";
+import ProfileSettings from "./ProfileSettings";
 import { useSelector } from "react-redux";
+import BillingSettings from "./BillingSettings";
+
+const { Title, Paragraph } = Typography;
 
 const Settings = () => {
   const userById = useSelector((state) => state.userById);
-  const [activeKey, setActiveKey] = useState("2");
+  const [selectedKey, setSelectedKey] = useState("accounts");
+
   const [form] = Form.useForm();
 
-  const items = [
-    {
-      key: "1",
-      label: (
-        <span style={{ display: "flex", alignItems: "center" }}>
-          <IoSettingsOutline style={{ marginRight: 8 }} /> Profile
-        </span>
-      ),
-      children: <div>hello</div>
-    },
-    {
-      key: "2",
-      label: (
-        <span style={{ display: "flex", alignItems: "center" }}>
-          <IoSettingsOutline style={{ marginRight: 8 }} /> Settings
-        </span>
-      ),
-      children: <SettingsForm form={form} initialValues={userById["data"]} />
-    }
+  const menuItems = [
+    { key: 'teams', icon: <TeamOutlined />, label: 'Teams', disabled: true },
+    { key: 'accounts', icon: <UserOutlined />, label: 'Accounts' },
+    { key: 'profile', icon: <SettingOutlined />, label: 'Profile' },
+    { key: 'billing', icon: <WalletOutlined />, label: 'Billing' },
+    { key: 'notifications', icon: <BellOutlined />, label: 'Notifications' },
+    { key: 'integrations', icon: <SafetyOutlined />, label: 'Integrations' }
   ];
 
+
+  const renderContent = () => {
+    switch (selectedKey) {
+    case "accounts":
+      return <AccountSettings form={form} userById={userById["data"]}/>;
+    case "profile":
+      return <ProfileSettings form={form} userById={userById["data"]}/>;
+    case "billing":
+      return <BillingSettings form={form} userById={userById["data"]}/>;
+    default:
+      return (
+        <Paragraph>
+            Please select a menu item to view the settings.
+        </Paragraph>
+      );
+    }
+  };
+
   return (
-    <div>
-      {/* Banner Section */}
-      <div
-        style={{
-          background: "linear-gradient(to right, #6a11cb 0%, #2575fc 100%)",
-          color: "#fff",
-          padding: "60px 20px",
-          borderRadius: "10px",
-          textAlign: "center",
-          marginBottom: "40px",
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)"
-        }}
-      >
-        <h1 style={{ fontSize: "36px", fontWeight: "bold" }}>Settings</h1>
-        <p style={{ fontSize: "18px", marginBottom: "30px" }}>
-          Manage your account and personalize your settings.
-        </p>
-        <Button
-          type="primary"
-          size="large"
-          style={{
-            borderRadius: "30px",
-            padding: "10px 30px",
-            fontSize: "16px",
-            backgroundColor: "#fff",
-            color: "#2575fc",
-            border: "none"
-          }}
-        >
-          Update Settings
-        </Button>
+    <>
+      <div style={{ maxWidth: '1200px', margin: 'auto', padding: '16px', minHeight: '100vh' }}>
+        <Title level={1} style={{ borderBottom: '2px solid #f0f0f0', paddingBottom: '16px' }}>
+        Settings
+        </Title>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '16px', marginTop: '24px' }}>
+          <Menu
+            style={{ width: 256 }}
+            defaultSelectedKeys={['accounts']}
+            mode="inline"
+            items={menuItems}
+            onClick={(e) => setSelectedKey(e.key)}
+          />
+          {renderContent()}
+        </div>
       </div>
 
-      {/* Tabs Section */}
-      <Row gutter={[16, 16]}>
-        <Col span={24}>
-          <Card
-            bordered={false}
-            style={{
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-              borderRadius: "10px"
-            }}
-          >
-            <Tabs
-              defaultActiveKey="2"
-              activeKey={activeKey}
-              onChange={(key) => setActiveKey(key)}
-              items={items}
-              tabBarStyle={{
-                fontSize: "16px",
-                fontWeight: "500",
-                color: "#4A4A4A"
-              }}
-            />
-          </Card>
-        </Col>
-      </Row>
-    </div>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import fs from "fs";
 import axios from "axios";
 import path from "path";
-import User from "../models/user.js";
+import User from "../models/User.js";
 import dotenv from "dotenv";
 dotenv.config();
 

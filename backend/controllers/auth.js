@@ -1,4 +1,4 @@
-import User from "../models/user.js";
+import User from "../models/User.js";
 import dotenv from "dotenv";
 import bcryptjs from "bcryptjs";
 import {
@@ -12,67 +12,100 @@ import fs from "fs";
 import nodemailer from "nodemailer";
 dotenv.config();
 
+
 export const signup = async (req, res) => {
-  const { email, password, name, userId } = req.body;
+  const { email, password, name, userId, address, avatar, preferences } = req.body;
+
+  // Validate required fields
   if (!email || !password || !name || !userId) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: "All required fields must be filled." });
   }
 
   try {
-    // Check if user already exists
-    const userAlreadyExists = await User.findOne({ email }).select("_id");
-    if (userAlreadyExists) {
-      return res.status(400).json({ message: "User already exists" });
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email }).select("_id");
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists with this email." });
     }
 
     // Hash the password
-    const hashedPassword = await bcryptjs.hash(password, 8);
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
+    // Generate verification details
     const verificationCode = generateVerificationCode();
+    const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // Expires in 24 hours
 
-    // Check if this is the first user
-    const userCount = await User.countDocuments();
-    const role = userCount === 0 ? "admin" : "user"; // Assign admin role to the first user
+    // Determine if the user is the first to sign up (assign "admin" role)
+    const isFirstUser = (await User.countDocuments()) === 0;
+    const role = isFirstUser ? "admin" : "user";
 
-    // Create the user
-    const user = new User({
+    // Create a new user instance
+    const newUser = new User({
       email,
       password: hashedPassword,
       name,
       userId,
-      role, // Assign role dynamically
+      role,
       verificationCode,
-      verificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours expiry
+      verificationExpires,
+      avatar: avatar || null,
+      address: address || {},
+      preferences: preferences || {},
+      settings: {
+        language: preferences?.language || "en",
+        notificationsEnabled: true,
+        theme: preferences?.theme || "light",
+        preferredLanguage: preferences?.preferredLanguage || "en",
+        is2FAEnabled: false,
+        emailNotifications: [],
+        isAccountDeactivated: false,
+        profileVisibility: "public",
+      },
     });
 
     // Mail API for sending verification email
     const mailApiUrl = `${process.env.API_BASE_URL}/api/v1/signup-mail`;
 
-    const saveUser = user.save();
-    const sendEmail = axios.post(mailApiUrl, {
+    // Save user and send verification email concurrently
+    const saveUserPromise = newUser.save();
+    const sendEmailPromise = axios.post(mailApiUrl, {
       email,
       verificationCode,
     });
 
-    // Wait for both saving user and sending email to complete
-    const [savedUser, emailResponse] = await Promise.all([saveUser, sendEmail]);
+    const [savedUser, emailResponse] = await Promise.allSettled([
+      saveUserPromise,
+      sendEmailPromise,
+    ]);
 
-    if (emailResponse.status !== 200) {
-      return res
-        .status(500)
-        .json({ message: "Error sending verification email" });
+    // Handle user save result
+    if (savedUser.status === "rejected") {
+      console.error("Error saving user:", savedUser.reason);
+      return res.status(500).json({ message: "Error saving user. Please try again." });
     }
 
-    // Generate token and set it in a cookie
-    generateTokenAndSetCookie(res, savedUser._id);
+    // Handle email sending result
+    if (emailResponse.status === "rejected" || emailResponse.value.status !== 200) {
+      console.error("Error sending verification email:", emailResponse.reason);
+      return res.status(500).json({
+        message: "User created successfully, but verification email could not be sent.",
+      });
+    }
 
+    // Generate token and set in a cookie
+    generateTokenAndSetCookie(res, savedUser.value._id);
+
+    // Respond with success
     return res.status(201).json({
       message: "User created successfully. Verification email sent.",
-      user: { ...savedUser._doc, password: undefined }, // Exclude password from response
+      user: { ...savedUser.value._doc, password: undefined }, // Exclude sensitive fields
     });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Signup error:", error);
+    return res.status(500).json({ message: "An unexpected error occurred." });
   }
 };
+
 
 
 export const signin = async (req, res) => {

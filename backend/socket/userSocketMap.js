@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import Message from '../models/Message.js';
-import User from '../models/user.js';
+import User from '../models/User.js';
 
 const userSocketMap = {};
 
@@ -56,6 +56,8 @@ export const handleUserConnections = (notificationNamespace) => {
                                 },
                             },
                             lastMessage: { $first: '$message' },
+                            lastMessageId: { $first: '$messageId' },
+                            lastMessageStatus: { $first: '$status' },
                             lastMessageTime: { $first: '$timestamp' },
                             lastMessageSender: { $first: '$senderId' },
                         },
@@ -70,18 +72,23 @@ export const handleUserConnections = (notificationNamespace) => {
                     },
                 ]);
 
-                const formattedChats = recentChats.map((chat) => ({
-                    chatWith: chat._id.chatWith,
-                    lastMessage: chat.lastMessage,
-                    lastMessageTime: chat.lastMessageTime,
-                    lastMessageSender: chat.lastMessageSender,
-                    chatUser: {
-                        ...chat.chatUser[0],
-                        _id: undefined,
-                        __v: undefined,
-                        password: undefined,
-                    },
-                }));
+                const formattedChats = recentChats
+                    .sort((a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)) // Sort by last message timestamp in descending order
+                    .map((chat) => ({
+                        chatWith: chat._id.chatWith,
+                        lastMessage: chat.lastMessage,
+                        lastMessageId: chat.lastMessageId,
+                        lastMessageStatus: chat.lastMessageStatus,
+                        lastMessageTime: chat.lastMessageTime,
+                        lastMessageSender: chat.lastMessageSender,
+                        chatUser: {
+                            ...(chat.chatUser[0] || {}), // Ensure chatUser exists
+                            _id: undefined,
+                            __v: undefined,
+                            password: undefined,
+                        },
+                    }));
+
 
                 socket.emit('recentChats', formattedChats);
             } catch (error) {
@@ -119,7 +126,7 @@ export const handleUserConnections = (notificationNamespace) => {
         });
 
         socket.on('sendMessage', async (data) => {
-            const { message, receiverId, timestamp } = data;
+            const { message, receiverId, timestamp, messageId } = data;
 
             if (!message || !receiverId) {
                 socket.emit('error', 'Invalid data received');
@@ -131,6 +138,7 @@ export const handleUserConnections = (notificationNamespace) => {
                     message,
                     senderId: userId,
                     receiverId,
+                    messageId,
                     status: 'sent',
                     timestamp: timestamp || new Date(),
                 });
