@@ -14,6 +14,7 @@ import ChatAdminPage from "./pages/admin/chat";
 import PlaceViewPage from "./pages/components/PlaceViewPage";
 import Booking from "./pages/booking";
 import Payment from "./pages/payment";
+import Dashboard from "./pages/admin/dashboard";
 
 const routes = [
   { path: "/", element: <Home /> },
@@ -29,7 +30,7 @@ const routes = [
     element: <MainLayout />,
     children: [
       { path: "users", element: <AllUsers /> },
-      { path: "dashboard", element: <div>dashboard</div> },
+      { path: "dashboard", element: <Dashboard /> },
       { path: "chat", element: <ChatAdminPage /> },
       { path: "bookings", element: <AllBookings /> },
       { path: "discounts", element: <Discount /> }
