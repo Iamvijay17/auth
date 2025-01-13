@@ -1,0 +1,153 @@
+import { Card, Col, Layout, Row, Statistic } from 'antd';
+import { ArcElement, CategoryScale, Chart as ChartJS, Legend,BarElement, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
+import React from 'react';
+import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import { FaMoneyBillWave, FaUserAlt } from 'react-icons/fa';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  BarElement,
+  Tooltip,
+  Legend,
+  ArcElement
+);
+
+const { Content } = Layout;
+
+const Dashboard = () => {
+  // Line chart data
+  const lineData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+    datasets: [
+      {
+        label: 'Total Bookings',
+        data: [30, 45, 60, 50, 70, 90, 100],
+        borderColor: 'rgba(75, 192, 192, 1)',
+        tension: 0.4
+      }
+    ]
+  };
+
+  // Doughnut chart data
+  const doughnutData = {
+    labels: ['Active Users', 'Inactive Users', 'New Users'],
+    datasets: [
+      {
+        data: [300, 50, 150],
+        backgroundColor: ['#4caf50', '#f44336', '#ffeb3b'],
+        hoverOffset: 10
+      }
+    ]
+  };
+
+
+  // Stacked Bar chart data
+  const stackedBarData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+    datasets: [
+      {
+        label: 'Active Users',
+        data: [50, 100, 150, 200, 250],
+        backgroundColor: '#4caf50'
+      },
+      {
+        label: 'Inactive Users',
+        data: [20, 30, 40, 50, 60],
+        backgroundColor: '#f44336'
+      },
+      {
+        label: 'New Users',
+        data: [10, 20, 30, 40, 50],
+        backgroundColor: '#ffeb3b'
+      }
+    ]
+  };
+
+
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+ 
+
+      {/* Main Content */}
+      <Content style={{ margin: '16px' }}>
+        <Row gutter={16}>
+          <Col span={8}>
+            <Card bordered={false} hoverable>
+              <Statistic title="Total Bookings" value={1128} prefix={<FaMoneyBillWave />} />
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card bordered={false} hoverable>
+              <Statistic title="Total Revenue" value={7845} prefix="$" />
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card bordered={false} hoverable>
+              <Statistic title="Total Users" value={3456} prefix={<FaUserAlt />} />
+            </Card>
+          </Col>
+        </Row>
+
+
+        {/* Doughnut Chart */}
+        <Row gutter={16} style={{ marginTop: '16px' }}>
+          <Col span={12}>
+            <Card title="Bookings Growth" bordered={false} hoverable>
+              <Line data={lineData} />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card title="User Status Distribution" bordered={false} hoverable>
+              <div style={{ height: '37vh' }}>
+                <Doughnut data={doughnutData} />
+              </div>
+            </Card>
+          </Col>
+
+          <Col span={6}>
+            <Card title="User Growth by Month" bordered={false} hoverable>
+              <div style={{ height: '300px' }}>
+                <Bar
+                  data={stackedBarData}
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'top'
+                      },
+                      tooltip: {
+                        callbacks: {
+                          label: (context) => {
+                            const value = context.raw;
+                            return `${context.dataset.label}: ${value}`;
+                          }
+                        }
+                      }
+                    },
+                    scales: {
+                      x: {
+                        stacked: true
+                      },
+                      y: {
+                        stacked: true
+                      }
+                    }
+                  }}
+                />
+              </div>
+            </Card>
+          </Col>
+        </Row>
+
+
+ 
+      </Content>
+    </Layout>
+  );
+};
+
+export default Dashboard;

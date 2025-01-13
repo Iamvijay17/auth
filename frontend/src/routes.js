@@ -11,10 +11,17 @@ import ProfilePage from "./pages/profile";
 import AllBookings from "./pages/admin/booking";
 import Discount from "./pages/admin/discount";
 import ChatAdminPage from "./pages/admin/chat";
+import PlaceViewPage from "./pages/components/PlaceViewPage";
+import Booking from "./pages/booking";
+import Payment from "./pages/payment";
+import Dashboard from "./pages/admin/dashboard";
 
 const routes = [
   { path: "/", element: <Home /> },
   { path: "/destination", element: <Destination /> },
+  { path: "/destination/:designationId", element: <PlaceViewPage /> },
+  { path: "/destination/book-now/:designationId", element: <Booking /> },
+  { path: "/destination/book-now/:designationId/checkout", element: <Payment /> },
   { path: "/stories", element: <Stories /> },
   { path: "/reviews", element: <Reviews /> },
   { path: "/profile", element: <ProfilePage /> },
@@ -23,7 +30,7 @@ const routes = [
     element: <MainLayout />,
     children: [
       { path: "users", element: <AllUsers /> },
-      { path: "dashboard", element: <div>dashboard</div> },
+      { path: "dashboard", element: <Dashboard /> },
       { path: "chat", element: <ChatAdminPage /> },
       { path: "bookings", element: <AllBookings /> },
       { path: "discounts", element: <Discount /> }

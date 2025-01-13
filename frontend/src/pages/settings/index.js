@@ -13,6 +13,7 @@ import AccountSettings from "./AccountSettings";
 import ProfileSettings from "./ProfileSettings";
 import { useSelector } from "react-redux";
 import BillingSettings from "./BillingSettings";
+import NotificationSettings from "./NotificationSettings";
 
 const { Title, Paragraph } = Typography;
 
@@ -40,6 +41,8 @@ const Settings = () => {
       return <ProfileSettings form={form} userById={userById["data"]}/>;
     case "billing":
       return <BillingSettings form={form} userById={userById["data"]}/>;
+    case "notifications":
+      return <NotificationSettings form={form} userById={userById["data"]}/>;
     default:
       return (
         <Paragraph>

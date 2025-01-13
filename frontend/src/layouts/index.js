@@ -99,13 +99,13 @@ const MainLayout = () => {
     <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} theme="light">
         <div className="logo" style={{ padding: "16px", textAlign: "center" }}>
-          <Avatar size={64} alt="User" src="/images/R-Wx_NHvZBci3KLrgXhp1.png" />
+          <Avatar size={collapsed ? 32 : 64} alt="User" src={userById["data"]?.avatar} />
           {!collapsed && (
             <div style={{ marginTop: 8 }}>
-              <Text strong>Sarah Carter</Text>
+              <Text strong>{userById["data"]?.name.toUpperCase()}</Text>
               <br />
               <Text type="secondary" style={{ fontSize: "12px" }}>
-                Sr. Engineer
+                {userById["data"]?.role.toUpperCase()}
               </Text>
             </div>
           )}

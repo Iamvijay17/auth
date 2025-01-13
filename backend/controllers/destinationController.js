@@ -3,15 +3,16 @@ import Destination from '../models/Destination.js';
 // Get all destinations
 export const getAllDestinations = async (req, res) => {
   try {
-    const { search, location, minPrice, maxPrice, rating } = req.query;
+    const { search, location, minPrice, maxPrice, rating, categories } = req.query;
 
     const filter = {};
     if (search) filter.name = new RegExp(search, 'i');
     if (location) filter.location = location;
     if (minPrice || maxPrice) filter.price = { $gte: minPrice || 0, $lte: maxPrice || Infinity };
     if (rating) filter.rating = { $gte: rating };
+    if (categories) filter.categories = { $in: categories.split(",") }; // Filter by multiple categories
 
-    const destinations = await Destination.find(filter);
+    const destinations = await Destination.find(filter).select('-_id');
     res.status(200).json(destinations);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -20,14 +21,30 @@ export const getAllDestinations = async (req, res) => {
 
 // Get destination by ID
 export const getDestinationById = async (req, res) => {
+const { id } = req.params;
+
   try {
-    const destination = await Destination.findById(req.params.id);
-    if (!destination) return res.status(404).json({ message: 'Destination not found' });
+    if (!id) {
+      return res.status(400).json({ message: 'Invalid destination ID format' });
+    }
+
+    const destination = await Destination.findOne({destinationId : id});
+
+    if (!destination) {
+      return res.status(404).json({ message: 'Destination not found' });
+    }
+
+    // Return the destination if found
     res.status(200).json(destination);
   } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error fetching destination:', error);
+
+    // Handle any other errors
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Create a new destination
 export const createDestination = async (req, res) => {
@@ -70,12 +87,20 @@ export const addReview = async (req, res) => {
 
     if (!destination) return res.status(404).json({ message: 'Destination not found' });
 
-    const review = { userId: req.user.id, rating, comment };
+    // New review structure with user info
+    const review = { 
+      userId: req.user.id, 
+      userName: req.user.name, // Assuming the user's name is available from the auth system
+      rating, 
+      comment,
+      helpfulVotes: 0 
+    };
     destination.reviews.push(review);
 
-    // Update rating
+    // Recalculate rating
     const totalRatings = destination.reviews.reduce((sum, review) => sum + review.rating, 0);
     destination.rating = totalRatings / destination.reviews.length;
+    destination.totalReviews = destination.reviews.length; // Update the total reviews count
 
     await destination.save();
     res.status(201).json({ message: 'Review added successfully', review });
