@@ -2,7 +2,7 @@ import { CalendarOutlined, CreditCardOutlined, EnvironmentOutlined } from "@ant-
 import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Typography, notification } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { PageServiceAPI } from "../page.service";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const { Title, Paragraph } = Typography;
 
@@ -12,6 +12,8 @@ const Booking = () => {
   const [couponCode, setCouponCode] = useState("");
   const [discountApplied, setDiscountApplied] = useState(0);
   const { designationId } = useParams();
+
+  const navigate = useNavigate();
 
   const getDesignationData = useCallback(() => {
     setLoading(true);
@@ -29,10 +31,6 @@ const Booking = () => {
     getDesignationData();
   }, [getDesignationData]);
 
-  const onFinish = (values) => {
-    setLoading(true);
-    console.log(values);
-  };
 
   const applyCoupon = () => {
     // Simulating coupon logic
@@ -55,6 +53,11 @@ const Booking = () => {
 
   const handleDateChange = (date, dateString) => {
     console.log(date, dateString);
+  };
+
+  const handleFinish = (values) => {
+    console.log("Form values: ", values);
+    navigate(`/destination/book-now/${designationId}/checkout`);
   };
 
   return (
@@ -142,7 +145,7 @@ const Booking = () => {
               padding: "20px"
             }}
           >
-            <Form layout="vertical" onFinish={onFinish}>
+            <Form layout="vertical">
               <Form.Item
                 label="Full Name"
                 name="name"
@@ -186,9 +189,9 @@ const Booking = () => {
                 <Button
                   type="primary"
                   size="large"
-                  htmlType="submit"
                   block
                   loading={isLoading}
+                  onClick={handleFinish}
                   style={{
                     borderRadius: "8px",
                     fontWeight: "bold"

@@ -13,12 +13,14 @@ import Discount from "./pages/admin/discount";
 import ChatAdminPage from "./pages/admin/chat";
 import PlaceViewPage from "./pages/components/PlaceViewPage";
 import Booking from "./pages/booking";
+import Payment from "./pages/payment";
 
 const routes = [
   { path: "/", element: <Home /> },
   { path: "/destination", element: <Destination /> },
   { path: "/destination/:designationId", element: <PlaceViewPage /> },
   { path: "/destination/book-now/:designationId", element: <Booking /> },
+  { path: "/destination/book-now/:designationId/checkout", element: <Payment /> },
   { path: "/stories", element: <Stories /> },
   { path: "/reviews", element: <Reviews /> },
   { path: "/profile", element: <ProfilePage /> },
