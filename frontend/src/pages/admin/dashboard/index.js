@@ -1,9 +1,10 @@
 import { Card, Col, Layout, Row, Statistic } from 'antd';
 import { ArcElement, CategoryScale, Chart as ChartJS, Legend, BarElement, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import { FaMoneyBillWave, FaUserAlt } from 'react-icons/fa';
 import CountUp from 'react-countup';
+import { AdminServiceAPI } from '../admin.service';
 
 ChartJS.register(
   CategoryScale,
@@ -20,6 +21,20 @@ ChartJS.register(
 const { Content } = Layout;
 
 const Dashboard = () => {
+
+  const [statistics, setStatistics] = useState();
+
+  useEffect(() => {
+    getStatistics();
+  }, []);
+
+  const getStatistics = () => {
+    AdminServiceAPI.getStatistics().then((res) => {
+      setStatistics(res);
+    });
+  };
+
+
   // Line chart data
   const lineData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
@@ -28,7 +43,7 @@ const Dashboard = () => {
         label: 'Total Bookings',
         data: [30, 45, 60, 50, 70, 90, 100],
         borderColor: 'rgba(75, 192, 192, 1)',
-        tension: 0.4
+        tension: .4
       }
     ]
   };
@@ -67,28 +82,28 @@ const Dashboard = () => {
       }
     ]
   };
+
   const formatter = (value) => <CountUp end={value} />;
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-
 
       {/* Main Content */}
       <Content style={{ margin: '16px' }}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} md={8}>
             <Card bordered={false} hoverable>
-              <Statistic title="Total Bookings" value={1128} prefix={<FaMoneyBillWave />} formatter={formatter} />
+              <Statistic title="Total Bookings" value={statistics?.bookingCount} prefix={<FaMoneyBillWave />} formatter={formatter} />
             </Card>
           </Col>
           <Col xs={24} sm={12} md={8}>
             <Card bordered={false} hoverable>
-              <Statistic title="Total Revenue" value={7845} prefix="$" formatter={formatter} />
+              <Statistic title="Total Destinations" value={statistics?.destinationCount} prefix="$" formatter={formatter} />
             </Card>
           </Col>
           <Col xs={24} sm={12} md={8}>
             <Card bordered={false} hoverable>
-              <Statistic title="Total Users" value={3456} prefix={<FaUserAlt />} formatter={formatter} />
+              <Statistic title="Total Users" value={statistics?.userCount} prefix={<FaUserAlt />} formatter={formatter} />
             </Card>
           </Col>
         </Row>
