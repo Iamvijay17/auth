@@ -23,9 +23,9 @@ router.post('/:id/associate-hotel', verifyToken, authorizeRoles('vendor', "admin
 router.post('/:id/package', verifyToken, authorizeRoles('vendor'), createPackageForTravelAgency);
 router.get('/destinations/:id/travel-agencies', getTravelAgenciesForDestination);
 router.post('/:id/review', verifyToken, addReviewForTravelAgency);
-router.get('/:id/reviews', getReviewsForTravelAgency);
+router.get('/:id/reviews', verifyToken, getReviewsForTravelAgency);
 router.post('/:id/rating', verifyToken, addRatingForTravelAgency);
-router.get('/:id/ratings', getRatingsForTravelAgency);
+router.get('/:id/ratings', verifyToken, getRatingsForTravelAgency);
 router.post('/:id/employees', verifyToken, authorizeRoles('vendor'), addEmployeeToTravelAgency);
 router.get('/:id/employees', verifyToken, authorizeRoles('vendor', 'admin'), getEmployeesForTravelAgency);
 router.put('/:agencyId/employees/:employeeId', verifyToken, authorizeRoles('vendor'), updateEmployeeDetails);

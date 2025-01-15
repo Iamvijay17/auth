@@ -3,7 +3,7 @@ import { searchDestinations } from '../controllers/searchController.js';
 
 const router = express.Router();
 
-router.get('/', searchDestinations);
+router.get('/destinations', searchDestinations);
 
 const searchRoutes = router;
 

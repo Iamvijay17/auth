@@ -31,9 +31,17 @@ const menuItems = [
   getItem("Users", "users", <MdOutlineDashboard />, "/admin/users"),
   getItem("Booking", "bookings", <UserOutlined />, "/admin/bookings"),
   getItem("Discount", "discounts", <FileOutlined />, "/admin/discounts"),
+  { type: "divider" },
+  getItem("Travel", "travel", <FileOutlined />, "/admin/travel/dashboard", [
+    getItem("Dashboard", "travel-dashboard", <FileOutlined />, "/admin/travel/dashboard"),
+    getItem("Vehicles", "travel-vehicles", <FileOutlined />, "/admin/travel/vehicles"),
+    getItem("Packages", "travel-packages", <FileOutlined />, "/admin/travel/packages")
+  ]),
   getItem("Team", "team", <TeamOutlined />, "/admin/team"),
   getItem("Chat", "chat", <MessageOutlined />, "/admin/chat")
 ];
+
+
 
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -45,7 +53,6 @@ const MainLayout = () => {
   const dispatch = useDispatch();
 
   const myCurrentStatus = userById?.data?.onlineStatus;
-  const currentKey = menuItems.find((item) => item.path === location.pathname)?.key || "dashboard";
 
   useEffect(() => {
     if (!accessToken) {
@@ -95,6 +102,20 @@ const MainLayout = () => {
     }
   ];
 
+
+  const findActiveKey = (items, path) => {
+    for (const item of items) {
+      if (item.path === path) return item.key;
+      if (item.children) {
+        const childKey = findActiveKey(item.children, path);
+        if (childKey) return childKey;
+      }
+    }
+    return null;
+  };
+
+  const currentKey = findActiveKey(menuItems, location.pathname) || "dashboard";
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} theme="light">
@@ -115,8 +136,26 @@ const MainLayout = () => {
           defaultSelectedKeys={[currentKey]}
           selectedKeys={[currentKey]}
           items={menuItems}
-          onClick={({ key }) => navigate(menuItems.find((item) => item.key === key)?.path)}
+          onClick={({ key }) => {
+            const findPath = (items, key) => {
+              for (let item of items) {
+                if (item.key === key) return item.path;
+                if (item.children) {
+                  const childPath = findPath(item.children, key);
+                  if (childPath) return childPath;
+                }
+              }
+              return null;
+            };
+
+            const path = findPath(menuItems, key);
+            if (path) navigate(path);
+          }}
         />
+
+
+
+        
       </Sider>
       <Layout>
         <Header

@@ -1,50 +1,92 @@
+import { Routes, Route } from "react-router-dom";
+import { Button, Result } from "antd";
 import React from "react";
-import Home from "./pages/website/home";
-import Destination from "./pages/website/destination";
-import Stories from "./pages/website/stories";
-import Reviews from "./pages/website/reviews";
 import MainLayout from "./layouts";
-import AllUsers from "./pages/admin/users";
 import CommonLayout from "./layouts/commonLayout";
-import Settings from "./pages/settings";
-import ProfilePage from "./pages/profile";
 import AllBookings from "./pages/admin/booking";
-import Discount from "./pages/admin/discount";
 import ChatAdminPage from "./pages/admin/chat";
-import PlaceViewPage from "./pages/components/PlaceViewPage";
-import Booking from "./pages/booking";
-import Payment from "./pages/payment";
 import Dashboard from "./pages/admin/dashboard";
+import Discount from "./pages/admin/discount";
+import TravelAdminDashboard from "./pages/admin/travel/dashboard";
+import AllUsers from "./pages/admin/users";
+import Booking from "./pages/booking";
+import PlaceViewPage from "./pages/components/PlaceViewPage";
+import Payment from "./pages/payment";
+import ProfilePage from "./pages/profile";
+import Settings from "./pages/settings";
+import Destination from "./pages/website/destination";
+import Home from "./pages/website/home";
+import Reviews from "./pages/website/reviews";
+import Stories from "./pages/website/stories";
+import TravelAdminPackages from "./pages/admin/travel/packages";
+import AdminTravelLayout from "./pages/admin/travel";
+import Vehicles from "./pages/admin/travel/vehicles";
 
-const routes = [
-  { path: "/", element: <Home /> },
-  { path: "/destination", element: <Destination /> },
-  { path: "/destination/:designationId", element: <PlaceViewPage /> },
-  { path: "/destination/book-now/:designationId", element: <Booking /> },
-  { path: "/destination/book-now/:designationId/checkout", element: <Payment /> },
-  { path: "/stories", element: <Stories /> },
-  { path: "/reviews", element: <Reviews /> },
-  { path: "/profile", element: <ProfilePage /> },
-  {
-    path: "/admin",
-    element: <MainLayout />,
-    children: [
-      { path: "users", element: <AllUsers /> },
-      { path: "dashboard", element: <Dashboard /> },
-      { path: "chat", element: <ChatAdminPage /> },
-      { path: "bookings", element: <AllBookings /> },
-      { path: "discounts", element: <Discount /> }
-    ]
-  },
-  {
-    path: "/settings",
-    element: <CommonLayout />,
-    children: [
-      { path: "", element: <Settings /> },
-      { path: "notifications", element: <div>Notifications Settings</div> },
-      { path: "security", element: <Settings /> }
-    ]
-  }
-];
+const AppRoutes = () => (
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/destination" element={<Destination />} />
+    <Route path="/destination/:designationId" element={<PlaceViewPage />} />
+    <Route path="/destination/book-now/:designationId" element={<Booking />} />
+    <Route path="/destination/book-now/:designationId/checkout" element={<Payment />} />
+    <Route path="/stories" element={<Stories />} />
+    <Route path="/reviews" element={<Reviews />} />
+    <Route path="/profile" element={<ProfilePage />} />
+    
+    <Route path="/admin" element={<MainLayout />}>
+      <Route path="users" element={<AllUsers />} />
+      <Route path="dashboard" element={<Dashboard />} />
+      <Route path="chat" element={<ChatAdminPage />} />
+      <Route path="bookings" element={<AllBookings />} />
+      <Route path="discounts" element={<Discount />} />
+      
+      <Route path="travel" element={<AdminTravelLayout />}>
+        <Route path="dashboard" element={<TravelAdminDashboard />} />
+        <Route path="vehicles" element={<Vehicles />} />
+        <Route path="packages" element={<TravelAdminPackages />} />
+      </Route>
+    </Route>
+    
+    <Route path="/settings" element={<CommonLayout />}>
+      <Route index element={<Settings />} />
+      <Route path="notifications" element={<div>Notifications Settings</div>} />
+      <Route path="security" element={<Settings />} />
+    </Route>
 
-export default routes;
+
+
+
+
+
+
+
+    
+    
+    <Route
+      path="*"
+      element={
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh"
+          }}
+        >
+          <Result
+            status="404"
+            title="404"
+            subTitle="Sorry, the page you visited does not exist."
+            extra={
+              <Button type="primary" onClick={() => window.history.back()}>
+                Go Back
+              </Button>
+            }
+          />
+        </div>
+      }
+    />
+  </Routes>
+);
+
+export default AppRoutes;
