@@ -1,8 +1,9 @@
 import { Card, Col, Layout, Row, Statistic } from 'antd';
-import { ArcElement, CategoryScale, Chart as ChartJS, Legend,BarElement, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
+import { ArcElement, CategoryScale, Chart as ChartJS, Legend, BarElement, LinearScale, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import React from 'react';
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import { FaMoneyBillWave, FaUserAlt } from 'react-icons/fa';
+import CountUp from 'react-countup';
 
 ChartJS.register(
   CategoryScale,
@@ -66,41 +67,41 @@ const Dashboard = () => {
       }
     ]
   };
-
+  const formatter = (value) => <CountUp end={value} />;
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
- 
+
 
       {/* Main Content */}
       <Content style={{ margin: '16px' }}>
-        <Row gutter={16}>
-          <Col span={8}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12} md={8}>
             <Card bordered={false} hoverable>
-              <Statistic title="Total Bookings" value={1128} prefix={<FaMoneyBillWave />} />
+              <Statistic title="Total Bookings" value={1128} prefix={<FaMoneyBillWave />} formatter={formatter} />
             </Card>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={12} md={8}>
             <Card bordered={false} hoverable>
-              <Statistic title="Total Revenue" value={7845} prefix="$" />
+              <Statistic title="Total Revenue" value={7845} prefix="$" formatter={formatter} />
             </Card>
           </Col>
-          <Col span={8}>
+          <Col xs={24} sm={12} md={8}>
             <Card bordered={false} hoverable>
-              <Statistic title="Total Users" value={3456} prefix={<FaUserAlt />} />
+              <Statistic title="Total Users" value={3456} prefix={<FaUserAlt />} formatter={formatter} />
             </Card>
           </Col>
         </Row>
 
 
         {/* Doughnut Chart */}
-        <Row gutter={16} style={{ marginTop: '16px' }}>
-          <Col span={12}>
-            <Card title="Bookings Growth" bordered={false} hoverable>
-              <Line data={lineData} />
+        <Row gutter={[16, 16]} style={{ marginTop: '16px' }}>
+          <Col xs={24} lg={12}>
+            <Card title="Bookings Growth" bordered={false} hoverable >
+              <Line data={lineData} options={{ responsive: true, maintainAspectRatio: false }} style={{ height: '37vh' }} />
             </Card>
           </Col>
-          <Col span={6}>
+          <Col xs={24} md={12} lg={6}>
             <Card title="User Status Distribution" bordered={false} hoverable>
               <div style={{ height: '37vh' }}>
                 <Doughnut data={doughnutData} />
@@ -108,9 +109,9 @@ const Dashboard = () => {
             </Card>
           </Col>
 
-          <Col span={6}>
+          <Col xs={24} md={12} lg={6}>
             <Card title="User Growth by Month" bordered={false} hoverable>
-              <div style={{ height: '300px' }}>
+              <div>
                 <Bar
                   data={stackedBarData}
                   options={{
@@ -144,7 +145,7 @@ const Dashboard = () => {
         </Row>
 
 
- 
+
       </Content>
     </Layout>
   );

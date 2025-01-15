@@ -117,17 +117,6 @@ const userSchema = new mongoose.Schema(
       githubId: { type: String },
     },
 
-    // API Rate Limiting
-    apiRateLimit: {
-      requestsMade: { type: Number, default: 0 },
-      resetTime: { type: Date },
-    },
-
-    // Metadata and Custom Fields
-    metadata: {
-      referralCode: { type: String },
-      customFields: { type: Map, of: String }, // Dynamic fields
-    },
 
     // User Preferences
     preferences: {
