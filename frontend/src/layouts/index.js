@@ -2,13 +2,14 @@ import {
   FileOutlined,
   HomeOutlined,
   MessageOutlined,
-  TeamOutlined,
-  UserOutlined
+  TeamOutlined
 } from "@ant-design/icons";
 import { Avatar, Badge, Dropdown, Layout, Menu, theme, Typography } from "antd";
 import React, { useEffect, useState } from "react";
+import { FiPackage } from "react-icons/fi";
 import { IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
-import { MdOutlineDashboard } from "react-icons/md";
+import { LuLayoutList, LuUsers } from "react-icons/lu";
+import { MdOutlineDashboard, MdOutlineDiscount, MdOutlineModeOfTravel } from "react-icons/md";
 import { VscAccount } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -18,6 +19,8 @@ import { fetchUserById } from "../store/userByIdSlice";
 import { fetchAllUsers } from "../store/userSlice";
 import { getColorFromName } from "../utils";
 import { deleteCookie, getCookie } from "../utils/cookies";
+import { fetchAllDestinations } from "../store/destinationSlice";
+
 
 const { Header, Content, Sider } = Layout;
 const { Text } = Typography;
@@ -28,11 +31,12 @@ function getItem(label, key, icon, path, children) {
 
 const menuItems = [
   getItem("Dashboard", "dashboard", <HomeOutlined />, "/admin/dashboard"),
-  getItem("Users", "users", <MdOutlineDashboard />, "/admin/users"),
-  getItem("Booking", "bookings", <UserOutlined />, "/admin/bookings"),
-  getItem("Discount", "discounts", <FileOutlined />, "/admin/discounts"),
+  getItem("Users", "users", <LuUsers  />, "/admin/users"),
+  getItem("Booking", "bookings", <LuLayoutList />, "/admin/bookings"),
+  getItem("Discount", "discounts", <MdOutlineDiscount />, "/admin/discounts"),
+  getItem("Packages", "packages", <FiPackage />, "/admin/packages"),
   { type: "divider" },
-  getItem("Travel", "travel", <FileOutlined />, "/admin/travel/dashboard", [
+  getItem("Travel", "travel", <MdOutlineModeOfTravel  />, "/admin/travel/dashboard", [
     getItem("Dashboard", "travel-dashboard", <FileOutlined />, "/admin/travel/dashboard"),
     getItem("Vehicles", "travel-vehicles", <FileOutlined />, "/admin/travel/vehicles"),
     getItem("Packages", "travel-packages", <FileOutlined />, "/admin/travel/packages")
@@ -44,7 +48,7 @@ const menuItems = [
 
 
 const MainLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const { token } = theme.useToken();
   const navigate = useNavigate();
   const location = useLocation();
@@ -64,7 +68,8 @@ const MainLayout = () => {
     dispatch(fetchAllUsers());
     dispatch(fetchAllBookings());
     dispatch(fetchAllDiscounts());
-  }, [dispatch, accessToken, navigate]);
+    dispatch(fetchAllDestinations());
+  }, [dispatch, accessToken]);
 
   const handleLogOut = () => {
     deleteCookie("accessToken");
@@ -120,7 +125,24 @@ const MainLayout = () => {
     <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} theme="light">
         <div className="logo" style={{ padding: "16px", textAlign: "center" }}>
-          <Avatar size={collapsed ? 32 : 64} alt="User" src={userById["data"]?.avatar} />
+          {accessToken && userById?.data?.name && (
+            <Dropdown menu={{ items: dropdownItems }} trigger={["click"]}>
+              <Badge dot={myCurrentStatus} color={myCurrentStatus ? "green" : "red"} offset={[-4, 45]}>
+                <Avatar
+                  size={collapsed ? 32 : 64}
+                  shape="circle"
+                  alt="User"
+                  src={userById.data.avatar}
+                  style={{
+                    backgroundColor: userById.data.avatar ? "" : getColorFromName(userById.data.name),
+                    cursor: "pointer"
+                  }}
+                >
+                  {userById.data.avatar ? "" : userById.data.name.charAt(0).toUpperCase()}
+                </Avatar>
+              </Badge>
+            </Dropdown>
+          )}
           {!collapsed && (
             <div style={{ marginTop: 8 }}>
               <Text strong>{userById["data"]?.name.toUpperCase()}</Text>
@@ -170,24 +192,7 @@ const MainLayout = () => {
           <Link to="/" className="logo" style={{ fontSize: "18px", fontWeight: "bold" }}>
             Wanderlust Voyages
           </Link>
-          {accessToken && userById?.data?.name && (
-            <Dropdown menu={{ items: dropdownItems }} trigger={["click"]}>
-              <Badge dot={myCurrentStatus} color={myCurrentStatus ? "green" : "red"} offset={[-4, 45]}>
-                <Avatar
-                  size={34}
-                  shape="circle"
-                  alt="User"
-                  src={userById.data.avatar}
-                  style={{
-                    backgroundColor: getColorFromName(userById.data.name),
-                    cursor: "pointer"
-                  }}
-                >
-                  {userById.data.avatar ? "" : userById.data.name.charAt(0).toUpperCase()}
-                </Avatar>
-              </Badge>
-            </Dropdown>
-          )}
+          
         </Header>
         <Content
           style={{

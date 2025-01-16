@@ -5,10 +5,9 @@ import React from "react";
 const { Search } = Input;
 
 const Toolbar = ({ onChange, placeholder, handleMenuClick, items, extraLeft, extraRight, filter }) => {
-
   const handleSearchChange = (e) => {
     if (onChange) {
-      onChange(e.target.value);  // Passing the input value to the onChange handler
+      onChange(e.target.value);
     }
   };
 
@@ -19,31 +18,27 @@ const Toolbar = ({ onChange, placeholder, handleMenuClick, items, extraLeft, ext
   };
 
   return (
-    <div className="flex justify-between w-full p-4 gap-3">
-      {/* Render extraLeft if it is passed */}
-      {extraLeft && <div className="flex items-center">{extraLeft}</div>}
+    <div className="flex flex-wrap items-center justify-between w-full gap-3 p-4 sm:gap-4 lg:gap-6">
+      {extraLeft && <div className="flex items-center flex-wrap">{extraLeft}</div>}
 
-      {/* This div will push the content to the right */}
-      <div className="flex items-center gap-3 ml-auto">
-        {/* Search Input */}
+      <div className="flex flex-wrap items-center gap-3 lg:gap-4 ml-auto">
         <Search
-          className="w-[15rem]"
+          className="w-full sm:w-[15rem] lg:w-[20rem]"
           placeholder={placeholder || "Search"}
           onChange={handleSearchChange}
           allowClear
           enterButton
         />
-        
-        { filter &&
+
+        {filter && (
           <Dropdown menu={menuProps}>
             <Button>
               <FilterOutlined />
             </Button>
           </Dropdown>
-        }
+        )}
 
-        {extraRight && <div>{extraRight}</div>}
-
+        {extraRight && <div className="flex items-center">{extraRight}</div>}
       </div>
     </div>
   );

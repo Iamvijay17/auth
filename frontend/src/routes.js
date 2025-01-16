@@ -21,6 +21,7 @@ import Stories from "./pages/website/stories";
 import TravelAdminPackages from "./pages/admin/travel/packages";
 import AdminTravelLayout from "./pages/admin/travel";
 import Vehicles from "./pages/admin/travel/vehicles";
+import Packages from "./pages/admin/packages";
 
 const AppRoutes = () => (
   <Routes>
@@ -39,6 +40,7 @@ const AppRoutes = () => (
       <Route path="chat" element={<ChatAdminPage />} />
       <Route path="bookings" element={<AllBookings />} />
       <Route path="discounts" element={<Discount />} />
+      <Route path="packages" element={<Packages />} />
       
       <Route path="travel" element={<AdminTravelLayout />}>
         <Route path="dashboard" element={<TravelAdminDashboard />} />
