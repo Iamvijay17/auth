@@ -14,6 +14,7 @@ import ProfileSettings from "./ProfileSettings";
 import { useSelector } from "react-redux";
 import BillingSettings from "./BillingSettings";
 import NotificationSettings from "./NotificationSettings";
+import PreferenceSettings from "./PreferenceSettings";
 
 const { Title, Paragraph } = Typography;
 
@@ -29,7 +30,8 @@ const Settings = () => {
     { key: 'profile', icon: <SettingOutlined />, label: 'Profile' },
     { key: 'billing', icon: <WalletOutlined />, label: 'Billing' },
     { key: 'notifications', icon: <BellOutlined />, label: 'Notifications' },
-    { key: 'integrations', icon: <SafetyOutlined />, label: 'Integrations' }
+    { key: 'preference', icon: <BellOutlined />, label: 'Preference' },
+    { key: 'integrations', icon: <SafetyOutlined />, label: 'Integrations', disabled: true }
   ];
 
 
@@ -41,6 +43,8 @@ const Settings = () => {
       return <ProfileSettings form={form} userById={userById["data"]}/>;
     case "billing":
       return <BillingSettings form={form} userById={userById["data"]}/>;
+    case "preference":
+      return <PreferenceSettings form={form} userById={userById["data"]}/>;
     case "notifications":
       return <NotificationSettings form={form} userById={userById["data"]}/>;
     default:

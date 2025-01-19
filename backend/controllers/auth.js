@@ -14,7 +14,7 @@ dotenv.config();
 
 
 export const signup = async (req, res) => {
-  const { email, password, name, userId, address, avatar, preferences } = req.body;
+  const { email, password, name, userId, address, avatar, settings } = req.body;
 
   // Validate required fields
   if (!email || !password || !name || !userId) {
@@ -50,12 +50,10 @@ export const signup = async (req, res) => {
       verificationExpires,
       avatar: avatar || null,
       address: address || {},
-      preferences: preferences || {},
       settings: {
-        language: preferences?.language || "en",
+        language: settings?.language || "en",
         notificationsEnabled: true,
-        theme: preferences?.theme || "light",
-        preferredLanguage: preferences?.preferredLanguage || "en",
+        theme: settings?.theme || "light",
         is2FAEnabled: false,
         emailNotifications: [],
         isAccountDeactivated: false,

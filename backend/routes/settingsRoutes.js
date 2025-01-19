@@ -74,8 +74,6 @@ export default settingsRoutes;
  *               theme:
  *                 type: string
  *                 enum: [light, dark]
- *               preferredLanguage:
- *                 type: string
  *               is2FAEnabled:
  *                 type: boolean
  *               emailNotifications:

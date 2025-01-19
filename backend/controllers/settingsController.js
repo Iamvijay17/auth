@@ -22,7 +22,7 @@ export const getUserSettings = async (req, res) => {
  */
 
 export const updateUserSettings = async (req, res) => {
-  const { language, notificationsEnabled, theme, preferredLanguage, is2FAEnabled, emailNotifications, isAccountDeactivated, profileVisibility } = req.body;
+  const { language, notificationsEnabled, theme, is2FAEnabled, emailNotifications, isAccountDeactivated, profileVisibility } = req.body;
 
   try {
     const user = await User.findById(req.user.id);
@@ -34,7 +34,6 @@ export const updateUserSettings = async (req, res) => {
     user.settings.language = language || user.settings.language;
     user.settings.notificationsEnabled = notificationsEnabled !== undefined ? notificationsEnabled : user.settings.notificationsEnabled;
     user.settings.theme = theme || user.settings.theme;
-    user.settings.preferredLanguage = preferredLanguage || user.settings.preferredLanguage;
     user.settings.is2FAEnabled = is2FAEnabled !== undefined ? is2FAEnabled : user.settings.is2FAEnabled;
     user.settings.emailNotifications = emailNotifications || user.settings.emailNotifications;
     user.settings.isAccountDeactivated = isAccountDeactivated !== undefined ? isAccountDeactivated : user.settings.isAccountDeactivated;
