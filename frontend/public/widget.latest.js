@@ -484,23 +484,29 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.widget-launcher {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  width: 48px;
-  height: 48px;
-  background: white;
-  border-radius: 50%;
+  width: 148px;
+  height: 148px;
+  background-color: transparent;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 8px;
 }
 
-.widget-launcher img {
-  width: 28px;
-  height: 28px;
+/* styles.css */
+.widget-launcher .video-container {
+  transition: transform 0.3s ease; /* Smooth scaling animation */
 }
-`, "",{"version":3,"sources":["webpack://./src/styles/launcher.css"],"names":[],"mappings":"AAAA;EACE,eAAe;EACf,YAAY;EACZ,WAAW;EACX,WAAW;EACX,YAAY;EACZ,iBAAiB;EACjB,kBAAkB;EAClB,sCAAsC;EACtC,eAAe;EACf,cAAc;EACd,aAAa;EACb,mBAAmB;EACnB,uBAAuB;AACzB;;AAEA;EACE,WAAW;EACX,YAAY;AACd","sourcesContent":[".widget-launcher {\n  position: fixed;\n  bottom: 24px;\n  right: 24px;\n  width: 48px;\n  height: 48px;\n  background: white;\n  border-radius: 50%;\n  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);\n  cursor: pointer;\n  z-index: 10000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.widget-launcher img {\n  width: 28px;\n  height: 28px;\n}\n"],"sourceRoot":""}]);
+
+.widget-launcher .video-container:hover {
+  transform: scale(1.05); /* Scale up by 10% on hover */
+}
+.widget-launcher {
+  transition: opacity 0.3s ease;
+}`, "",{"version":3,"sources":["webpack://./src/styles/launcher.css"],"names":[],"mappings":"AAAA;EACE,eAAe;EACf,YAAY;EACZ,WAAW;EACX,YAAY;EACZ,aAAa;EACb,6BAA6B;EAC7B,sCAAsC;EACtC,eAAe;EACf,cAAc;EACd,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,kBAAkB;AACpB;;AAEA,eAAe;AACf;EACE,+BAA+B,EAAE,6BAA6B;AAChE;;AAEA;EACE,sBAAsB,EAAE,6BAA6B;AACvD;AACA;EACE,6BAA6B;AAC/B","sourcesContent":[".widget-launcher {\n  position: fixed;\n  bottom: 24px;\n  right: 24px;\n  width: 148px;\n  height: 148px;\n  background-color: transparent;\n  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);\n  cursor: pointer;\n  z-index: 10000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: 8px;\n}\n\n/* styles.css */\n.widget-launcher .video-container {\n  transition: transform 0.3s ease; /* Smooth scaling animation */\n}\n\n.widget-launcher .video-container:hover {\n  transform: scale(1.05); /* Scale up by 10% on hover */\n}\n.widget-launcher {\n  transition: opacity 0.3s ease;\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -526,7 +532,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_css_loader_dist_cjs_js_components_chat_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./components/chat.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/components/chat.css");
 /* harmony import */ var _node_modules_css_loader_dist_cjs_js_components_contact_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./components/contact.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/components/contact.css");
 /* harmony import */ var _node_modules_css_loader_dist_cjs_js_animations_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./animations.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/animations.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_launcher_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./launcher.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/launcher.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_videoWithChat_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! -!../../node_modules/css-loader/dist/cjs.js!./videoWithChat.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/videoWithChat.css");
 // Imports
+
+
 
 
 
@@ -540,12 +550,15 @@ ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_components_inputB
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_components_chat_css__WEBPACK_IMPORTED_MODULE_4__["default"]);
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_components_contact_css__WEBPACK_IMPORTED_MODULE_5__["default"]);
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_animations_css__WEBPACK_IMPORTED_MODULE_6__["default"]);
+___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_launcher_css__WEBPACK_IMPORTED_MODULE_7__["default"]);
+___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_videoWithChat_css__WEBPACK_IMPORTED_MODULE_8__["default"]);
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, `/* Root wrapper */
 .my-widget-wrapper {
   all: initial;
   font-family: sans-serif;
   width: 370px;
+  transition: width 0.3s ease;
   background: #fff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
@@ -553,6 +566,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* Root wrapper */
   bottom: 80px;
   right: 24px;
   z-index: 99998;
+}
+
+.my-widget-wrapper.chat-visible {
+  width: 640px;
 }
 
 /* Header section */
@@ -614,7 +631,150 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* Root wrapper */
 .fade-in {
   animation: fadeInUp 0.3s ease-out;
 }
-`, "",{"version":3,"sources":["webpack://./src/styles/style.css"],"names":[],"mappings":"AAMA,iBAAiB;AACjB;EACE,YAAY;EACZ,uBAAuB;EACvB,YAAY;EACZ,gBAAgB;EAChB,yCAAyC;EACzC,mBAAmB;EACnB,eAAe;EACf,YAAY;EACZ,WAAW;EACX,cAAc;AAChB;;AAEA,mBAAmB;AACnB;EACE,yBAAyB;EACzB,YAAY;EACZ,kBAAkB;EAClB,0BAA0B;EAC1B,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;AACrB;;AAEA;EACE,eAAe;EACf,SAAS;AACX;;AAEA,iBAAiB;AACjB;EACE,uBAAuB;EACvB,YAAY;EACZ,YAAY;EACZ,eAAe;EACf,eAAe;EACf,cAAc;AAChB;;AAEA,iBAAiB;AACjB;EACE,mBAAmB;EACnB,0BAA0B;EAC1B,oBAAoB;EACpB,eAAe;EACf,WAAW;EACX,aAAa;EACb,gBAAgB;AAClB;;AAEA,mBAAmB;AACnB;EACE,eAAe;EACf,kBAAkB;EAClB,WAAW;AACb;;AAEA,6BAA6B;AAC7B;EACE;IACE,UAAU;IACV,2BAA2B;EAC7B;EACA;IACE,UAAU;IACV,wBAAwB;EAC1B;AACF;;AAEA;EACE,iCAAiC;AACnC","sourcesContent":["@import './components/header.css';\n@import './components/inputBar.css';\n@import './components/chat.css';\n@import './components/contact.css';\n@import './animations.css';\n\n/* Root wrapper */\n.my-widget-wrapper {\n  all: initial;\n  font-family: sans-serif;\n  width: 370px;\n  background: #fff;\n  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);\n  border-radius: 12px;\n  position: fixed;\n  bottom: 80px;\n  right: 24px;\n  z-index: 99998;\n}\n\n/* Header section */\n.my-widget-header {\n  background-color: #1e293b;\n  color: white;\n  padding: 12px 16px;\n  border-radius: 8px 8px 0 0;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n\n.my-widget-header h2 {\n  font-size: 16px;\n  margin: 0;\n}\n\n/* Close button */\n#my-widget-header .close-btn {\n  background: transparent;\n  border: none;\n  color: white;\n  font-size: 20px;\n  cursor: pointer;\n  line-height: 1;\n}\n\n/* Body section */\n#my-widget-body {\n  background: #f9f9f9;\n  border-radius: 0 0 8px 8px;\n  /* padding: 2px 0; */\n  font-size: 14px;\n  color: #333;\n  height: 25rem;\n  overflow-y: auto;\n}\n\n/* Footer section */\n.my-widget-footer {\n  font-size: 12px;\n  text-align: center;\n  color: #888;\n}\n\n/* Widget fade-in animation */\n@keyframes fadeInUp {\n  from {\n    opacity: 0;\n    transform: translateY(10px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n\n.fade-in {\n  animation: fadeInUp 0.3s ease-out;\n}\n"],"sourceRoot":""}]);
+
+/* Hide desktop-only elements on mobile/tablet */
+@media (max-width: 900px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+`, "",{"version":3,"sources":["webpack://./src/styles/style.css"],"names":[],"mappings":"AAQA,iBAAiB;AACjB;EACE,YAAY;EACZ,uBAAuB;EACvB,YAAY;EACZ,2BAA2B;EAC3B,gBAAgB;EAChB,yCAAyC;EACzC,mBAAmB;EACnB,eAAe;EACf,YAAY;EACZ,WAAW;EACX,cAAc;AAChB;;AAEA;EACE,YAAY;AACd;;AAEA,mBAAmB;AACnB;EACE,yBAAyB;EACzB,YAAY;EACZ,kBAAkB;EAClB,0BAA0B;EAC1B,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;AACrB;;AAEA;EACE,eAAe;EACf,SAAS;AACX;;AAEA,iBAAiB;AACjB;EACE,uBAAuB;EACvB,YAAY;EACZ,YAAY;EACZ,eAAe;EACf,eAAe;EACf,cAAc;AAChB;;AAEA,iBAAiB;AACjB;EACE,mBAAmB;EACnB,0BAA0B;EAC1B,oBAAoB;EACpB,eAAe;EACf,WAAW;EACX,aAAa;EACb,gBAAgB;AAClB;;AAEA,mBAAmB;AACnB;EACE,eAAe;EACf,kBAAkB;EAClB,WAAW;AACb;;AAEA,6BAA6B;AAC7B;EACE;IACE,UAAU;IACV,2BAA2B;EAC7B;EACA;IACE,UAAU;IACV,wBAAwB;EAC1B;AACF;;AAEA;EACE,iCAAiC;AACnC;;AAEA,gDAAgD;AAChD;EACE;IACE,wBAAwB;EAC1B;AACF","sourcesContent":["@import \"./components/header.css\";\n@import \"./components/inputBar.css\";\n@import \"./components/chat.css\";\n@import \"./components/contact.css\";\n@import \"./animations.css\";\n@import \"./launcher.css\";\n@import \"./videoWithChat.css\";\n\n/* Root wrapper */\n.my-widget-wrapper {\n  all: initial;\n  font-family: sans-serif;\n  width: 370px;\n  transition: width 0.3s ease;\n  background: #fff;\n  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);\n  border-radius: 12px;\n  position: fixed;\n  bottom: 80px;\n  right: 24px;\n  z-index: 99998;\n}\n\n.my-widget-wrapper.chat-visible {\n  width: 640px;\n}\n\n/* Header section */\n.my-widget-header {\n  background-color: #1e293b;\n  color: white;\n  padding: 12px 16px;\n  border-radius: 8px 8px 0 0;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n\n.my-widget-header h2 {\n  font-size: 16px;\n  margin: 0;\n}\n\n/* Close button */\n#my-widget-header .close-btn {\n  background: transparent;\n  border: none;\n  color: white;\n  font-size: 20px;\n  cursor: pointer;\n  line-height: 1;\n}\n\n/* Body section */\n#my-widget-body {\n  background: #f9f9f9;\n  border-radius: 0 0 8px 8px;\n  /* padding: 2px 0; */\n  font-size: 14px;\n  color: #333;\n  height: 25rem;\n  overflow-y: auto;\n}\n\n/* Footer section */\n.my-widget-footer {\n  font-size: 12px;\n  text-align: center;\n  color: #888;\n}\n\n/* Widget fade-in animation */\n@keyframes fadeInUp {\n  from {\n    opacity: 0;\n    transform: translateY(10px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n\n.fade-in {\n  animation: fadeInUp 0.3s ease-out;\n}\n\n/* Hide desktop-only elements on mobile/tablet */\n@media (max-width: 900px) {\n  .desktop-only {\n    display: none !important;\n  }\n}\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/videoWithChat.css":
+/*!****************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/videoWithChat.css ***!
+  \****************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, `.video-chat-layout {
+  display: flex;
+  width: 100%;
+  max-width: 650px;
+  min-width: 320px;
+  /* gap: 8px; */
+  overflow: hidden;
+}
+
+.video-section {
+  flex: 2 2 0;
+  min-width: 0;
+  background: #000;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-section {
+  /* flex: 1 1 0; */
+  min-width: 0;
+  background: #f8fafc;
+  padding: 8px;
+  border-radius: 8px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s, opacity 0.3s;
+  opacity: 1;
+}
+
+.chat-section.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-chat-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+  margin-left: auto;
+  margin-right: 8px;
+  height: 32px;
+  align-self: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.toggle-chat-btn:hover {
+  background: #1d4ed8;
+}
+
+.my-widget-header .header-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.widget-title {
+  flex: 1;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .video-chat-layout {
+    flex-direction: column;
+    max-width: 100vw;
+    min-width: 0;
+    width: 100vw;
+    height: 100vh;
+    gap: 0;
+  }
+  .video-section,
+  .chat-section {
+    width: 100%;
+    min-width: 0;
+    border-radius: 0;
+  }
+  .video-section {
+    height: 40vh;
+    min-height: 180px;
+    max-height: 50vh;
+  }
+  .chat-section {
+    flex: 1 1 0;
+    height: 60vh;
+    min-height: 200px;
+    max-height: 60vh;
+    padding: 4px;
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s,
+      opacity 0.3s;
+  }
+  .chat-section.collapsed {
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    padding: 0 !important;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+`, "",{"version":3,"sources":["webpack://./src/styles/videoWithChat.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,WAAW;EACX,gBAAgB;EAChB,gBAAgB;EAChB,cAAc;EACd,gBAAgB;AAClB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,gBAAgB;EAChB,kBAAkB;EAClB,aAAa;EACb,sBAAsB;AACxB;;AAEA;EACE,iBAAiB;EACjB,YAAY;EACZ,mBAAmB;EACnB,YAAY;EACZ,kBAAkB;EAClB,gBAAgB;EAChB,aAAa;EACb,sBAAsB;EACtB;2EACyE;EACzE,UAAU;AACZ;;AAEA;EACE,mBAAmB;EACnB,uBAAuB;EACvB,qBAAqB;EACrB,UAAU;EACV,oBAAoB;AACtB;;AAEA;EACE,mBAAmB;EACnB,WAAW;EACX,YAAY;EACZ,kBAAkB;EAClB,iBAAiB;EACjB,eAAe;EACf,eAAe;EACf,2BAA2B;EAC3B,iBAAiB;EACjB,iBAAiB;EACjB,YAAY;EACZ,kBAAkB;EAClB,yCAAyC;AAC3C;AACA;EACE,mBAAmB;AACrB;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,QAAQ;AACV;;AAEA;EACE,OAAO;EACP,SAAS;EACT,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE;IACE,sBAAsB;IACtB,gBAAgB;IAChB,YAAY;IACZ,YAAY;IACZ,aAAa;IACb,MAAM;EACR;EACA;;IAEE,WAAW;IACX,YAAY;IACZ,gBAAgB;EAClB;EACA;IACE,YAAY;IACZ,iBAAiB;IACjB,gBAAgB;EAClB;EACA;IACE,WAAW;IACX,YAAY;IACZ,iBAAiB;IACjB,gBAAgB;IAChB,YAAY;IACZ;kBACc;EAChB;EACA;IACE,oBAAoB;IACpB,wBAAwB;IACxB,wBAAwB;IACxB,qBAAqB;IACrB,UAAU;IACV,oBAAoB;EACtB;AACF","sourcesContent":[".video-chat-layout {\n  display: flex;\n  width: 100%;\n  max-width: 650px;\n  min-width: 320px;\n  /* gap: 8px; */\n  overflow: hidden;\n}\n\n.video-section {\n  flex: 2 2 0;\n  min-width: 0;\n  background: #000;\n  border-radius: 8px;\n  display: flex;\n  flex-direction: column;\n}\n\n.chat-section {\n  /* flex: 1 1 0; */\n  min-width: 0;\n  background: #f8fafc;\n  padding: 8px;\n  border-radius: 8px;\n  overflow-y: auto;\n  display: flex;\n  flex-direction: column;\n  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),\n    min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s, opacity 0.3s;\n  opacity: 1;\n}\n\n.chat-section.collapsed {\n  width: 0 !important;\n  min-width: 0 !important;\n  padding: 0 !important;\n  opacity: 0;\n  pointer-events: none;\n}\n\n.toggle-chat-btn {\n  background: #2563eb;\n  color: #fff;\n  border: none;\n  border-radius: 4px;\n  padding: 6px 16px;\n  cursor: pointer;\n  font-size: 14px;\n  transition: background 0.2s;\n  margin-left: auto;\n  margin-right: 8px;\n  height: 32px;\n  align-self: center;\n  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);\n}\n.toggle-chat-btn:hover {\n  background: #1d4ed8;\n}\n\n.my-widget-header .header-container {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n\n.widget-title {\n  flex: 1;\n  margin: 0;\n  font-size: 18px;\n  font-weight: 600;\n}\n\n@media (max-width: 900px) {\n  .video-chat-layout {\n    flex-direction: column;\n    max-width: 100vw;\n    min-width: 0;\n    width: 100vw;\n    height: 100vh;\n    gap: 0;\n  }\n  .video-section,\n  .chat-section {\n    width: 100%;\n    min-width: 0;\n    border-radius: 0;\n  }\n  .video-section {\n    height: 40vh;\n    min-height: 180px;\n    max-height: 50vh;\n  }\n  .chat-section {\n    flex: 1 1 0;\n    height: 60vh;\n    min-height: 200px;\n    max-height: 60vh;\n    padding: 4px;\n    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s,\n      opacity 0.3s;\n  }\n  .chat-section.collapsed {\n    height: 0 !important;\n    min-height: 0 !important;\n    max-height: 0 !important;\n    padding: 0 !important;\n    opacity: 0;\n    pointer-events: none;\n  }\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -36463,68 +36623,90 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   renderChatHistory: () => (/* binding */ renderChatHistory)
 /* harmony export */ });
 const renderChatHistory = () => {
-    const container = document.createElement('div');
-    container.id = 'widget-chat-history';
+  const container = document.createElement('div');
+  container.id = 'widget-chat-history';
 
-    // Typing indicator
-    const typing = document.createElement('div');
-    typing.className = 'chat-message bot';
-    typing.id = 'typing-indicator';
-    typing.innerHTML = `
-      <div class="chat-bubble typing-bubble">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
+  // Typing indicator
+  const typing = document.createElement('div');
+  typing.className = 'chat-message bot';
+  typing.id = 'typing-indicator';
+  typing.innerHTML = `
+        <div class="chat-bubble typing-bubble">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
     `;
 
-    // Add initial static messages
-    const initialMessages = [
-        { sender: 'bot', text: 'Hi there! How can I help you today?' },
-        { sender: 'user', text: 'I need help with my order' },
-        { sender: 'bot', text: 'Sure, let me check your order status.' },
-    ];
+  // Add initial static messages
+  const initialMessages = [
+    { sender: 'bot', text: 'Hi there! How can I help you today?' },
+    { sender: 'user', text: 'I need help with my order' },
+    { sender: 'bot', text: 'Sure, let me check your order status.' },
+  ];
 
-    initialMessages.forEach(({ sender, text }) => {
-        const message = document.createElement('div');
-        message.className = `chat-message ${sender}`;
-        message.innerHTML = `
-        <div class="chat-bubble">${text}</div>
-        <span class="chat-time">${new Date().toLocaleTimeString()}</span>
-      `;
-        container.appendChild(message);
-    });
+  initialMessages.forEach(({ sender, text }) => {
+    const message = document.createElement('div');
+    message.className = `chat-message ${sender}`;
+    message.innerHTML = `
+            <div class="chat-bubble">${text}</div>
+            <span class="chat-time"></span> <!-- No ID here -->
+        `;
 
-    // Typing indicator methods
-    container.showTypingIndicator = () => {
-        if (!container.querySelector('#typing-indicator')) {
-            container.appendChild(typing);
-            container.scrollTop = container.scrollHeight;
-        }
-    };
+    // Get current time without seconds
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const time = `${hours}:${minutes}`;
 
-    container.hideTypingIndicator = () => {
-        const indicator = container.querySelector('#typing-indicator');
-        if (indicator) indicator.remove();
-    };
+    // Set the time just for this message
+    const timeElement = message.querySelector('.chat-time');
+    timeElement.textContent = time;
 
-    // Add a new message dynamically
-    container.addMessage = (sender, text, time = new Date().toLocaleTimeString()) => {
-        container.hideTypingIndicator();
+    container.appendChild(message);
+  });
 
-        const message = document.createElement('div');
-        message.className = `chat-message ${sender}`;
-        message.innerHTML = `
-        <div class="chat-bubble">${text}</div>
-        <span class="chat-time">${time}</span>
-      `;
-        container.appendChild(message);
-        container.scrollTop = container.scrollHeight;
-    };
+  // Typing indicator methods
+  container.showTypingIndicator = () => {
+    if (!container.querySelector('#typing-indicator')) {
+      container.appendChild(typing);
+      container.scrollTop = container.scrollHeight;
+    }
+  };
 
-    return container;
+  container.hideTypingIndicator = () => {
+    const indicator = container.querySelector('#typing-indicator');
+    if (indicator) indicator.remove();
+  };
+
+  // Add a new message dynamically
+  container.addMessage = (sender, text, time = null) => {
+    container.hideTypingIndicator();
+
+    const message = document.createElement('div');
+    message.className = `chat-message ${sender}`;
+    message.innerHTML = `
+            <div class="chat-bubble">${text}</div>
+            <span class="chat-time"></span>
+        `;
+
+    // Use provided time or generate current time
+    const finalTime = time || (() => {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    })();
+
+    const timeElement = message.querySelector('.chat-time');
+    timeElement.textContent = finalTime;
+
+    container.appendChild(message);
+    container.scrollTop = container.scrollHeight;
+  };
+
+  return container;
 };
-
 
 /***/ }),
 
@@ -36716,6 +36898,16 @@ const renderInputBar = () => {
     button.disabled = trimmed.length === 0;
   });
 
+  const { currentView } = (0,_store__WEBPACK_IMPORTED_MODULE_0__.getState)();
+
+  const actionMap = {
+    chat: 'message',
+    contact: 'contact_message',
+  };
+
+  const actionData = actionMap[currentView] || 'message';
+  
+
   // Shared send handler
   const handleSend = async () => {
     const message = input.value.trim();
@@ -36724,7 +36916,7 @@ const renderInputBar = () => {
     button.disabled = true;
 
     try {
-      const data = await (0,_utils_api__WEBPACK_IMPORTED_MODULE_1__.apiRequest)({ message, action: 'message' });
+      const data = await (0,_utils_api__WEBPACK_IMPORTED_MODULE_1__.apiRequest)({ message, action: actionData });
 
       const videoUrl = data?.getVideoData?.videoUrl || message;
 
@@ -36737,6 +36929,7 @@ const renderInputBar = () => {
         const newBody = (0,_video__WEBPACK_IMPORTED_MODULE_2__.renderVideoPlayer)(videoUrl);
         newBody.id = 'my-widget-body';
         body.replaceWith(newBody);
+        window.__myWidgetBody = newBody; // Ensure global reference is updated
       }
     } catch (err) {
       console.error('❌ Failed to fetch video:', err);
@@ -36829,11 +37022,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_video_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/video.js */ "./src/js/components/video.js");
 /* harmony import */ var _components_contact_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/contact.js */ "./src/js/components/contact.js");
 /* harmony import */ var _components_chat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/chat.js */ "./src/js/components/chat.js");
+/* harmony import */ var _videoWithChat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./videoWithChat.js */ "./src/js/layout/videoWithChat.js");
 
 
 
 
-const renderBody = (initialView = 'home') => {
+
+const renderBody = (initialView = 'video') => {
   const body = document.createElement('div');
   body.id = 'my-widget-body';
   body.className = 'fade-slide'; // animation class
@@ -36842,8 +37037,11 @@ const renderBody = (initialView = 'home') => {
   content.id = 'widget-content-area';
   body.appendChild(content);
 
+  let videoWithChatContainer = null;
+
   body.setView = (view) => {
     content.innerHTML = '';
+    videoWithChatContainer = null;
     switch (view) {
       case 'video':
         content.appendChild((0,_components_video_js__WEBPACK_IMPORTED_MODULE_0__.renderVideoPlayer)());
@@ -36854,8 +37052,19 @@ const renderBody = (initialView = 'home') => {
       case 'chat':
         content.appendChild((0,_components_chat_js__WEBPACK_IMPORTED_MODULE_2__.renderChatHistory)());
         break;
+      case 'video_with_chat':
+        videoWithChatContainer = (0,_videoWithChat_js__WEBPACK_IMPORTED_MODULE_3__.renderVideoWithChat)();
+        content.appendChild(videoWithChatContainer);
+        break;
       default:
         content.innerHTML = `<p>Welcome to the widget!</p>`;
+    }
+  };
+
+  // Expose chat toggle for header button
+  body.toggleChatPanel = () => {
+    if (videoWithChatContainer && typeof videoWithChatContainer.toggleChat === 'function') {
+      videoWithChatContainer.toggleChat();
     }
   };
 
@@ -36896,27 +37105,264 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   renderHeader: () => (/* binding */ renderHeader)
 /* harmony export */ });
-function renderHeader() {
+/* harmony import */ var _store_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../store/index.js */ "./src/store/index.js");
+
+
+function renderHeader(options = {}) {
   const header = document.createElement('div');
   header.className = 'my-widget-header';
 
   header.innerHTML = `
     <div class="header-container">
       <h2 class="widget-title">🤖 FaceBot Support</h2>
+      <button class="toggle-chat-btn" type="button" title="Show/Hide Chat">Show Chat</button>
       <button class="close-btn" aria-label="Close Widget">&times;</button>
     </div>
   `;
 
-  // Add close button logic (emit a custom event)
-  const closeBtn = header.querySelector('.close-btn');
-  closeBtn.addEventListener('click', () => {
-    const closeEvent = new CustomEvent('close-widget');
-    document.dispatchEvent(closeEvent); // Your main.js should listen for this
+  // Chat toggle button logic
+  const toggleChatBtn = header.querySelector('.toggle-chat-btn');
+  toggleChatBtn.addEventListener('click', () => {
+    (0,_store_index_js__WEBPACK_IMPORTED_MODULE_0__.setChatOpen)(!(0,_store_index_js__WEBPACK_IMPORTED_MODULE_0__.getState)().chatOpen);
   });
+
+  // Subscribe to chat state to update button text
+  const updateBtnText = (isOpen) => {
+    toggleChatBtn.textContent = isOpen ? 'Hide Chat' : 'Show Chat';
+  };
+  (0,_store_index_js__WEBPACK_IMPORTED_MODULE_0__.subscribeChat)(updateBtnText);
+  // Set initial button text
+  updateBtnText((0,_store_index_js__WEBPACK_IMPORTED_MODULE_0__.getState)().chatOpen);
 
   return header;
 }
 
+
+/***/ }),
+
+/***/ "./src/js/layout/videoWithChat.js":
+/*!****************************************!*\
+  !*** ./src/js/layout/videoWithChat.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   renderVideoWithChat: () => (/* binding */ renderVideoWithChat),
+/* harmony export */   toggleChatState: () => (/* binding */ toggleChatState)
+/* harmony export */ });
+/* harmony import */ var _components_video_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/video.js */ "./src/js/components/video.js");
+/* harmony import */ var _components_chat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/chat.js */ "./src/js/components/chat.js");
+/* harmony import */ var _store_index_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../store/index.js */ "./src/store/index.js");
+
+
+
+
+const renderVideoWithChat = () => {
+    const layout = document.createElement('div');
+    layout.id = 'my-widget-body';
+    layout.className = 'video-chat-layout';
+
+    const videoSection = document.createElement('div');
+    videoSection.className = 'video-section';
+    videoSection.appendChild((0,_components_video_js__WEBPACK_IMPORTED_MODULE_0__.renderVideoPlayer)());
+
+    const chatSection = document.createElement('div');
+    chatSection.className = 'chat-section';
+    chatSection.appendChild((0,_components_chat_js__WEBPACK_IMPORTED_MODULE_1__.renderChatHistory)());
+
+    layout.appendChild(videoSection);
+    layout.appendChild(chatSection);
+
+    // Subscribe to chat state
+    const updateChatVisibility = (isOpen) => {
+        if (isOpen) {
+            chatSection.classList.remove('collapsed');
+            layout.closest('.my-widget-wrapper')?.classList.add('chat-visible');
+            // Restore flex values
+            chatSection.style.flex = '1 1 0';
+            videoSection.style.flex = '1 1 0';
+        } else {
+            chatSection.classList.add('collapsed');
+            layout.closest('.my-widget-wrapper')?.classList.remove('chat-visible');
+            // Collapse chat flex
+            chatSection.style.flex = '0 0 0';
+            videoSection.style.flex = '1 1 0';
+        }
+    };
+    (0,_store_index_js__WEBPACK_IMPORTED_MODULE_2__.subscribeChat)(updateChatVisibility);
+    // Set initial state
+    updateChatVisibility((0,_store_index_js__WEBPACK_IMPORTED_MODULE_2__.getState)().chatOpen);
+
+    return layout;
+};
+
+// Export a function to toggle chat state
+function toggleChatState() {
+    (0,_store_index_js__WEBPACK_IMPORTED_MODULE_2__.setChatOpen)(!(0,_store_index_js__WEBPACK_IMPORTED_MODULE_2__.getState)().chatOpen);
+}
+
+
+/***/ }),
+
+/***/ "./src/js/modules/launcher.js":
+/*!************************************!*\
+  !*** ./src/js/modules/launcher.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createLauncher: () => (/* binding */ createLauncher)
+/* harmony export */ });
+/* harmony import */ var hls_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! hls.js */ "./node_modules/hls.js/dist/hls.mjs");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../store */ "./src/store/index.js");
+/* harmony import */ var _components_inputBar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/inputBar */ "./src/js/components/inputBar.js");
+/* harmony import */ var _layout_footer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../layout/footer */ "./src/js/layout/footer.js");
+/* harmony import */ var _layout_header__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../layout/header */ "./src/js/layout/header.js");
+// launcher.js
+
+
+
+
+
+
+
+const createLauncher = (renderBody, setView) => {
+    const launcher = document.createElement('div');
+    launcher.className = 'widget-launcher';
+
+    // Create a container for the video
+    const videoContainer = document.createElement('div');
+    videoContainer.className = 'video-container'; // Add a class for styling
+    videoContainer.style.position = 'relative';
+    // videoContainer.style.width = '300px'; // Increase width
+    // videoContainer.style.height = '150px'; // Increase height
+    videoContainer.style.overflow = 'hidden';
+    videoContainer.style.borderRadius = '8px';
+    videoContainer.style.cursor = 'pointer';
+
+    // Add hover scale effect using inline styles
+    videoContainer.style.transition = 'transform 0.3s ease'; // Smooth scaling animation
+    videoContainer.addEventListener('mouseenter', () => {
+        videoContainer.style.transform = 'scale(1.05)'; // Scale up by 10%
+    });
+    videoContainer.addEventListener('mouseleave', () => {
+        videoContainer.style.transform = ''; // Reset to original size
+    });
+
+    // Create video element
+    const video = document.createElement('video');
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.autoplay = true;
+    video.style.width = '100%';
+    video.style.height = '100%';
+    video.style.objectFit = 'cover';
+
+    // Add fallback poster if needed
+    video.poster = 'https://example.com/your-video-thumbnail.jpg '; // Optional
+
+    videoContainer.appendChild(video);
+    launcher.appendChild(videoContainer);
+
+    document.body.appendChild(launcher);
+
+    let widgetOpen = false;
+    let shadowRoot = null;
+
+    // Load HLS video if supported
+    const loadVideo = () => {
+        const hlsUrl = 'https://d1jcbfcd9v1do3.cloudfront.net/facebot/videos/knowledge_base/facebot/default/1_playlist.m3u8 ';
+
+        if (!hlsUrl) {
+            console.warn("No HLS URL provided for launcher video.");
+            return;
+        }
+
+        if (hls_js__WEBPACK_IMPORTED_MODULE_0__["default"].isSupported()) {
+            const hls = new hls_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
+            hls.loadSource(hlsUrl);
+            hls.attachMedia(video);
+            hls.on(hls_js__WEBPACK_IMPORTED_MODULE_0__["default"].Events.MANIFEST_PARSED, () => video.play());
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // For Safari (native HLS support)
+            video.src = hlsUrl;
+            video.addEventListener('loadedmetadata', () => video.play());
+        }
+    };
+
+    // Apply position from config
+    if ((0,_store__WEBPACK_IMPORTED_MODULE_1__.getState)().widgetConfig?.position === 'left') {
+        launcher.style.left = '24px';
+        launcher.style.right = 'auto';
+    }
+
+    // Trigger video load after DOM insertion
+    setTimeout(loadVideo, 0);
+
+    launcher.onclick = () => {
+        const rootContainer = document.getElementById('fb-widget-root');
+
+        if (!widgetOpen) {
+            shadowRoot = rootContainer.shadowRoot || rootContainer.attachShadow({ mode: 'open' });
+            shadowRoot.innerHTML = '';
+
+            const styles = [...document.head.querySelectorAll('style')];
+            styles.forEach(style => shadowRoot.appendChild(style.cloneNode(true)));
+
+            const body = renderBody('home');
+            window.__myWidgetBody = body;
+            window.__myWidgetBody?.setView('video_with_chat');
+            setView('video_with_chat');
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'my-widget-wrapper fade-in';
+
+            // Apply theme color if available
+            if ((0,_store__WEBPACK_IMPORTED_MODULE_1__.getState)().widgetConfig?.themeColor) {
+                wrapper.style.border = `2px solid ${(0,_store__WEBPACK_IMPORTED_MODULE_1__.getState)().widgetConfig.themeColor}`;
+            }
+
+            // Pass callback to header for video+chat button
+            wrapper.appendChild((0,_layout_header__WEBPACK_IMPORTED_MODULE_4__.renderHeader)({
+                onShowVideoChat: () => {
+                  if (window.__myWidgetBody && typeof window.__myWidgetBody.setView === 'function') {
+                    window.__myWidgetBody.setView('video_with_chat');
+                  }
+                }
+            }));
+            wrapper.appendChild(body);
+
+            if ((0,_store__WEBPACK_IMPORTED_MODULE_1__.getState)().currentView !== 'contact') {
+                wrapper.appendChild((0,_components_inputBar__WEBPACK_IMPORTED_MODULE_2__.renderInputBar)());
+            }
+            wrapper.appendChild((0,_layout_footer__WEBPACK_IMPORTED_MODULE_3__.renderFooter)());
+
+            shadowRoot.appendChild(wrapper);
+            widgetOpen = true;
+            launcher.style.display = 'none'; // 👈 Hide launcher when open
+        } else {
+            if (rootContainer.shadowRoot) {
+                rootContainer.shadowRoot.innerHTML = '';
+            }
+            launcher.style.display = 'block'; // 👈 Show launcher again when closed
+            widgetOpen = false;
+        }
+    };
+
+    document.addEventListener('close-widget', () => {
+        const rootContainer = document.getElementById('fb-widget-root');
+        if (rootContainer.shadowRoot) {
+            rootContainer.shadowRoot.innerHTML = '';
+        }
+        launcher.style.display = 'block'; // 👈  visible again
+        widgetOpen = false;
+    });
+
+    return launcher;
+};
 
 /***/ }),
 
@@ -36943,8 +37389,8 @@ const apiRequest = async (body) => {
 
     const payload = {
         ...body,
-        fb_id: (0,_store__WEBPACK_IMPORTED_MODULE_0__.getState)().user['facebot-id'],
-        partner_id: (0,_store__WEBPACK_IMPORTED_MODULE_0__.getState)().user['partner-id'],
+        fb_id: (0,_store__WEBPACK_IMPORTED_MODULE_0__.getState)().details['facebot-id'],
+        partner_id: (0,_store__WEBPACK_IMPORTED_MODULE_0__.getState)().details['partner-id'],
     }
 
 
@@ -36968,90 +37414,50 @@ const apiRequest = async (body) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getState: () => (/* binding */ getState),
+/* harmony export */   setChatOpen: () => (/* binding */ setChatOpen),
 /* harmony export */   setDetails: () => (/* binding */ setDetails),
 /* harmony export */   setView: () => (/* binding */ setView),
-/* harmony export */   subscribe: () => (/* binding */ subscribe)
+/* harmony export */   setWidgetConfig: () => (/* binding */ setWidgetConfig),
+/* harmony export */   subscribeChat: () => (/* binding */ subscribeChat)
 /* harmony export */ });
-// src/js/store.js
+// src/store/index.js
 const state = {
-    currentView: 'chat', // default layout
+    currentView: 'chat',
+    details: {},
+    widgetConfig: {}, // <-- new
     listeners: [],
+    chatOpen: false, // <-- add chat visibility state
+    chatListeners: [], // <-- listeners for chat visibility
 };
 
 const getState = () => state;
 
-const setView = (newView) => {
-    state.currentView = newView;
-    state.listeners.forEach((callback) => callback(newView));
+const setView = (view) => {
+    state.currentView = view;
+    state.listeners.forEach(cb => cb(view));
 };
 
-const subscribe = (callback) => {
-    state.listeners.push(callback);
+const setDetails = (details) => {
+    state.details = details;
 };
 
-const setDetails = (userData) => {
-    state.user = { ...userData }; // store user details
-    notify();
+const setWidgetConfig = (config) => {
+    state.widgetConfig = config;
 };
 
-// Notify all listeners
-const notify = () => {
-    state.listeners.forEach((cb) => cb(state));
+// Add chat visibility state management
+const setChatOpen = (isOpen) => {
+    state.chatOpen = isOpen;
+    state.chatListeners.forEach(cb => cb(isOpen));
 };
 
-/***/ }),
-
-/***/ "./src/styles/launcher.css":
-/*!*********************************!*\
-  !*** ./src/styles/launcher.css ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_launcher_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./launcher.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/launcher.css");
-
-      
-      
-      
-      
-      
-      
-      
-      
-      
-
-var options = {};
-
-options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
-options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
-
-      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
-    
-options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
-options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
-
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_launcher_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
-
-
-
-
-       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_launcher_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_launcher_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_launcher_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
-
+const subscribeChat = (cb) => {
+    state.chatListeners.push(cb);
+    return () => {
+        state.chatListeners = state.chatListeners.filter(fn => fn !== cb);
+    };
+};
+  
 
 /***/ }),
 
@@ -37190,12 +37596,13 @@ var __webpack_exports__ = {};
   \*********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _styles_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles/style.css */ "./src/styles/style.css");
-/* harmony import */ var _styles_launcher_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/launcher.css */ "./src/styles/launcher.css");
-/* harmony import */ var _js_layout_header_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/layout/header.js */ "./src/js/layout/header.js");
-/* harmony import */ var _js_layout_body_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/layout/body.js */ "./src/js/layout/body.js");
-/* harmony import */ var _js_layout_footer_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/layout/footer.js */ "./src/js/layout/footer.js");
-/* harmony import */ var _js_components_inputBar_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./js/components/inputBar.js */ "./src/js/components/inputBar.js");
-/* harmony import */ var _store_index_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./store/index.js */ "./src/store/index.js");
+/* harmony import */ var _js_layout_header_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./js/layout/header.js */ "./src/js/layout/header.js");
+/* harmony import */ var _js_layout_body_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/layout/body.js */ "./src/js/layout/body.js");
+/* harmony import */ var _js_layout_footer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/layout/footer.js */ "./src/js/layout/footer.js");
+/* harmony import */ var _js_components_inputBar_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/components/inputBar.js */ "./src/js/components/inputBar.js");
+/* harmony import */ var _store_index_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store/index.js */ "./src/store/index.js");
+/* harmony import */ var _js_utils_api_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./js/utils/api.js */ "./src/js/utils/api.js");
+/* harmony import */ var _js_modules_launcher_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./js/modules/launcher.js */ "./src/js/modules/launcher.js");
 
 
 
@@ -37204,90 +37611,34 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
+
+document.addEventListener('DOMContentLoaded', async () => {
   const rootContainer = document.getElementById('fb-widget-root');
+  const fb_partner_id = rootContainer?.getAttribute('data-partner_id');
+  const fb_id = rootContainer?.getAttribute('data-fb_id');
 
-  // Partner ID
-  const fb_partner_id = rootContainer?.getAttribute("data-partner_id");
-
-  // Knowledge Base ID
-  const fb_id = rootContainer?.getAttribute("data-fb_id");
-
-  // store in setDetails
-  (0,_store_index_js__WEBPACK_IMPORTED_MODULE_6__.setDetails)({
+  (0,_store_index_js__WEBPACK_IMPORTED_MODULE_5__.setDetails)({
     'partner-id': fb_partner_id,
     'facebot-id': fb_id,
   });
 
-  // Create and insert the floating launcher button
-  const launcher = document.createElement('div');
-  launcher.className = 'widget-launcher';
-  launcher.innerHTML = `<img id="launcher-icon" src="https://face-bot.ai/Union.svg" alt="Open Widget" />`;
-  document.body.appendChild(launcher);
-
-  const launcherIcon = launcher.querySelector('#launcher-icon');
-
-
-  let widgetOpen = false;
-  let shadowRoot = null;
-
-  launcher.onclick = () => {
-    if (!widgetOpen) {
-      // Always use existing shadow root or create a new one
-      shadowRoot = rootContainer.shadowRoot || rootContainer.attachShadow({ mode: 'open' });
-
-      // Clean previous content
-      shadowRoot.innerHTML = '';
-
-      // Clone styles from <head> into Shadow DOM
-      const styles = [...document.head.querySelectorAll('style')];
-      styles.forEach(style => shadowRoot.appendChild(style.cloneNode(true)));
-
-      // Create the body with dynamic switch support
-      const body = (0,_js_layout_body_js__WEBPACK_IMPORTED_MODULE_3__.renderBody)('home'); // default view
-
-      // Save reference globally or in closure
-      window.__myWidgetBody = body;
-      window.__myWidgetBody?.setView('chat');  // default view
-
-      const state = (0,_store_index_js__WEBPACK_IMPORTED_MODULE_6__.getState)();
-      (0,_store_index_js__WEBPACK_IMPORTED_MODULE_6__.setView)('chat');
-
-      // Build widget layout
-      const wrapper = document.createElement('div');
-      wrapper.className = 'my-widget-wrapper fade-in';
-      wrapper.appendChild((0,_js_layout_header_js__WEBPACK_IMPORTED_MODULE_2__.renderHeader)());
-      wrapper.appendChild(body);
-
-
-      // ✅ Only add footer if view is NOT "chat"
-      if (state.currentView !== 'chat') {
-        wrapper.appendChild((0,_js_components_inputBar_js__WEBPACK_IMPORTED_MODULE_5__.renderInputBar)());
-      }
-      wrapper.appendChild((0,_js_layout_footer_js__WEBPACK_IMPORTED_MODULE_4__.renderFooter)());
-
-
-      shadowRoot.appendChild(wrapper);
-      launcherIcon.src = 'https://www.gstatic.com/images/branding/product/1x/youtube_32dp.png';
-      widgetOpen = true;
-    } else {
-      // Clear shadow DOM content
-      if (rootContainer.shadowRoot) {
-        rootContainer.shadowRoot.innerHTML = '';
-      }
-      launcherIcon.src = 'https://face-bot.ai/Union.svg';
-      widgetOpen = false;
+  // Fetch widget config
+  try {
+    const config = await (0,_js_utils_api_js__WEBPACK_IMPORTED_MODULE_6__.apiRequest)({ action: 'get_config' });
+    // Check if widget should be shown
+    if (!config.data.active) {
+      console.warn('🚫 Widget is disabled via config.');
+      return;
     }
-  };
 
-  // Listen for close-widget event
-  document.addEventListener('close-widget', () => {
-    if (rootContainer.shadowRoot) {
-      rootContainer.shadowRoot.innerHTML = '';
-    }
-    launcherIcon.src = 'https://face-bot.ai/Union.svg';
-    widgetOpen = false;
-  });
+    (0,_store_index_js__WEBPACK_IMPORTED_MODULE_5__.setWidgetConfig)(config);
+  } catch (err) {
+    console.error('❌ Failed to fetch widget config:', err);
+    return; // don't load widget if config fails
+  }
+
+  // ✅ Create and attach launcher
+ (0,_js_modules_launcher_js__WEBPACK_IMPORTED_MODULE_7__.createLauncher)(_js_layout_body_js__WEBPACK_IMPORTED_MODULE_2__.renderBody, _store_index_js__WEBPACK_IMPORTED_MODULE_5__.setView);
 });
 
 })();
